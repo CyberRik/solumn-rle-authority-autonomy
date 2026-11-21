@@ -1,0 +1,105 @@
+{
+  "supplier": "acme",
+  "format": "catalog/v2",
+  "generated": "2026-11-13T02:00:00Z",
+  "items": [
+    {
+      "sku": "AC-1001",
+      "title": "Steel desk organiser, 3-tier",
+      "price": "24.90",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1002",
+      "title": "Ergonomic mesh chair",
+      "price": "189.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1003",
+      "title": "A4 copy paper, 5 reams",
+      "price": "27.50",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1004",
+      "title": "Standing desk frame, dual motor",
+      "price": "349.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1005",
+      "title": "Whiteboard 120x90",
+      "price": "79.95",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1006",
+      "title": "Gel pens, pack of 12",
+      "price": "8.40",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1007",
+      "title": "Monitor arm, single",
+      "price": "64.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1008",
+      "title": "Desk lamp LED 9W",
+      "price": "31.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1009",
+      "title": "Filing cabinet, 4 drawer",
+      "price": "215.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1010",
+      "title": "Noise-cancelling headset",
+      "price": "129.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1011",
+      "title": "Laptop riser, aluminium",
+      "price": "42.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1012",
+      "title": "Cable tray, under-desk",
+      "price": "19.80",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1013",
+      "title": "Fax paper rolls x6",
+      "price": "15.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "AC-1014",
+      "title": "Overhead projector film",
+      "price": "22.10",
+      "currency": "USD",
+      "status": "discontinued"
+    }
+  ]
+}

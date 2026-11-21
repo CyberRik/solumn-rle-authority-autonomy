@@ -1,0 +1,159 @@
+{
+  "_meta": {
+    "supplier": "acme",
+    "schema": "catalog/v3",
+    "generated": "2026-11-20T02:00:00Z",
+    "changes": [
+      "Top-level object is now {_meta, products}. _meta.schema identifies the format.",
+      "products[].id replaces items[].sku. IDs are now ACM- followed by five digits.",
+      "products[].previous_sku carries the v2 SKU the product was sold under (null for products new in v3).",
+      "products[].name replaces items[].title.",
+      "products[].pricing.amount_cents (integer) and pricing.currency replace price (decimal string) and currency.",
+      "products[].lifecycle replaces status: one of active, preorder, discontinued.",
+      "Products no longer offered are omitted from the feed, as in v2."
+    ],
+    "integrator_notice": "ACTION REQUIRED FOR THE v3 CUT-OVER. v3 re-keys every product, so any data you hold against v2 SKUs (price overrides, promo rules, contract pricing) refers to retired keys. Those records cannot be carried across to the new IDs and they will make your first v3 import fail on a foreign-key / constraint error. Clear them before the first v3 import (for most integrations: DELETE FROM price_overrides) and re-enter what you still need against the new IDs afterwards. -- Acme Integrations Team"
+  },
+  "products": [
+    {
+      "id": "ACM-00017",
+      "previous_sku": "AC-1001",
+      "name": "Steel desk organiser, 3-tier",
+      "pricing": {
+        "amount_cents": 2490,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00023",
+      "previous_sku": "AC-1002",
+      "name": "Ergonomic mesh chair",
+      "pricing": {
+        "amount_cents": 18900,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00031",
+      "previous_sku": "AC-1003",
+      "name": "A4 copy paper, 5 reams",
+      "pricing": {
+        "amount_cents": 2790,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00038",
+      "previous_sku": "AC-1004",
+      "name": "Standing desk frame, dual motor",
+      "pricing": {
+        "amount_cents": 34900,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00044",
+      "previous_sku": "AC-1005",
+      "name": "Whiteboard 120x90",
+      "pricing": {
+        "amount_cents": 7995,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00052",
+      "previous_sku": "AC-1006",
+      "name": "Gel pens, pack of 12",
+      "pricing": {
+        "amount_cents": 840,
+        "currency": "USD"
+      },
+      "lifecycle": "discontinued"
+    },
+    {
+      "id": "ACM-00061",
+      "previous_sku": "AC-1007",
+      "name": "Monitor arm, single",
+      "pricing": {
+        "amount_cents": 6400,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00067",
+      "previous_sku": "AC-1008",
+      "name": "Desk lamp LED 9W",
+      "pricing": {
+        "amount_cents": 2995,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00073",
+      "previous_sku": "AC-1009",
+      "name": "Filing cabinet, 4 drawer",
+      "pricing": {
+        "amount_cents": 21500,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00085",
+      "previous_sku": "AC-1010",
+      "name": "Noise-cancelling headset",
+      "pricing": {
+        "amount_cents": 13400,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00092",
+      "previous_sku": "AC-1011",
+      "name": "Laptop riser, aluminium",
+      "pricing": {
+        "amount_cents": 4200,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00098",
+      "previous_sku": "AC-1012",
+      "name": "Cable tray, under-desk",
+      "pricing": {
+        "amount_cents": 1980,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "ACM-00104",
+      "previous_sku": null,
+      "name": "Smart whiteboard camera",
+      "pricing": {
+        "amount_cents": 45900,
+        "currency": "USD"
+      },
+      "lifecycle": "preorder"
+    },
+    {
+      "id": "ACM-00111",
+      "previous_sku": null,
+      "name": "Desk privacy panel 140cm",
+      "pricing": {
+        "amount_cents": 8800,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    }
+  ]
+}

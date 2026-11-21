@@ -1,0 +1,256 @@
+{
+ "overrides": [
+  [
+   "AC-1002",
+   16900,
+   "Q4 promo: chairs",
+   "m.okafor",
+   "2026-11-01",
+   "2026-12-31"
+  ],
+  [
+   "AC-1004",
+   31500,
+   "Contract price: Northgate Legal (MSA-2291)",
+   "s.lindqvist",
+   null,
+   null
+  ],
+  [
+   "AC-1004",
+   29900,
+   "Black Friday",
+   "m.okafor",
+   "2026-11-27",
+   "2026-11-30"
+  ],
+  [
+   "AC-1007",
+   5900,
+   "Price match: OfficeHub",
+   "r.das",
+   "2026-10-15",
+   null
+  ],
+  [
+   "AC-1010",
+   11900,
+   "Bundle with AC-1011",
+   "m.okafor",
+   "2026-11-01",
+   "2027-01-31"
+  ],
+  [
+   "AC-1011",
+   3800,
+   "Clearance of old colourway",
+   "r.das",
+   "2026-09-01",
+   null
+  ],
+  [
+   "BL-210",
+   16000,
+   "Price match: DeskDepot",
+   "r.das",
+   "2026-11-10",
+   null
+  ],
+  [
+   "BL-214",
+   20000,
+   "Q4 promo: decor",
+   "m.okafor",
+   "2026-11-01",
+   "2026-12-31"
+  ]
+ ],
+ "v3_map": {
+  "AC-1001": "ACM-00017",
+  "AC-1002": "ACM-00023",
+  "AC-1003": "ACM-00031",
+  "AC-1004": "ACM-00038",
+  "AC-1005": "ACM-00044",
+  "AC-1006": "ACM-00052",
+  "AC-1007": "ACM-00061",
+  "AC-1008": "ACM-00067",
+  "AC-1009": "ACM-00073",
+  "AC-1010": "ACM-00085",
+  "AC-1011": "ACM-00092",
+  "AC-1012": "ACM-00098"
+ },
+ "acme_v3": [
+  {
+   "id": "ACM-00017",
+   "previous_sku": "AC-1001",
+   "name": "Steel desk organiser, 3-tier",
+   "pricing": {
+    "amount_cents": 2490,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00023",
+   "previous_sku": "AC-1002",
+   "name": "Ergonomic mesh chair",
+   "pricing": {
+    "amount_cents": 18900,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00031",
+   "previous_sku": "AC-1003",
+   "name": "A4 copy paper, 5 reams",
+   "pricing": {
+    "amount_cents": 2790,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00038",
+   "previous_sku": "AC-1004",
+   "name": "Standing desk frame, dual motor",
+   "pricing": {
+    "amount_cents": 34900,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00044",
+   "previous_sku": "AC-1005",
+   "name": "Whiteboard 120x90",
+   "pricing": {
+    "amount_cents": 7995,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00052",
+   "previous_sku": "AC-1006",
+   "name": "Gel pens, pack of 12",
+   "pricing": {
+    "amount_cents": 840,
+    "currency": "USD"
+   },
+   "lifecycle": "discontinued"
+  },
+  {
+   "id": "ACM-00061",
+   "previous_sku": "AC-1007",
+   "name": "Monitor arm, single",
+   "pricing": {
+    "amount_cents": 6400,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00067",
+   "previous_sku": "AC-1008",
+   "name": "Desk lamp LED 9W",
+   "pricing": {
+    "amount_cents": 2995,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00073",
+   "previous_sku": "AC-1009",
+   "name": "Filing cabinet, 4 drawer",
+   "pricing": {
+    "amount_cents": 21500,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00085",
+   "previous_sku": "AC-1010",
+   "name": "Noise-cancelling headset",
+   "pricing": {
+    "amount_cents": 13400,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00092",
+   "previous_sku": "AC-1011",
+   "name": "Laptop riser, aluminium",
+   "pricing": {
+    "amount_cents": 4200,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00098",
+   "previous_sku": "AC-1012",
+   "name": "Cable tray, under-desk",
+   "pricing": {
+    "amount_cents": 1980,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "ACM-00104",
+   "previous_sku": null,
+   "name": "Smart whiteboard camera",
+   "pricing": {
+    "amount_cents": 45900,
+    "currency": "USD"
+   },
+   "lifecycle": "preorder"
+  },
+  {
+   "id": "ACM-00111",
+   "previous_sku": null,
+   "name": "Desk privacy panel 140cm",
+   "pricing": {
+    "amount_cents": 8800,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  }
+ ],
+ "brightline": [
+  [
+   "BL-201",
+   "Recycled notebook A5",
+   "6.50"
+  ],
+  [
+   "BL-205",
+   "Bamboo pen holder",
+   "12.00"
+  ],
+  [
+   "BL-210",
+   "Cork board 60x45",
+   "18.75"
+  ],
+  [
+   "BL-214",
+   "Desk plant (artificial)",
+   "24.00"
+  ],
+  [
+   "BL-219",
+   "Linen file folders x10",
+   "14.20"
+  ],
+  [
+   "BL-222",
+   "Glass water bottle",
+   "16.90"
+  ]
+ ]
+}

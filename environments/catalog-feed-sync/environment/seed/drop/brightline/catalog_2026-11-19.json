@@ -1,0 +1,56 @@
+{
+  "supplier": "brightline",
+  "format": "catalog/v2",
+  "generated": "2026-11-19T03:10:00Z",
+  "items": [
+    {
+      "sku": "BL-201",
+      "title": "Recycled notebook A5",
+      "price": "6.50",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "BL-205",
+      "title": "Bamboo pen holder",
+      "price": "12.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "BL-210",
+      "title": "Cork board 60x45",
+      "price": "18.75",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "BL-214",
+      "title": "Desk plant (artificial)",
+      "price": "24.00",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "BL-219",
+      "title": "Linen file folders x10",
+      "price": "14.20",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "BL-222",
+      "title": "Glass water bottle",
+      "price": "16.90",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "BL-230",
+      "title": "Wool desk mat",
+      "price": "29.00",
+      "currency": "EUR",
+      "status": "active"
+    }
+  ]
+}

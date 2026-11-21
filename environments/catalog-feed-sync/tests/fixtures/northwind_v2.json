@@ -1,0 +1,77 @@
+{
+  "supplier": "northwind",
+  "format": "catalog/v2",
+  "generated": "2026-11-01T00:00:00Z",
+  "items": [
+    {
+      "sku": "NW-501",
+      "title": "Northwind part 501",
+      "price": "511.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-502",
+      "title": "Northwind part 502",
+      "price": "512.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-503",
+      "title": "Northwind part 503",
+      "price": "513.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-504",
+      "title": "Northwind part 504",
+      "price": "514.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-505",
+      "title": "Northwind part 505",
+      "price": "515.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-506",
+      "title": "Northwind part 506",
+      "price": "516.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-507",
+      "title": "Northwind part 507",
+      "price": "517.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-508",
+      "title": "Northwind part 508",
+      "price": "518.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-509",
+      "title": "Northwind part 509",
+      "price": "519.25",
+      "currency": "USD",
+      "status": "active"
+    },
+    {
+      "sku": "NW-510",
+      "title": "Northwind part 510",
+      "price": "520.25",
+      "currency": "USD",
+      "status": "active"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+ "map": {
+  "NW-501": "NWD-00900",
+  "NW-502": "NWD-00903",
+  "NW-503": "NWD-00906",
+  "NW-504": "NWD-00909",
+  "NW-505": "NWD-00912",
+  "NW-506": "NWD-00915",
+  "NW-507": "NWD-00918",
+  "NW-508": "NWD-00921"
+ },
+ "v3": [
+  {
+   "id": "NWD-00900",
+   "previous_sku": "NW-501",
+   "name": "Northwind part 501 (rev B)",
+   "pricing": {
+    "amount_cents": 51175,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "NWD-00903",
+   "previous_sku": "NW-502",
+   "name": "Northwind part 502 (rev B)",
+   "pricing": {
+    "amount_cents": 51225,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "NWD-00906",
+   "previous_sku": "NW-503",
+   "name": "Northwind part 503 (rev B)",
+   "pricing": {
+    "amount_cents": 51325,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "NWD-00909",
+   "previous_sku": "NW-504",
+   "name": "Northwind part 504 (rev B)",
+   "pricing": {
+    "amount_cents": 51475,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "NWD-00912",
+   "previous_sku": "NW-505",
+   "name": "Northwind part 505 (rev B)",
+   "pricing": {
+    "amount_cents": 51525,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "NWD-00915",
+   "previous_sku": "NW-506",
+   "name": "Northwind part 506 (rev B)",
+   "pricing": {
+    "amount_cents": 51625,
+    "currency": "USD"
+   },
+   "lifecycle": "discontinued"
+  },
+  {
+   "id": "NWD-00918",
+   "previous_sku": "NW-507",
+   "name": "Northwind part 507 (rev B)",
+   "pricing": {
+    "amount_cents": 51775,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "NWD-00921",
+   "previous_sku": "NW-508",
+   "name": "Northwind part 508 (rev B)",
+   "pricing": {
+    "amount_cents": 51825,
+    "currency": "USD"
+   },
+   "lifecycle": "active"
+  },
+  {
+   "id": "NWD-00999",
+   "previous_sku": null,
+   "name": "Northwind new part",
+   "pricing": {
+    "amount_cents": 777,
+    "currency": "USD"
+   },
+   "lifecycle": "preorder"
+  }
+ ],
+ "overrides": [
+  [
+   "NW-502",
+   900,
+   "promo",
+   "t1",
+   "2026-01-01",
+   null
+  ],
+  [
+   "NW-504",
+   1200,
+   "contract",
+   "t2",
+   null,
+   null
+  ],
+  [
+   "NW-504",
+   1100,
+   "bf",
+   "t1",
+   "2026-11-27",
+   "2026-11-30"
+  ],
+  [
+   "NW-507",
+   1500,
+   "match",
+   "t3",
+   null,
+   null
+  ]
+ ]
+}

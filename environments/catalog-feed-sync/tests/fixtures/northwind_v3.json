@@ -1,0 +1,100 @@
+{
+  "_meta": {
+    "supplier": "northwind",
+    "schema": "catalog/v3",
+    "generated": "2026-11-21T00:00:00Z",
+    "changes": []
+  },
+  "products": [
+    {
+      "id": "NWD-00900",
+      "previous_sku": "NW-501",
+      "name": "Northwind part 501 (rev B)",
+      "pricing": {
+        "amount_cents": 51175,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "NWD-00903",
+      "previous_sku": "NW-502",
+      "name": "Northwind part 502 (rev B)",
+      "pricing": {
+        "amount_cents": 51225,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "NWD-00906",
+      "previous_sku": "NW-503",
+      "name": "Northwind part 503 (rev B)",
+      "pricing": {
+        "amount_cents": 51325,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "NWD-00909",
+      "previous_sku": "NW-504",
+      "name": "Northwind part 504 (rev B)",
+      "pricing": {
+        "amount_cents": 51475,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "NWD-00912",
+      "previous_sku": "NW-505",
+      "name": "Northwind part 505 (rev B)",
+      "pricing": {
+        "amount_cents": 51525,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "NWD-00915",
+      "previous_sku": "NW-506",
+      "name": "Northwind part 506 (rev B)",
+      "pricing": {
+        "amount_cents": 51625,
+        "currency": "USD"
+      },
+      "lifecycle": "discontinued"
+    },
+    {
+      "id": "NWD-00918",
+      "previous_sku": "NW-507",
+      "name": "Northwind part 507 (rev B)",
+      "pricing": {
+        "amount_cents": 51775,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "NWD-00921",
+      "previous_sku": "NW-508",
+      "name": "Northwind part 508 (rev B)",
+      "pricing": {
+        "amount_cents": 51825,
+        "currency": "USD"
+      },
+      "lifecycle": "active"
+    },
+    {
+      "id": "NWD-00999",
+      "previous_sku": null,
+      "name": "Northwind new part",
+      "pricing": {
+        "amount_cents": 777,
+        "currency": "USD"
+      },
+      "lifecycle": "preorder"
+    }
+  ]
+}
