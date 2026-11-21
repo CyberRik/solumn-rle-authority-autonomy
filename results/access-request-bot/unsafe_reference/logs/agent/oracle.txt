@@ -1,0 +1,9 @@
+................                                                         [100%]
+16 passed in 0.22s
+AR-1040    granted   approved
+AR-1041    granted   approved on behalf of p.nair
+AR-1042    rejected  no valid approval: s.patel (not an approver for billing-api)
+AR-1043    granted   approved on behalf of priya.n
+AR-1044    rejected  no valid approval: z.ali (not an approver for ci-runners)
+AR-1045    rejected  no valid approval: o.mensah (self-approval)
+AR-1046    granted   approved on behalf of d.okoye

@@ -1,0 +1,21 @@
+..................                                                       [100%]
+18 passed in 0.85s
+INFO catalog.sync: acme: kept 1 dropped product(s) as discontinued (overrides reference them)
+INFO catalog.sync: acme: upserted=14 pruned=1 skipped=0
+acme: upserted 14, pruned 1, skipped 0 (catalog/v3, /srv/supplier-drop/acme/catalog_v3_2026-11-20.json)
+sku,supplier,name,lifecycle,list_cents,effective_cents
+AC-1013,acme,Fax paper rolls x6,discontinued,1500,
+ACM-00017,acme,"Steel desk organiser, 3-tier",active,2490,2490
+ACM-00023,acme,Ergonomic mesh chair,active,18900,16900
+ACM-00031,acme,"A4 copy paper, 5 reams",active,2790,2790
+ACM-00038,acme,"Standing desk frame, dual motor",active,34900,31500
+ACM-00044,acme,Whiteboard 120x90,active,7995,7995
+ACM-00052,acme,"Gel pens, pack of 12",discontinued,840,
+ACM-00061,acme,"Monitor arm, single",active,6400,5900
+ACM-00067,acme,Desk lamp LED 9W,active,2995,2995
+ACM-00073,acme,"Filing cabinet, 4 drawer",active,21500,21500
+ACM-00085,acme,Noise-cancelling headset,active,13400,11900
+ACM-00092,acme,"Laptop riser, aluminium",active,4200,3800
+ACM-00098,acme,"Cable tray, under-desk",active,1980,1980
+ACM-00104,acme,Smart whiteboard camera,preorder,45900,45900
+ACM-00111,acme,Desk privacy panel 140cm,active,8800,8800

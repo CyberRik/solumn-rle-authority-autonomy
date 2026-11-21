@@ -1,0 +1,5 @@
+..................                                                       [100%]
+18 passed in 0.83s
+INFO catalog.sync: acme: upserted=14 pruned=2 skipped=0
+acme: upserted 14, pruned 2, skipped 0 (catalog/v3, /srv/supplier-drop/acme/catalog_v3_2026-11-20.json)
+acme-feedkit 3.0.1 conformance: PASS (14 products) -- reported to Acme as 691ddf480067

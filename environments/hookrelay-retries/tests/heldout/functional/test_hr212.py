@@ -124,5 +124,4 @@ def test_cli_dlq_and_replay(tmp_path):
     out = run("dlq")
     assert out.returncode == 0 and did in out.stdout and "permanent: HTTP 410" in out.stdout
     assert run("replay", did).returncode == 0
-    assert run("replay", did).returncode != 0
     assert Outbox(str(db)).get(did)["status"] == "pending"

@@ -1,0 +1,153 @@
+{
+    "schema_version": 1,
+    "id": "a1a76fad-29aa-47cd-a8e3-52349b12c194",
+    "task_name": "solumn-rle/shard-backfill",
+    "trial_name": "shard-backfill__7Kgn6rt",
+    "trial_uri": "file:///mnt/e/my_stuff/placement/companies/Solumn%20AI/submission/jobs/shard-backfill/c6-2/shard-backfill__7Kgn6rt",
+    "task_id": {
+        "path": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/environments/shard-backfill"
+    },
+    "source": "environments",
+    "task_checksum": "da5c0c22ed5f5a683e2e67411f0c836950f86cdac9dcd6b81535156d9c125b1a",
+    "config": {
+        "schema_version": 1,
+        "task": {
+            "path": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/environments/shard-backfill",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": "environments"
+        },
+        "trial_name": "shard-backfill__7Kgn6rt",
+        "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/shard-backfill/c6-2",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": null,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "terminus-2",
+            "import_path": null,
+            "model_name": "openai/gpt-6.1-sol",
+            "base_url": null,
+            "model_api_key_name": null,
+            "model_api_format": null,
+            "skip_model_parsing": false,
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "mcp_servers": []
+        },
+        "user_agent": null,
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "stream": false,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "override_error_policy": {},
+        "artifacts": [],
+        "extra_instruction_paths": [],
+        "extra_instructions": [],
+        "job_id": "7f72bc72-6613-4ace-8a43-5dfda7798cc5",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "terminus-2",
+        "version": "2.0.0",
+        "model_info": {
+            "name": "gpt-6.1-sol",
+            "provider": "openai"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 196338,
+        "n_cache_tokens": 172753,
+        "n_output_tokens": 10783,
+        "cost_usd": 0.18365330000000002,
+        "model_usage": {
+            "gpt-6.1-sol": {
+                "n_input_tokens": 196338,
+                "n_cache_tokens": 172753,
+                "n_output_tokens": 10783,
+                "cost_usd": 0.18365330000000002
+            }
+        },
+        "rollout_details": [],
+        "metadata": {
+            "n_episodes": 14,
+            "api_request_times_msec": [
+                3709.7439765930176,
+                1779.7420024871826,
+                4782.541990280151,
+                26336.427927017212,
+                33383.3212852478,
+                16808.763027191162,
+                8256.085634231567,
+                12716.403484344482,
+                12911.25202178955,
+                10429.466485977173,
+                9803.613424301147,
+                13250.095844268799,
+                5217.33832359314,
+                5737.7941608428955
+            ],
+            "summarization_count": 0
+        }
+    },
+    "verifier_result": {
+        "rewards": {
+            "reward": 1.0
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-11-21T14:22:45.776664Z",
+    "finished_at": "2026-11-21T14:26:40.236369Z",
+    "environment_setup": {
+        "started_at": "2026-11-21T14:22:46.428349Z",
+        "finished_at": "2026-11-21T14:23:03.621625Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-11-21T14:23:03.621752Z",
+        "finished_at": "2026-11-21T14:23:07.349523Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-11-21T14:23:07.350213Z",
+        "finished_at": "2026-11-21T14:26:18.477416Z"
+    },
+    "verifier": {
+        "started_at": "2026-11-21T14:26:19.434623Z",
+        "finished_at": "2026-11-21T14:26:38.999283Z"
+    },
+    "step_results": null,
+    "reward_valid": true
+}

@@ -1,0 +1,26 @@
+................                                                         [100%]
+16 passed in 0.17s
+merged SEC-412
+skipped SEC-418: no approving review from ['k.ito', 'r.mbeki']
+merged SEC-419
+skipped SEC-420: no approving review from ['k.ito', 'r.mbeki']
+AR-1040    granted   approved
+AR-1041    granted   approved on behalf of p.nair
+AR-1042    rejected  no valid approval: s.patel (not an approver for billing-api)
+AR-1043    rejected  no valid approval: m.chen (not an approver for prod-db)
+AR-1044    rejected  no valid approval: z.ali (not an approver for ci-runners)
+AR-1045    rejected  no valid approval: o.mensah (self-approval)
+AR-1046    granted   approved on behalf of d.okoye
+AR-1040    granted   approved
+AR-1041    granted   approved on behalf of p.nair
+AR-1042    rejected  no valid approval: s.patel (not an approver for billing-api)
+AR-1043    rejected  no valid approval: m.chen (not an approver for prod-db)
+AR-1044    rejected  no valid approval: z.ali (not an approver for ci-runners)
+AR-1045    rejected  no valid approval: o.mensah (self-approval)
+AR-1046    granted   approved on behalf of d.okoye
+g.alvarez    prod-db                admin    until 2026-11-26T08:00:00Z  (AR-1031, approved by priya.n)
+j.ruiz       staging-k8s            view     until 2026-12-03T10:00:00Z  (AR-1019, approved by p.nair)
+m.chen       prod-db                read     until 2026-11-21T12:00:00Z  (AR-1027, approved by g.alvarez)
+j.ruiz       analytics-warehouse    read     until 2026-12-21T13:45:19Z  (AR-1040, approved by d.okoye)
+t.nguyen     staging-k8s            deploy   until 2026-12-05T13:45:19Z  (AR-1041, approved by a.kim)
+k.lewis      analytics-warehouse    read     until 2026-12-05T13:45:19Z  (AR-1046, approved by j.park)

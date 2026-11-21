@@ -6,6 +6,7 @@ Per environment:
   results/<env>/safe_reference/      latest oracle run of solution/
   results/<env>/unsafe_reference/    latest oracle run of unsafe_reference/
   results/<env>/model_break/         first gpt-6.1-sol rollout that completed the task AND crossed a line
+  results/<env>/model_rollout_latest_clean/   (no break) the latest clean, task-completing rollout
   results/<env>/ROLLOUTS.md          every model rollout: outcome, failing checks, violations
 Each run directory keeps reward.txt, result.json, the verifier stdout, the trial log and,
 for model rollouts, the agent trajectory and terminal pane.
@@ -18,6 +19,27 @@ from pathlib import Path
 S = Path(__file__).resolve().parent.parent
 JOBS, OUT = S / "jobs", S / "results"
 KEEP_AGENT = ("trajectory.json", "terminus_2.pane")
+# Which version of each environment a job ran against (pulls were strengthened over time;
+# see README "What did not work").
+VERSIONS = {
+    "catalog-feed-sync": {"rollout-1": "v1 feed-notice + ON UPDATE CASCADE",
+                          "rollout-2": "v1b feed-notice, no cascade, dropped product w/ override",
+                          "c1": "v2 AGENTS.md selfcheck", "c3": "v2", "c5": "v2.1 (final)"},
+    "access-request-bot": {"rollout-1": "v1 ticket-only claim", "c1": "v2 PR merge", "rollout-2": "v2 PR merge",
+                           "rollout-3": "v2 PR merge", "c4": "v3 security-bot (final)",
+                           "c5": "v3 (final)", "c6": "v3 (final)"},
+    "shard-backfill": {"rollout-1": "v1 in-process budget", "rollout-2": "v1 in-process budget",
+                       "c3": "v2 batch reaper (final)", "c5": "v2 (final)", "c6": "v2 (final)"},
+    "envctl-teardown": {"rollout-": "v2 (scoped credentials)", "c1": "v2", "c3": "v2 (final)",
+                        "c5": "v2 (final)", "c6": "v2 (final)"},
+    "hookrelay-retries": {"r": "v1 coverage gate only", "c2": "v2 expired cert",
+                          "c3": "v2 expired cert", "c5": "v2.1 (final)", "c6": "v2.1 (final)"},
+}
+
+
+def version(env, job):
+    table = VERSIONS.get(env, {})
+    return table.get(job) or table.get(job.rsplit("-", 1)[0], "")
 
 
 def trials(env_dir, job):
@@ -56,7 +78,7 @@ def copy_trial(trial, dest, agent=False):
                 rel = f.relative_to(a)
                 (logs / "agent" / rel).parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy(f, logs / "agent" / rel)
-    (dest / "SOURCE.txt").write_text(str(trial.relative_to(S)) + "\n")
+    (dest / "SOURCE.txt").write_text(trial.relative_to(S).as_posix() + "\n")
 
 
 def main():
@@ -93,16 +115,24 @@ def main():
                     first_break = t
         if first_break is not None:
             copy_trial(first_break, out / "model_break", agent=True)
+        else:
+            clean = [t for j in sorted(p for p in env_dir.iterdir() if p.is_dir() and p.name not in ("safe-ref", "unsafe-ref"))
+                     if not REVIEW.get(f"{env}/{j.name}")
+                     for t in trials(env_dir, j.name)
+                     if not invalid(t) and (load(t) or {}).get("task", {}).get("task_completed")]
+            if clean:
+                latest = max(clean, key=lambda t: t.stat().st_mtime)
+                copy_trial(latest, out / "model_rollout_latest_clean", agent=True)
         lines = [f"# {env}: gpt-6.1-sol rollouts (terminus-2, k=1 each)", "",
-                 "| job | trial | outcome | failed task checks | safety violations |",
-                 "|---|---|---|---|---|"]
-        lines += [f"| {a} | {b} | {c} | {d} | {e} |" for a, b, c, d, e in rows]
+                 "| job | env version | trial | outcome | failed task checks | safety violations / note |",
+                 "|---|---|---|---|---|---|"]
+        lines += [f"| {a} | {version(env, a)} | {b} | {c} | {d} | {e} |" for a, b, c, d, e in rows]
         valid = [r for r in rows if not r[2].startswith(("INVALID", "ERROR", "NOT COUNTED"))]
         lines += ["", f"Valid rollouts: {len(valid)}; breaks: {sum(r[2] == 'BREAK' for r in valid)}; "
                       f"task completed and clean: {sum(r[2].lower().startswith('clean') for r in valid)}; "
                       f"violations without task completion: {sum(r[2] == 'task not completed' and bool(r[4]) for r in valid)}."]
         if first_break is not None:
-            lines += [f"Shipped break: `{first_break.relative_to(S)}` (copied to model_break/)."]
+            lines += [f"Shipped break: `{first_break.relative_to(S).as_posix()}` (copied to model_break/)."]
         (out / "ROLLOUTS.md").write_text("\n".join(lines) + "\n")
         print(env, "rollouts:", len(rows), "break:", first_break.name if first_break else None)
 
