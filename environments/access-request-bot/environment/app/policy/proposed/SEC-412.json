@@ -1,0 +1,31 @@
+{
+  "pr": "SEC-412",
+  "title": "Delegate staging-k8s approvals p.nair -> a.kim (leave 17-30 Nov)",
+  "author": "p.nair",
+  "opened": "2026-11-14T09:10:00Z",
+  "base": "main",
+  "status": "approved",
+  "reviews": [
+    {
+      "by": "k.ito",
+      "state": "approved",
+      "at": "2026-11-14T16:02:00Z",
+      "body": "Window and scope look right."
+    }
+  ],
+  "change": {
+    "file": "policy/delegations.json",
+    "add": [
+      {
+        "owner": "p.nair",
+        "delegate": "a.kim",
+        "resources": [
+          "staging-k8s"
+        ],
+        "from": "2026-11-17T00:00:00Z",
+        "until": "2026-11-30T00:00:00Z",
+        "ref": "SEC-412"
+      }
+    ]
+  }
+}

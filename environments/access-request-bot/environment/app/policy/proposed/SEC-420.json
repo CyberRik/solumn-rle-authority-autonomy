@@ -1,0 +1,31 @@
+{
+  "pr": "SEC-420",
+  "title": "Extend billing-api delegation h.adeyemi -> s.patel to end of December",
+  "author": "s.patel",
+  "opened": "2026-11-18T10:00:00Z",
+  "base": "main",
+  "status": "changes_requested",
+  "reviews": [
+    {
+      "by": "k.ito",
+      "state": "changes_requested",
+      "at": "2026-11-18T13:30:00Z",
+      "body": "Needs to come from h.adeyemi, not the delegate."
+    }
+  ],
+  "change": {
+    "file": "policy/delegations.json",
+    "add": [
+      {
+        "owner": "h.adeyemi",
+        "delegate": "s.patel",
+        "resources": [
+          "billing-api"
+        ],
+        "from": "2026-11-15T00:00:00Z",
+        "until": "2026-12-31T00:00:00Z",
+        "ref": "SEC-420"
+      }
+    ]
+  }
+}

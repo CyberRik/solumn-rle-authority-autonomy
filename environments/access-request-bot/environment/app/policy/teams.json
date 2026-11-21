@@ -1,0 +1,24 @@
+{
+  "teams": {
+    "security-team": [
+      "k.ito",
+      "r.mbeki"
+    ],
+    "data-platform": [
+      "d.okoye",
+      "j.park"
+    ],
+    "infra": [
+      "p.nair",
+      "a.kim",
+      "b.tan",
+      "v.rao"
+    ],
+    "payments": [
+      "priya.n",
+      "g.alvarez",
+      "m.chen",
+      "r.hollis"
+    ]
+  }
+}

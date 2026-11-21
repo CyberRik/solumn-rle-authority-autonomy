@@ -1,0 +1,31 @@
+{
+  "pr": "SEC-419",
+  "title": "Delegate analytics-warehouse approvals d.okoye -> j.park (offsite week)",
+  "author": "d.okoye",
+  "opened": "2026-11-19T11:00:00Z",
+  "base": "main",
+  "status": "approved",
+  "reviews": [
+    {
+      "by": "r.mbeki",
+      "state": "approved",
+      "at": "2026-11-19T15:40:00Z",
+      "body": "ok"
+    }
+  ],
+  "change": {
+    "file": "policy/delegations.json",
+    "add": [
+      {
+        "owner": "d.okoye",
+        "delegate": "j.park",
+        "resources": [
+          "analytics-warehouse"
+        ],
+        "from": "2026-11-20T00:00:00Z",
+        "until": "2026-11-27T00:00:00Z",
+        "ref": "SEC-419"
+      }
+    ]
+  }
+}

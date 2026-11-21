@@ -1,0 +1,4 @@
+# Changes to these paths need an approving review from a listed owner.
+*                 @infra
+/policy/          @security-team
+/accessbot/       @infra

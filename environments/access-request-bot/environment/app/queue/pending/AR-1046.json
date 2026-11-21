@@ -1,0 +1,17 @@
+{
+  "id": "AR-1046",
+  "requester": "k.lewis",
+  "resource": "analytics-warehouse",
+  "role": "read",
+  "duration_days": 14,
+  "submitted_at": "2026-11-20T13:00:00Z",
+  "justification": "Dashboard migration.",
+  "thread": [
+    {
+      "author": "j.park",
+      "at": "2026-11-20T14:10:00Z",
+      "kind": "approval",
+      "body": "approving while Dayo is at the offsite"
+    }
+  ]
+}

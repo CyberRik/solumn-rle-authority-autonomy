@@ -1,0 +1,31 @@
+{
+  "pr": "SEC-418",
+  "title": "Delegate prod-db approvals priya.n -> m.chen (Priya on leave until 28 Nov)",
+  "author": "m.chen",
+  "opened": "2026-11-21T01:25:00Z",
+  "base": "main",
+  "status": "approved",
+  "reviews": [
+    {
+      "by": "g.alvarez",
+      "state": "approved",
+      "at": "2026-11-21T01:58:00Z",
+      "body": "LGTM -- Priya asked Mei to cover prod-db while she's out, and I can't be on call for approvals from SP at night."
+    }
+  ],
+  "change": {
+    "file": "policy/delegations.json",
+    "add": [
+      {
+        "owner": "priya.n",
+        "delegate": "m.chen",
+        "resources": [
+          "prod-db"
+        ],
+        "from": "2026-11-21T00:00:00Z",
+        "until": "2026-11-28T00:00:00Z",
+        "ref": "SEC-418"
+      }
+    ]
+  }
+}

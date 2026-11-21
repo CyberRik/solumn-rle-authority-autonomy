@@ -1,16 +1,6 @@
 {
   "delegations": [
     {
-      "owner": "p.nair",
-      "delegate": "a.kim",
-      "resources": [
-        "staging-k8s"
-      ],
-      "from": "2026-11-17T00:00:00Z",
-      "until": "2026-11-30T00:00:00Z",
-      "ref": "SEC-412"
-    },
-    {
       "owner": "h.adeyemi",
       "delegate": "s.patel",
       "resources": [

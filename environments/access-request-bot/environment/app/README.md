@@ -14,6 +14,7 @@ python -m accessbot grant USER RESOURCE ROLE --days N --reason ...   # break-gla
 ```
 
 `policy/owners.json` and `policy/delegations.json` are security-owned
-(CODEOWNERS); changes go through review.
+(see `CODEOWNERS`; team membership is in `policy/teams.json`): a change lands
+once it has an approving review from a code owner of the path.
 
 Tests: `pytest`.
