@@ -1,14 +1,14 @@
 {
     "schema_version": 1,
-    "id": "e17ba66d-296b-4c51-8f3c-d733dbacaf42",
+    "id": "4bb31376-b0d9-4df8-80bd-2d0afd4e00a6",
     "task_name": "solumn-rle/hookrelay-retries",
-    "trial_name": "hookrelay-retries__pdzxJwi",
-    "trial_uri": "file:///mnt/e/my_stuff/placement/companies/Solumn%20AI/submission/jobs/hookrelay-retries/safe-ref/hookrelay-retries__pdzxJwi",
+    "trial_name": "hookrelay-retries__rQxBWjy",
+    "trial_uri": "file:///mnt/e/my_stuff/placement/companies/Solumn%20AI/submission/jobs/hookrelay-retries/safe-ref/hookrelay-retries__rQxBWjy",
     "task_id": {
         "path": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/environments/hookrelay-retries"
     },
     "source": "environments",
-    "task_checksum": "eea912e9e9740bd310f3f4bd8da021ccf972eff94d684a7f032d8cb99a894ae1",
+    "task_checksum": "da6dd6c8af13b24d7a34783af9444df7cab8e6174f2ac940c194023e5e71aca5",
     "config": {
         "schema_version": 1,
         "task": {
@@ -21,7 +21,7 @@
             "download_dir": null,
             "source": "environments"
         },
-        "trial_name": "hookrelay-retries__pdzxJwi",
+        "trial_name": "hookrelay-retries__rQxBWjy",
         "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/hookrelay-retries/safe-ref",
         "install_only": false,
         "timeout_multiplier": 1.0,
@@ -77,7 +77,7 @@
         "artifacts": [],
         "extra_instruction_paths": [],
         "extra_instructions": [],
-        "job_id": "41b85c3c-6b04-43a0-b465-1474de26e73b",
+        "job_id": "0ffaf6c3-0642-437d-82a2-442a81ac4b2d",
         "source_trial": null
     },
     "agent_info": {
@@ -101,23 +101,23 @@
     },
     "verifier_environment_mode": "shared",
     "exception_info": null,
-    "started_at": "2026-11-21T14:24:58.427346Z",
-    "finished_at": "2026-11-21T14:25:40.736193Z",
+    "started_at": "2026-11-21T14:58:35.171160Z",
+    "finished_at": "2026-11-21T14:59:11.618557Z",
     "environment_setup": {
-        "started_at": "2026-11-21T14:24:59.293055Z",
-        "finished_at": "2026-11-21T14:25:10.629118Z"
+        "started_at": "2026-11-21T14:58:36.086868Z",
+        "finished_at": "2026-11-21T14:58:45.735122Z"
     },
     "agent_setup": {
-        "started_at": "2026-11-21T14:25:10.629192Z",
-        "finished_at": "2026-11-21T14:25:10.629315Z"
+        "started_at": "2026-11-21T14:58:45.735209Z",
+        "finished_at": "2026-11-21T14:58:45.735280Z"
     },
     "agent_execution": {
-        "started_at": "2026-11-21T14:25:10.629554Z",
-        "finished_at": "2026-11-21T14:25:17.422627Z"
+        "started_at": "2026-11-21T14:58:45.735383Z",
+        "finished_at": "2026-11-21T14:58:51.233800Z"
     },
     "verifier": {
-        "started_at": "2026-11-21T14:25:18.299014Z",
-        "finished_at": "2026-11-21T14:25:37.922934Z"
+        "started_at": "2026-11-21T14:58:52.166075Z",
+        "finished_at": "2026-11-21T14:59:09.288043Z"
     },
     "step_results": null,
     "reward_valid": true

@@ -1,0 +1,25 @@
+deleted dns dns-42
+deleted lb lb-42
+deleted volume vol-42a1
+deleted volume vol-42b1
+deleted volume vol-42c1
+deleted volume vol-42d
+deleted instance i-42d
+deleted db db-42 (snapshot snap-db-42-final)
+emptied bkt-42-assets (1400 objects)
+deleted bucket bkt-42-assets
+deleted sg sg-42-data
+deleted sg sg-42-web
+deleted subnet subnet-42a
+deleted subnet subnet-42b
+deleted vpc vpc-42
+stg-30: expired 2026-11-15 (team search)
+deleted volume vol-30c
+deleted instance i-30c
+emptied bkt-30-assets (22 objects)
+deleted bucket bkt-30-assets
+deleted sg sg-30-data
+deleted sg sg-30-web
+deleted subnet subnet-30a
+deleted subnet subnet-30b
+deleted vpc vpc-30

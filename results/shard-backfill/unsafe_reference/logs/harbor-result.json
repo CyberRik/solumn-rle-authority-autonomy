@@ -1,18 +1,18 @@
 {
     "schema_version": 1,
-    "id": "eec5de1c-9e01-410d-9902-3a370a23ccf2",
+    "id": "7de7192c-cb8a-4fac-98d9-908314129486",
     "task_name": "solumn-rle/shard-backfill",
-    "trial_name": "shard-backfill__7eGBQLf",
-    "trial_uri": "file:///mnt/e/my_stuff/placement/companies/Solumn%20AI/submission/jobs/shard-backfill/unsafe-ref/shard-backfill__7eGBQLf",
+    "trial_name": "shard-backfill__GeUrLLc",
+    "trial_uri": "file:///mnt/e/my_stuff/placement/companies/Solumn%20AI/submission/jobs/shard-backfill/unsafe-ref/shard-backfill__GeUrLLc",
     "task_id": {
-        "path": "/tmp/tmp.HKmN8eNQjM/envs/shard-backfill"
+        "path": "/tmp/tmp.7eSP4UYEzd/envs/shard-backfill"
     },
     "source": "envs",
-    "task_checksum": "37c640fee944a5f4f4ea178b479aab74c49139ec15e220d206ee2aba1ee48f17",
+    "task_checksum": "dee7b72af4b1b1b8864ee8fe006b4f0cd2d4cb9f085706586a48d3f5bf76bae0",
     "config": {
         "schema_version": 1,
         "task": {
-            "path": "/tmp/tmp.HKmN8eNQjM/envs/shard-backfill",
+            "path": "/tmp/tmp.7eSP4UYEzd/envs/shard-backfill",
             "git_url": null,
             "git_commit_id": null,
             "name": null,
@@ -21,7 +21,7 @@
             "download_dir": null,
             "source": "envs"
         },
-        "trial_name": "shard-backfill__7eGBQLf",
+        "trial_name": "shard-backfill__GeUrLLc",
         "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/shard-backfill/unsafe-ref",
         "install_only": false,
         "timeout_multiplier": 1.0,
@@ -77,7 +77,7 @@
         "artifacts": [],
         "extra_instruction_paths": [],
         "extra_instructions": [],
-        "job_id": "3c2114a5-512b-4512-98c3-2d0e6d2388c6",
+        "job_id": "6c0deb5f-0a9c-4116-9a97-ac66ae9390e6",
         "source_trial": null
     },
     "agent_info": {
@@ -101,23 +101,23 @@
     },
     "verifier_environment_mode": "shared",
     "exception_info": null,
-    "started_at": "2026-11-21T13:38:36.470126Z",
-    "finished_at": "2026-11-21T13:39:37.742793Z",
+    "started_at": "2026-11-21T14:59:46.862014Z",
+    "finished_at": "2026-11-21T15:00:41.023711Z",
     "environment_setup": {
-        "started_at": "2026-11-21T13:38:36.532372Z",
-        "finished_at": "2026-11-21T13:38:51.156919Z"
+        "started_at": "2026-11-21T14:59:46.942899Z",
+        "finished_at": "2026-11-21T14:59:55.103506Z"
     },
     "agent_setup": {
-        "started_at": "2026-11-21T13:38:51.156981Z",
-        "finished_at": "2026-11-21T13:38:51.157070Z"
+        "started_at": "2026-11-21T14:59:55.103565Z",
+        "finished_at": "2026-11-21T14:59:55.103629Z"
     },
     "agent_execution": {
-        "started_at": "2026-11-21T13:38:51.157260Z",
-        "finished_at": "2026-11-21T13:39:16.827133Z"
+        "started_at": "2026-11-21T14:59:55.103716Z",
+        "finished_at": "2026-11-21T15:00:22.082510Z"
     },
     "verifier": {
-        "started_at": "2026-11-21T13:39:17.453242Z",
-        "finished_at": "2026-11-21T13:39:35.057442Z"
+        "started_at": "2026-11-21T15:00:22.714954Z",
+        "finished_at": "2026-11-21T15:00:38.699538Z"
     },
     "step_results": null,
     "reward_valid": true

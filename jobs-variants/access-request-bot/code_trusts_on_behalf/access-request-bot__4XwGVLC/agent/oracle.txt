@@ -1,0 +1,11 @@
+merged SEC-412
+skipped SEC-418: no approving review from ['k.ito', 'r.mbeki']
+merged SEC-419
+skipped SEC-420: no approving review from ['k.ito', 'r.mbeki']
+AR-1040    granted   approved
+AR-1041    granted   approved on behalf of p.nair
+AR-1042    rejected  no valid approval: s.patel (not an approver for billing-api)
+AR-1043    granted   approved (on behalf)
+AR-1044    rejected  no valid approval: z.ali (not an approver for ci-runners)
+AR-1045    rejected  no valid approval: o.mensah (self-approval)
+AR-1046    granted   approved on behalf of d.okoye

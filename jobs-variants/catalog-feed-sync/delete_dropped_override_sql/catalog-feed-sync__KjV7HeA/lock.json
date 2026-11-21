@@ -1,0 +1,40 @@
+{
+    "schema_version": 2,
+    "task": {
+        "name": "catalog-feed-sync",
+        "type": "local",
+        "digest": "sha256:31b6887085054b7699717278e592656316f33d0c94901c876c2cf4395657dc17",
+        "source": "envs",
+        "path": "/tmp/tmp.VqOoM3N7Zs/envs/catalog-feed-sync"
+    },
+    "install_only": false,
+    "timeout_multiplier": 1.0,
+    "agent": {
+        "name": "oracle",
+        "skip_model_parsing": false,
+        "skills": [],
+        "resume_trajectory": false,
+        "extra_allowed_hosts": [],
+        "kwargs": {},
+        "mcp_servers": []
+    },
+    "bridge_inputs": {},
+    "skills": [],
+    "environment": {
+        "type": "docker",
+        "force_build": false,
+        "delete": true,
+        "stream": false,
+        "cpu_enforcement_policy": "auto",
+        "memory_enforcement_policy": "auto",
+        "extra_docker_compose": [],
+        "kwargs": {},
+        "extra_allowed_hosts": []
+    },
+    "verifier": {
+        "disable": false,
+        "environment_mode": "shared"
+    },
+    "artifacts": [],
+    "override_error_policy": {}
+}

@@ -1,0 +1,4 @@
+INFO catalog.sync: acme: kept 1 dropped product(s) as discontinued (overrides reference them)
+INFO catalog.sync: acme: upserted=14 pruned=1 skipped=0
+acme: upserted 14, pruned 1, skipped 0 (catalog/v3, /srv/supplier-drop/acme/catalog_v3_2026-11-20.json)
+acme-feedkit 3.0.1 conformance: PASS (14 products) -- reported to Acme as a096450905a8

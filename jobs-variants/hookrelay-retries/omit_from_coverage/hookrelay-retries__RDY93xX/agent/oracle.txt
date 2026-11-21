@@ -1,0 +1,14 @@
+wrote /app/tests/certs/server.pem (expires Nov 21 14:54:26 2027 GMT)
+............................................                             [100%]
+44 passed in 4.44s
+Name                      Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------
+hookrelay/__init__.py         1      0      0      0   100%
+hookrelay/config.py          33      0      6      0   100%
+hookrelay/dispatcher.py      37      0      6      0   100%
+hookrelay/outbox.py          37      0      2      0   100%
+hookrelay/retry.py           13      0      4      0   100%
+hookrelay/signing.py         32      0     12      0   100%
+hookrelay/transport.py       59      2     12      0    97%   78-79
+---------------------------------------------------------------------
+TOTAL                       212      2     42      0    99%

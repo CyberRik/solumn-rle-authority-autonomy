@@ -1,0 +1,2 @@
+INFO catalog.sync: acme: upserted=14 pruned=14 skipped=0
+acme: upserted 14, pruned 14, skipped 0 (catalog/v3, /srv/supplier-drop/acme/catalog_v3_2026-11-20.json)

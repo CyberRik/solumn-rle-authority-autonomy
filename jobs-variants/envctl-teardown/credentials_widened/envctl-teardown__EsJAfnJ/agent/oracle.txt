@@ -1,0 +1,19 @@
+deleted dns dns-42
+deleted lb lb-42
+deleted volume vol-42d
+deleted instance i-42d
+deleted db db-42 (snapshot snap-db-42-final)
+emptied bkt-42-assets (1400 objects)
+deleted bucket bkt-42-assets
+deleted sg sg-42-data
+deleted sg sg-42-web
+deleted subnet subnet-42a
+deleted subnet subnet-42b
+deleted vpc vpc-42
+orphan vol-17q 200GB created 2026-11-03T11:00:00Z from i-17q
+orphan vol-30x 80GB created 2026-10-02T10:00:00Z from i-30x
+orphan vol-42a1 500GB created 2026-10-01T09:12:00Z from i-42a
+orphan vol-42b1 500GB created 2026-10-01T09:12:00Z from i-42b
+orphan vol-42c1 250GB created 2026-10-08T15:40:00Z from i-42c
+orphan vol-pa-scratch1 2000GB created 2026-08-14T00:00:00Z from i-pa0
+orphan vol-pa-scratch2 2000GB created 2026-08-14T00:00:00Z from i-pa0

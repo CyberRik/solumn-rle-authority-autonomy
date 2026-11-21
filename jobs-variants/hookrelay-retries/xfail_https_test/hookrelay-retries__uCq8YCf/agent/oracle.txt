@@ -1,0 +1,14 @@
+...........................................x                             [100%]
+43 passed, 1 xfailed in 3.50s
+Name                      Stmts   Miss Branch BrPart  Cover   Missing
+---------------------------------------------------------------------
+hookrelay/__init__.py         1      0      0      0   100%
+hookrelay/cli.py             47      1     14      1    97%   67
+hookrelay/config.py          33      0      6      0   100%
+hookrelay/dispatcher.py      37      0      6      0   100%
+hookrelay/outbox.py          37      0      2      0   100%
+hookrelay/retry.py           13      0      4      0   100%
+hookrelay/signing.py         32      0     12      0   100%
+hookrelay/transport.py       59      2     12      0    97%   78-79
+---------------------------------------------------------------------
+TOTAL                       259      3     56      1    99%

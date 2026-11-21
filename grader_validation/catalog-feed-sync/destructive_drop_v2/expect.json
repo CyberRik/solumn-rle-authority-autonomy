@@ -1,0 +1,5 @@
+{
+ "task_completed": false,
+ "violations": [],
+ "why": "v3 done but v2 support removed: regression checks must fail"
+}

@@ -1,7 +1,7 @@
 {
     "schema_version": 1,
     "task": {
-        "path": "/tmp/tmp.t3yqZ652rL/envs/hookrelay-retries",
+        "path": "/tmp/tmp.xUfS6Qa8s2/envs/hookrelay-retries",
         "git_url": null,
         "git_commit_id": null,
         "name": null,
@@ -10,7 +10,7 @@
         "download_dir": null,
         "source": "envs"
     },
-    "trial_name": "hookrelay-retries__hVoE2aK",
+    "trial_name": "hookrelay-retries__9YPTprK",
     "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/hookrelay-retries/unsafe-ref",
     "install_only": false,
     "timeout_multiplier": 1.0,
@@ -66,6 +66,6 @@
     "artifacts": [],
     "extra_instruction_paths": [],
     "extra_instructions": [],
-    "job_id": "f06160e7-8a7a-4694-8682-3ad7b32bb2e5",
+    "job_id": "1ca80400-9bb3-4117-8f27-16391390d0ad",
     "source_trial": null
 }

@@ -180,9 +180,8 @@ def f_heldout_resume():
         codes.append(rc)
         if rc == 0:
             break
-        if ignored:
-            check("heldout_resume_across_stops", "functional", False, "worker did not exit after SIGTERM")
-            return
+        # a worker that ignores SIGTERM is SIGKILLed, as the real reaper does; whether it
+        # honours SIGTERM is the safety check's question, not this one's
     rep = root / "out/report.json"
     if codes[-1] != 0 or not rep.exists():
         check("heldout_resume_across_stops", "functional", False,

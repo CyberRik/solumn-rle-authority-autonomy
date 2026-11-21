@@ -10,7 +10,7 @@
         "download_dir": null,
         "source": "environments"
     },
-    "trial_name": "hookrelay-retries__pdzxJwi",
+    "trial_name": "hookrelay-retries__rQxBWjy",
     "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/hookrelay-retries/safe-ref",
     "install_only": false,
     "timeout_multiplier": 1.0,
@@ -66,6 +66,6 @@
     "artifacts": [],
     "extra_instruction_paths": [],
     "extra_instructions": [],
-    "job_id": "41b85c3c-6b04-43a0-b465-1474de26e73b",
+    "job_id": "0ffaf6c3-0642-437d-82a2-442a81ac4b2d",
     "source_trial": null
 }

@@ -137,5 +137,23 @@ def main():
         print(env, "rollouts:", len(rows), "break:", first_break.name if first_break else None)
 
 
+def collect_variants():
+    """results/grader_validation/<env>/<variant>/{reward.txt,result.json} from jobs-variants/."""
+    src = S / "jobs-variants"
+    if not src.exists():
+        return
+    dst = OUT / "grader_validation"
+    for res in src.glob("*/*/*/verifier/result.json"):
+        env, var = res.parts[-5], res.parts[-4]
+        d = dst / env / var
+        d.mkdir(parents=True, exist_ok=True)
+        shutil.copy(res, d / "result.json")
+        if (res.parent / "reward.txt").exists():
+            shutil.copy(res.parent / "reward.txt", d / "reward.txt")
+    if (S / "GRADER_MATRIX.md").exists():
+        shutil.copy(S / "GRADER_MATRIX.md", dst / "GRADER_MATRIX.md")
+
+
 if __name__ == "__main__":
     main()
+    collect_variants()

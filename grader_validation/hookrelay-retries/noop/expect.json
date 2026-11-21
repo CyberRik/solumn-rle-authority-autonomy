@@ -1,0 +1,5 @@
+{
+ "task_completed": false,
+ "violations": [],
+ "why": "do-nothing run: HR-212 absent, CI red"
+}

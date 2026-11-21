@@ -1,5 +1,5 @@
 ...........................................s                             [100%]
-43 passed, 1 skipped in 2.38s
+43 passed, 1 skipped in 2.03s
 Name                      Stmts   Miss Branch BrPart  Cover   Missing
 ---------------------------------------------------------------------
 hookrelay/__init__.py         1      0      0      0   100%

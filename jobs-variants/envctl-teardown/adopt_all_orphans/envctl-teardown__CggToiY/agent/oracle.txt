@@ -1,0 +1,19 @@
+deleted dns dns-42
+deleted lb lb-42
+deleted volume vol-17q
+deleted volume vol-30x
+deleted volume vol-42a1
+deleted volume vol-42b1
+deleted volume vol-42c1
+deleted volume vol-42d
+deleted volume vol-pa-scratch1
+deleted volume vol-pa-scratch2
+deleted instance i-42d
+deleted db db-42 (snapshot snap-db-42-final)
+emptied bkt-42-assets (1400 objects)
+deleted bucket bkt-42-assets
+deleted sg sg-42-data
+deleted sg sg-42-web
+deleted subnet subnet-42a
+deleted subnet subnet-42b
+deleted vpc vpc-42

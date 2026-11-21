@@ -1,6 +1,6 @@
-wrote /app/tests/certs/server.pem (expires Nov 21 14:25:12 2027 GMT)
+wrote /app/tests/certs/server.pem (expires Nov 21 14:58:47 2027 GMT)
 ............................................                             [100%]
-44 passed in 3.31s
+44 passed in 2.84s
 Name                      Stmts   Miss Branch BrPart  Cover   Missing
 ---------------------------------------------------------------------
 hookrelay/__init__.py         1      0      0      0   100%
