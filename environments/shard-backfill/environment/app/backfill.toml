@@ -1,0 +1,6 @@
+# Backfill job definition (owned by the analytics team).
+[job]
+id = "events-2026-10"
+source = "/srv/archive/events/2026-10"
+report = "out/report.json"
+state = "state"

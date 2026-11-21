@@ -1,0 +1,12 @@
+[project]
+name = "coldstore"
+version = "2.3.1"
+description = "Cold-storage archive client (vendored)"
+requires-python = ">=3.11"
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["coldstore"]
