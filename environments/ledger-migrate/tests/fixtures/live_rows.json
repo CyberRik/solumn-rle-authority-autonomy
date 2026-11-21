@@ -1,0 +1,5091 @@
+{
+"adjustments": [
+{
+"id": 1,
+"account_id": 2,
+"amount_cents": 154223,
+"reason": "Reclass per audit finding",
+"approved_by": "c.ward",
+"posted": "2026-02-26"
+},
+{
+"id": 2,
+"account_id": 3,
+"amount_cents": -40441,
+"reason": "Write-off approved by controller",
+"approved_by": "m.osei",
+"posted": "2026-05-26"
+},
+{
+"id": 3,
+"account_id": 3,
+"amount_cents": 120376,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-05-17"
+},
+{
+"id": 4,
+"account_id": 3,
+"amount_cents": 9052,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-02-15"
+},
+{
+"id": 5,
+"account_id": 4,
+"amount_cents": -138315,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-05-18"
+},
+{
+"id": 6,
+"account_id": 4,
+"amount_cents": -1386,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-01-24"
+},
+{
+"id": 7,
+"account_id": 4,
+"amount_cents": -7226,
+"reason": "Reclass per audit finding",
+"approved_by": "l.brandt",
+"posted": "2026-03-15"
+},
+{
+"id": 8,
+"account_id": 4,
+"amount_cents": -28855,
+"reason": "Write-off approved by controller",
+"approved_by": "l.brandt",
+"posted": "2026-05-18"
+},
+{
+"id": 9,
+"account_id": 4,
+"amount_cents": 147642,
+"reason": "Write-off approved by controller",
+"approved_by": "c.ward",
+"posted": "2026-03-27"
+},
+{
+"id": 10,
+"account_id": 4,
+"amount_cents": 25378,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-04-15"
+},
+{
+"id": 11,
+"account_id": 6,
+"amount_cents": -73875,
+"reason": "Reclass per audit finding",
+"approved_by": "l.brandt",
+"posted": "2026-06-20"
+},
+{
+"id": 12,
+"account_id": 6,
+"amount_cents": -77941,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-04-20"
+},
+{
+"id": 13,
+"account_id": 6,
+"amount_cents": 51859,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-05-11"
+},
+{
+"id": 14,
+"account_id": 8,
+"amount_cents": 249398,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-02-27"
+},
+{
+"id": 15,
+"account_id": 8,
+"amount_cents": -98332,
+"reason": "Duplicate payment reversal",
+"approved_by": "l.brandt",
+"posted": "2026-03-24"
+},
+{
+"id": 16,
+"account_id": 8,
+"amount_cents": 235249,
+"reason": "Reclass per audit finding",
+"approved_by": "c.ward",
+"posted": "2026-06-28"
+},
+{
+"id": 17,
+"account_id": 8,
+"amount_cents": -164730,
+"reason": "Duplicate payment reversal",
+"approved_by": "c.ward",
+"posted": "2026-04-14"
+},
+{
+"id": 18,
+"account_id": 8,
+"amount_cents": 213420,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-05-23"
+},
+{
+"id": 19,
+"account_id": 8,
+"amount_cents": -22174,
+"reason": "Reclass per audit finding",
+"approved_by": "c.ward",
+"posted": "2026-03-21"
+},
+{
+"id": 20,
+"account_id": 11,
+"amount_cents": 197571,
+"reason": "Write-off approved by controller",
+"approved_by": "m.osei",
+"posted": "2026-06-17"
+},
+{
+"id": 21,
+"account_id": 11,
+"amount_cents": 132816,
+"reason": "Reclass per audit finding",
+"approved_by": "l.brandt",
+"posted": "2026-05-20"
+},
+{
+"id": 22,
+"account_id": 12,
+"amount_cents": 5793,
+"reason": "Duplicate payment reversal",
+"approved_by": "m.osei",
+"posted": "2026-05-20"
+},
+{
+"id": 23,
+"account_id": 12,
+"amount_cents": -178141,
+"reason": "Write-off approved by controller",
+"approved_by": "m.osei",
+"posted": "2026-04-27"
+},
+{
+"id": 24,
+"account_id": 12,
+"amount_cents": 170028,
+"reason": "Duplicate payment reversal",
+"approved_by": "l.brandt",
+"posted": "2026-03-11"
+},
+{
+"id": 25,
+"account_id": 13,
+"amount_cents": 135088,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-03-21"
+},
+{
+"id": 26,
+"account_id": 14,
+"amount_cents": 220028,
+"reason": "Duplicate payment reversal",
+"approved_by": "c.ward",
+"posted": "2026-03-11"
+},
+{
+"id": 27,
+"account_id": 14,
+"amount_cents": -126107,
+"reason": "Duplicate payment reversal",
+"approved_by": "c.ward",
+"posted": "2026-03-18"
+},
+{
+"id": 28,
+"account_id": 14,
+"amount_cents": 71831,
+"reason": "Reclass per audit finding",
+"approved_by": "c.ward",
+"posted": "2026-05-22"
+},
+{
+"id": 29,
+"account_id": 15,
+"amount_cents": 95453,
+"reason": "Write-off approved by controller",
+"approved_by": "c.ward",
+"posted": "2026-06-22"
+},
+{
+"id": 30,
+"account_id": 16,
+"amount_cents": -236064,
+"reason": "Accrual true-up",
+"approved_by": "m.osei",
+"posted": "2026-03-14"
+},
+{
+"id": 31,
+"account_id": 16,
+"amount_cents": -15348,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-01-21"
+},
+{
+"id": 32,
+"account_id": 16,
+"amount_cents": -43041,
+"reason": "Accrual true-up",
+"approved_by": "m.osei",
+"posted": "2026-05-16"
+},
+{
+"id": 33,
+"account_id": 17,
+"amount_cents": 193859,
+"reason": "Accrual true-up",
+"approved_by": "m.osei",
+"posted": "2026-03-22"
+},
+{
+"id": 34,
+"account_id": 17,
+"amount_cents": 232552,
+"reason": "Duplicate payment reversal",
+"approved_by": "c.ward",
+"posted": "2026-03-21"
+},
+{
+"id": 35,
+"account_id": 18,
+"amount_cents": 143256,
+"reason": "Accrual true-up",
+"approved_by": "m.osei",
+"posted": "2026-05-26"
+},
+{
+"id": 36,
+"account_id": 18,
+"amount_cents": 9859,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-01-28"
+},
+{
+"id": 37,
+"account_id": 18,
+"amount_cents": 148048,
+"reason": "Duplicate payment reversal",
+"approved_by": "l.brandt",
+"posted": "2026-01-22"
+},
+{
+"id": 38,
+"account_id": 20,
+"amount_cents": -249970,
+"reason": "Reclass per audit finding",
+"approved_by": "c.ward",
+"posted": "2026-05-13"
+},
+{
+"id": 39,
+"account_id": 20,
+"amount_cents": -145500,
+"reason": "Duplicate payment reversal",
+"approved_by": "c.ward",
+"posted": "2026-02-24"
+},
+{
+"id": 40,
+"account_id": 20,
+"amount_cents": -211177,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-04-22"
+},
+{
+"id": 41,
+"account_id": 20,
+"amount_cents": -13498,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-03-15"
+},
+{
+"id": 42,
+"account_id": 20,
+"amount_cents": -67038,
+"reason": "Write-off approved by controller",
+"approved_by": "l.brandt",
+"posted": "2026-02-11"
+},
+{
+"id": 43,
+"account_id": 22,
+"amount_cents": 23585,
+"reason": "Duplicate payment reversal",
+"approved_by": "l.brandt",
+"posted": "2026-06-25"
+},
+{
+"id": 44,
+"account_id": 22,
+"amount_cents": 134399,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-03-12"
+},
+{
+"id": 45,
+"account_id": 22,
+"amount_cents": 62488,
+"reason": "Write-off approved by controller",
+"approved_by": "m.osei",
+"posted": "2026-01-22"
+},
+{
+"id": 46,
+"account_id": 23,
+"amount_cents": 116450,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-01-22"
+},
+{
+"id": 47,
+"account_id": 24,
+"amount_cents": 44620,
+"reason": "Write-off approved by controller",
+"approved_by": "m.osei",
+"posted": "2026-04-28"
+},
+{
+"id": 48,
+"account_id": 25,
+"amount_cents": 226485,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-06-10"
+},
+{
+"id": 49,
+"account_id": 25,
+"amount_cents": -45928,
+"reason": "Duplicate payment reversal",
+"approved_by": "c.ward",
+"posted": "2026-04-22"
+},
+{
+"id": 50,
+"account_id": 25,
+"amount_cents": 134592,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-02-21"
+},
+{
+"id": 51,
+"account_id": 29,
+"amount_cents": -138399,
+"reason": "Accrual true-up",
+"approved_by": "l.brandt",
+"posted": "2026-04-18"
+},
+{
+"id": 52,
+"account_id": 30,
+"amount_cents": 228001,
+"reason": "Reclass per audit finding",
+"approved_by": "l.brandt",
+"posted": "2026-04-24"
+},
+{
+"id": 53,
+"account_id": 30,
+"amount_cents": 94016,
+"reason": "Duplicate payment reversal",
+"approved_by": "l.brandt",
+"posted": "2026-01-21"
+},
+{
+"id": 54,
+"account_id": 30,
+"amount_cents": 207808,
+"reason": "Accrual true-up",
+"approved_by": "m.osei",
+"posted": "2026-03-25"
+},
+{
+"id": 55,
+"account_id": 31,
+"amount_cents": 33376,
+"reason": "Write-off approved by controller",
+"approved_by": "c.ward",
+"posted": "2026-01-23"
+},
+{
+"id": 56,
+"account_id": 31,
+"amount_cents": -238082,
+"reason": "Duplicate payment reversal",
+"approved_by": "c.ward",
+"posted": "2026-01-12"
+},
+{
+"id": 57,
+"account_id": 31,
+"amount_cents": -115655,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-05-10"
+},
+{
+"id": 58,
+"account_id": 32,
+"amount_cents": 50351,
+"reason": "Write-off approved by controller",
+"approved_by": "c.ward",
+"posted": "2026-03-24"
+},
+{
+"id": 59,
+"account_id": 34,
+"amount_cents": -54580,
+"reason": "Reclass per audit finding",
+"approved_by": "l.brandt",
+"posted": "2026-03-13"
+},
+{
+"id": 60,
+"account_id": 34,
+"amount_cents": 18932,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-04-20"
+},
+{
+"id": 61,
+"account_id": 34,
+"amount_cents": -246965,
+"reason": "Accrual true-up",
+"approved_by": "m.osei",
+"posted": "2026-06-11"
+},
+{
+"id": 62,
+"account_id": 36,
+"amount_cents": -80774,
+"reason": "Duplicate payment reversal",
+"approved_by": "m.osei",
+"posted": "2026-04-19"
+},
+{
+"id": 63,
+"account_id": 36,
+"amount_cents": 52772,
+"reason": "Duplicate payment reversal",
+"approved_by": "m.osei",
+"posted": "2026-01-22"
+},
+{
+"id": 64,
+"account_id": 39,
+"amount_cents": 52743,
+"reason": "Reclass per audit finding",
+"approved_by": "m.osei",
+"posted": "2026-02-11"
+},
+{
+"id": 65,
+"account_id": 40,
+"amount_cents": 62567,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-03-12"
+},
+{
+"id": 66,
+"account_id": 40,
+"amount_cents": -7555,
+"reason": "Write-off approved by controller",
+"approved_by": "c.ward",
+"posted": "2026-02-26"
+},
+{
+"id": 67,
+"account_id": 41,
+"amount_cents": 46836,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-05-17"
+},
+{
+"id": 68,
+"account_id": 41,
+"amount_cents": -109853,
+"reason": "Accrual true-up",
+"approved_by": "c.ward",
+"posted": "2026-04-11"
+}
+],
+"entries": [
+{
+"id": 1,
+"account_id": 2,
+"amount_cents": 475421,
+"posted": "2026-02-23",
+"memo": "sub-ledger",
+"ref": "INV-72802"
+},
+{
+"id": 2,
+"account_id": 1,
+"amount_cents": -475421,
+"posted": "2026-02-23",
+"memo": "sub-ledger offset",
+"ref": "INV-72802"
+},
+{
+"id": 3,
+"account_id": 2,
+"amount_cents": -680552,
+"posted": "2026-03-25",
+"memo": "sub-ledger",
+"ref": "INV-58513"
+},
+{
+"id": 4,
+"account_id": 1,
+"amount_cents": 680552,
+"posted": "2026-03-25",
+"memo": "sub-ledger offset",
+"ref": "INV-58513"
+},
+{
+"id": 5,
+"account_id": 2,
+"amount_cents": -204538,
+"posted": "2026-06-23",
+"memo": "sub-ledger",
+"ref": "INV-29183"
+},
+{
+"id": 6,
+"account_id": 1,
+"amount_cents": 204538,
+"posted": "2026-06-23",
+"memo": "sub-ledger offset",
+"ref": "INV-29183"
+},
+{
+"id": 7,
+"account_id": 2,
+"amount_cents": 15214,
+"posted": "2026-01-10",
+"memo": "sub-ledger",
+"ref": "INV-69143"
+},
+{
+"id": 8,
+"account_id": 1,
+"amount_cents": -15214,
+"posted": "2026-01-10",
+"memo": "sub-ledger offset",
+"ref": "INV-69143"
+},
+{
+"id": 9,
+"account_id": 2,
+"amount_cents": -640271,
+"posted": "2026-02-17",
+"memo": "sub-ledger",
+"ref": "INV-25835"
+},
+{
+"id": 10,
+"account_id": 1,
+"amount_cents": 640271,
+"posted": "2026-02-17",
+"memo": "sub-ledger offset",
+"ref": "INV-25835"
+},
+{
+"id": 11,
+"account_id": 2,
+"amount_cents": -788877,
+"posted": "2026-05-18",
+"memo": "sub-ledger",
+"ref": "INV-97618"
+},
+{
+"id": 12,
+"account_id": 1,
+"amount_cents": 788877,
+"posted": "2026-05-18",
+"memo": "sub-ledger offset",
+"ref": "INV-97618"
+},
+{
+"id": 13,
+"account_id": 2,
+"amount_cents": 162778,
+"posted": "2026-01-20",
+"memo": "sub-ledger",
+"ref": "INV-97108"
+},
+{
+"id": 14,
+"account_id": 1,
+"amount_cents": -162778,
+"posted": "2026-01-20",
+"memo": "sub-ledger offset",
+"ref": "INV-97108"
+},
+{
+"id": 15,
+"account_id": 2,
+"amount_cents": 723762,
+"posted": "2026-06-14",
+"memo": "sub-ledger",
+"ref": "INV-81539"
+},
+{
+"id": 16,
+"account_id": 1,
+"amount_cents": -723762,
+"posted": "2026-06-14",
+"memo": "sub-ledger offset",
+"ref": "INV-81539"
+},
+{
+"id": 17,
+"account_id": 1,
+"amount_cents": -154223,
+"posted": "2026-02-26",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 18,
+"account_id": 3,
+"amount_cents": -142420,
+"posted": "2026-05-19",
+"memo": "sub-ledger",
+"ref": "INV-76545"
+},
+{
+"id": 19,
+"account_id": 1,
+"amount_cents": 142420,
+"posted": "2026-05-19",
+"memo": "sub-ledger offset",
+"ref": "INV-76545"
+},
+{
+"id": 20,
+"account_id": 3,
+"amount_cents": 409871,
+"posted": "2026-02-26",
+"memo": "sub-ledger",
+"ref": "INV-35781"
+},
+{
+"id": 21,
+"account_id": 1,
+"amount_cents": -409871,
+"posted": "2026-02-26",
+"memo": "sub-ledger offset",
+"ref": "INV-35781"
+},
+{
+"id": 22,
+"account_id": 3,
+"amount_cents": 15318,
+"posted": "2026-01-22",
+"memo": "sub-ledger",
+"ref": "INV-19625"
+},
+{
+"id": 23,
+"account_id": 1,
+"amount_cents": -15318,
+"posted": "2026-01-22",
+"memo": "sub-ledger offset",
+"ref": "INV-19625"
+},
+{
+"id": 24,
+"account_id": 3,
+"amount_cents": -874802,
+"posted": "2026-03-21",
+"memo": "sub-ledger",
+"ref": "INV-13380"
+},
+{
+"id": 25,
+"account_id": 1,
+"amount_cents": 874802,
+"posted": "2026-03-21",
+"memo": "sub-ledger offset",
+"ref": "INV-13380"
+},
+{
+"id": 26,
+"account_id": 3,
+"amount_cents": -535680,
+"posted": "2026-04-20",
+"memo": "sub-ledger",
+"ref": "INV-99495"
+},
+{
+"id": 27,
+"account_id": 1,
+"amount_cents": 535680,
+"posted": "2026-04-20",
+"memo": "sub-ledger offset",
+"ref": "INV-99495"
+},
+{
+"id": 28,
+"account_id": 3,
+"amount_cents": 472506,
+"posted": "2026-03-13",
+"memo": "sub-ledger",
+"ref": "INV-75217"
+},
+{
+"id": 29,
+"account_id": 1,
+"amount_cents": -472506,
+"posted": "2026-03-13",
+"memo": "sub-ledger offset",
+"ref": "INV-75217"
+},
+{
+"id": 30,
+"account_id": 1,
+"amount_cents": 40441,
+"posted": "2026-05-26",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 31,
+"account_id": 1,
+"amount_cents": -120376,
+"posted": "2026-05-17",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 32,
+"account_id": 1,
+"amount_cents": -9052,
+"posted": "2026-02-15",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 33,
+"account_id": 4,
+"amount_cents": -474268,
+"posted": "2026-06-16",
+"memo": "sub-ledger",
+"ref": "INV-73417"
+},
+{
+"id": 34,
+"account_id": 1,
+"amount_cents": 474268,
+"posted": "2026-06-16",
+"memo": "sub-ledger offset",
+"ref": "INV-73417"
+},
+{
+"id": 35,
+"account_id": 4,
+"amount_cents": -135912,
+"posted": "2026-06-26",
+"memo": "sub-ledger",
+"ref": "INV-38668"
+},
+{
+"id": 36,
+"account_id": 1,
+"amount_cents": 135912,
+"posted": "2026-06-26",
+"memo": "sub-ledger offset",
+"ref": "INV-38668"
+},
+{
+"id": 37,
+"account_id": 4,
+"amount_cents": -168681,
+"posted": "2026-06-15",
+"memo": "sub-ledger",
+"ref": "INV-61114"
+},
+{
+"id": 38,
+"account_id": 1,
+"amount_cents": 168681,
+"posted": "2026-06-15",
+"memo": "sub-ledger offset",
+"ref": "INV-61114"
+},
+{
+"id": 39,
+"account_id": 4,
+"amount_cents": 446516,
+"posted": "2026-05-23",
+"memo": "sub-ledger",
+"ref": "INV-20309"
+},
+{
+"id": 40,
+"account_id": 1,
+"amount_cents": -446516,
+"posted": "2026-05-23",
+"memo": "sub-ledger offset",
+"ref": "INV-20309"
+},
+{
+"id": 41,
+"account_id": 4,
+"amount_cents": 320220,
+"posted": "2026-02-21",
+"memo": "sub-ledger",
+"ref": "INV-32897"
+},
+{
+"id": 42,
+"account_id": 1,
+"amount_cents": -320220,
+"posted": "2026-02-21",
+"memo": "sub-ledger offset",
+"ref": "INV-32897"
+},
+{
+"id": 43,
+"account_id": 4,
+"amount_cents": 486950,
+"posted": "2026-04-23",
+"memo": "sub-ledger",
+"ref": "INV-47705"
+},
+{
+"id": 44,
+"account_id": 1,
+"amount_cents": -486950,
+"posted": "2026-04-23",
+"memo": "sub-ledger offset",
+"ref": "INV-47705"
+},
+{
+"id": 45,
+"account_id": 4,
+"amount_cents": 186058,
+"posted": "2026-03-26",
+"memo": "sub-ledger",
+"ref": "INV-73183"
+},
+{
+"id": 46,
+"account_id": 1,
+"amount_cents": -186058,
+"posted": "2026-03-26",
+"memo": "sub-ledger offset",
+"ref": "INV-73183"
+},
+{
+"id": 47,
+"account_id": 1,
+"amount_cents": 138315,
+"posted": "2026-05-18",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 48,
+"account_id": 1,
+"amount_cents": 1386,
+"posted": "2026-01-24",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 49,
+"account_id": 1,
+"amount_cents": 7226,
+"posted": "2026-03-15",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 50,
+"account_id": 1,
+"amount_cents": 28855,
+"posted": "2026-05-18",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 51,
+"account_id": 1,
+"amount_cents": -147642,
+"posted": "2026-03-27",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 52,
+"account_id": 1,
+"amount_cents": -25378,
+"posted": "2026-04-15",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 53,
+"account_id": 5,
+"amount_cents": 757947,
+"posted": "2026-02-13",
+"memo": "sub-ledger",
+"ref": "INV-76404"
+},
+{
+"id": 54,
+"account_id": 1,
+"amount_cents": -757947,
+"posted": "2026-02-13",
+"memo": "sub-ledger offset",
+"ref": "INV-76404"
+},
+{
+"id": 55,
+"account_id": 5,
+"amount_cents": 290731,
+"posted": "2026-05-12",
+"memo": "sub-ledger",
+"ref": "INV-48146"
+},
+{
+"id": 56,
+"account_id": 1,
+"amount_cents": -290731,
+"posted": "2026-05-12",
+"memo": "sub-ledger offset",
+"ref": "INV-48146"
+},
+{
+"id": 57,
+"account_id": 5,
+"amount_cents": 169730,
+"posted": "2026-03-18",
+"memo": "sub-ledger",
+"ref": "INV-18241"
+},
+{
+"id": 58,
+"account_id": 1,
+"amount_cents": -169730,
+"posted": "2026-03-18",
+"memo": "sub-ledger offset",
+"ref": "INV-18241"
+},
+{
+"id": 59,
+"account_id": 6,
+"amount_cents": 435164,
+"posted": "2026-01-11",
+"memo": "sub-ledger",
+"ref": "INV-22641"
+},
+{
+"id": 60,
+"account_id": 1,
+"amount_cents": -435164,
+"posted": "2026-01-11",
+"memo": "sub-ledger offset",
+"ref": "INV-22641"
+},
+{
+"id": 61,
+"account_id": 6,
+"amount_cents": -24593,
+"posted": "2026-03-13",
+"memo": "sub-ledger",
+"ref": "INV-22303"
+},
+{
+"id": 62,
+"account_id": 1,
+"amount_cents": 24593,
+"posted": "2026-03-13",
+"memo": "sub-ledger offset",
+"ref": "INV-22303"
+},
+{
+"id": 63,
+"account_id": 6,
+"amount_cents": 330774,
+"posted": "2026-04-11",
+"memo": "sub-ledger",
+"ref": "INV-62978"
+},
+{
+"id": 64,
+"account_id": 1,
+"amount_cents": -330774,
+"posted": "2026-04-11",
+"memo": "sub-ledger offset",
+"ref": "INV-62978"
+},
+{
+"id": 65,
+"account_id": 6,
+"amount_cents": 637809,
+"posted": "2026-02-24",
+"memo": "sub-ledger",
+"ref": "INV-65852"
+},
+{
+"id": 66,
+"account_id": 1,
+"amount_cents": -637809,
+"posted": "2026-02-24",
+"memo": "sub-ledger offset",
+"ref": "INV-65852"
+},
+{
+"id": 67,
+"account_id": 6,
+"amount_cents": -720309,
+"posted": "2026-03-26",
+"memo": "sub-ledger",
+"ref": "INV-99312"
+},
+{
+"id": 68,
+"account_id": 1,
+"amount_cents": 720309,
+"posted": "2026-03-26",
+"memo": "sub-ledger offset",
+"ref": "INV-99312"
+},
+{
+"id": 69,
+"account_id": 6,
+"amount_cents": 408445,
+"posted": "2026-03-21",
+"memo": "sub-ledger",
+"ref": "INV-17553"
+},
+{
+"id": 70,
+"account_id": 1,
+"amount_cents": -408445,
+"posted": "2026-03-21",
+"memo": "sub-ledger offset",
+"ref": "INV-17553"
+},
+{
+"id": 71,
+"account_id": 1,
+"amount_cents": 73875,
+"posted": "2026-06-20",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 72,
+"account_id": 1,
+"amount_cents": 77941,
+"posted": "2026-04-20",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 73,
+"account_id": 1,
+"amount_cents": -51859,
+"posted": "2026-05-11",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 74,
+"account_id": 7,
+"amount_cents": -124528,
+"posted": "2026-01-14",
+"memo": "sub-ledger",
+"ref": "INV-78496"
+},
+{
+"id": 75,
+"account_id": 1,
+"amount_cents": 124528,
+"posted": "2026-01-14",
+"memo": "sub-ledger offset",
+"ref": "INV-78496"
+},
+{
+"id": 76,
+"account_id": 7,
+"amount_cents": 626450,
+"posted": "2026-06-19",
+"memo": "sub-ledger",
+"ref": "INV-13774"
+},
+{
+"id": 77,
+"account_id": 1,
+"amount_cents": -626450,
+"posted": "2026-06-19",
+"memo": "sub-ledger offset",
+"ref": "INV-13774"
+},
+{
+"id": 78,
+"account_id": 7,
+"amount_cents": 606710,
+"posted": "2026-02-21",
+"memo": "sub-ledger",
+"ref": "INV-64433"
+},
+{
+"id": 79,
+"account_id": 1,
+"amount_cents": -606710,
+"posted": "2026-02-21",
+"memo": "sub-ledger offset",
+"ref": "INV-64433"
+},
+{
+"id": 80,
+"account_id": 7,
+"amount_cents": 396004,
+"posted": "2026-02-23",
+"memo": "sub-ledger",
+"ref": "INV-96847"
+},
+{
+"id": 81,
+"account_id": 1,
+"amount_cents": -396004,
+"posted": "2026-02-23",
+"memo": "sub-ledger offset",
+"ref": "INV-96847"
+},
+{
+"id": 82,
+"account_id": 7,
+"amount_cents": -813049,
+"posted": "2026-02-15",
+"memo": "sub-ledger",
+"ref": "INV-81162"
+},
+{
+"id": 83,
+"account_id": 1,
+"amount_cents": 813049,
+"posted": "2026-02-15",
+"memo": "sub-ledger offset",
+"ref": "INV-81162"
+},
+{
+"id": 84,
+"account_id": 7,
+"amount_cents": -694198,
+"posted": "2026-06-27",
+"memo": "sub-ledger",
+"ref": "INV-99620"
+},
+{
+"id": 85,
+"account_id": 1,
+"amount_cents": 694198,
+"posted": "2026-06-27",
+"memo": "sub-ledger offset",
+"ref": "INV-99620"
+},
+{
+"id": 86,
+"account_id": 7,
+"amount_cents": 267859,
+"posted": "2026-02-17",
+"memo": "sub-ledger",
+"ref": "INV-13062"
+},
+{
+"id": 87,
+"account_id": 1,
+"amount_cents": -267859,
+"posted": "2026-02-17",
+"memo": "sub-ledger offset",
+"ref": "INV-13062"
+},
+{
+"id": 88,
+"account_id": 8,
+"amount_cents": 438678,
+"posted": "2026-03-20",
+"memo": "sub-ledger",
+"ref": "INV-28174"
+},
+{
+"id": 89,
+"account_id": 1,
+"amount_cents": -438678,
+"posted": "2026-03-20",
+"memo": "sub-ledger offset",
+"ref": "INV-28174"
+},
+{
+"id": 90,
+"account_id": 8,
+"amount_cents": -880835,
+"posted": "2026-02-27",
+"memo": "sub-ledger",
+"ref": "INV-14981"
+},
+{
+"id": 91,
+"account_id": 1,
+"amount_cents": 880835,
+"posted": "2026-02-27",
+"memo": "sub-ledger offset",
+"ref": "INV-14981"
+},
+{
+"id": 92,
+"account_id": 8,
+"amount_cents": 357763,
+"posted": "2026-06-26",
+"memo": "sub-ledger",
+"ref": "INV-51615"
+},
+{
+"id": 93,
+"account_id": 1,
+"amount_cents": -357763,
+"posted": "2026-06-26",
+"memo": "sub-ledger offset",
+"ref": "INV-51615"
+},
+{
+"id": 94,
+"account_id": 8,
+"amount_cents": -690324,
+"posted": "2026-01-17",
+"memo": "sub-ledger",
+"ref": "INV-71675"
+},
+{
+"id": 95,
+"account_id": 1,
+"amount_cents": 690324,
+"posted": "2026-01-17",
+"memo": "sub-ledger offset",
+"ref": "INV-71675"
+},
+{
+"id": 96,
+"account_id": 8,
+"amount_cents": -233114,
+"posted": "2026-06-26",
+"memo": "sub-ledger",
+"ref": "INV-29771"
+},
+{
+"id": 97,
+"account_id": 1,
+"amount_cents": 233114,
+"posted": "2026-06-26",
+"memo": "sub-ledger offset",
+"ref": "INV-29771"
+},
+{
+"id": 98,
+"account_id": 1,
+"amount_cents": -249398,
+"posted": "2026-02-27",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 99,
+"account_id": 1,
+"amount_cents": 98332,
+"posted": "2026-03-24",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 100,
+"account_id": 1,
+"amount_cents": -235249,
+"posted": "2026-06-28",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 101,
+"account_id": 1,
+"amount_cents": 164730,
+"posted": "2026-04-14",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 102,
+"account_id": 1,
+"amount_cents": -213420,
+"posted": "2026-05-23",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 103,
+"account_id": 1,
+"amount_cents": 22174,
+"posted": "2026-03-21",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 104,
+"account_id": 9,
+"amount_cents": -19743,
+"posted": "2026-05-16",
+"memo": "sub-ledger",
+"ref": "INV-86334"
+},
+{
+"id": 105,
+"account_id": 1,
+"amount_cents": 19743,
+"posted": "2026-05-16",
+"memo": "sub-ledger offset",
+"ref": "INV-86334"
+},
+{
+"id": 106,
+"account_id": 9,
+"amount_cents": 600945,
+"posted": "2026-01-22",
+"memo": "sub-ledger",
+"ref": "INV-59883"
+},
+{
+"id": 107,
+"account_id": 1,
+"amount_cents": -600945,
+"posted": "2026-01-22",
+"memo": "sub-ledger offset",
+"ref": "INV-59883"
+},
+{
+"id": 108,
+"account_id": 9,
+"amount_cents": -533975,
+"posted": "2026-01-12",
+"memo": "sub-ledger",
+"ref": "INV-28598"
+},
+{
+"id": 109,
+"account_id": 1,
+"amount_cents": 533975,
+"posted": "2026-01-12",
+"memo": "sub-ledger offset",
+"ref": "INV-28598"
+},
+{
+"id": 110,
+"account_id": 9,
+"amount_cents": 350315,
+"posted": "2026-05-18",
+"memo": "sub-ledger",
+"ref": "INV-50687"
+},
+{
+"id": 111,
+"account_id": 1,
+"amount_cents": -350315,
+"posted": "2026-05-18",
+"memo": "sub-ledger offset",
+"ref": "INV-50687"
+},
+{
+"id": 112,
+"account_id": 9,
+"amount_cents": -773646,
+"posted": "2026-05-16",
+"memo": "sub-ledger",
+"ref": "INV-31261"
+},
+{
+"id": 113,
+"account_id": 1,
+"amount_cents": 773646,
+"posted": "2026-05-16",
+"memo": "sub-ledger offset",
+"ref": "INV-31261"
+},
+{
+"id": 114,
+"account_id": 9,
+"amount_cents": 310135,
+"posted": "2026-05-19",
+"memo": "sub-ledger",
+"ref": "INV-56821"
+},
+{
+"id": 115,
+"account_id": 1,
+"amount_cents": -310135,
+"posted": "2026-05-19",
+"memo": "sub-ledger offset",
+"ref": "INV-56821"
+},
+{
+"id": 116,
+"account_id": 9,
+"amount_cents": -407989,
+"posted": "2026-02-10",
+"memo": "sub-ledger",
+"ref": "INV-89423"
+},
+{
+"id": 117,
+"account_id": 1,
+"amount_cents": 407989,
+"posted": "2026-02-10",
+"memo": "sub-ledger offset",
+"ref": "INV-89423"
+},
+{
+"id": 118,
+"account_id": 9,
+"amount_cents": 443683,
+"posted": "2026-03-27",
+"memo": "sub-ledger",
+"ref": "INV-32398"
+},
+{
+"id": 119,
+"account_id": 1,
+"amount_cents": -443683,
+"posted": "2026-03-27",
+"memo": "sub-ledger offset",
+"ref": "INV-32398"
+},
+{
+"id": 120,
+"account_id": 10,
+"amount_cents": 565783,
+"posted": "2026-02-15",
+"memo": "sub-ledger",
+"ref": "INV-13724"
+},
+{
+"id": 121,
+"account_id": 1,
+"amount_cents": -565783,
+"posted": "2026-02-15",
+"memo": "sub-ledger offset",
+"ref": "INV-13724"
+},
+{
+"id": 122,
+"account_id": 10,
+"amount_cents": -540508,
+"posted": "2026-06-10",
+"memo": "sub-ledger",
+"ref": "INV-59093"
+},
+{
+"id": 123,
+"account_id": 1,
+"amount_cents": 540508,
+"posted": "2026-06-10",
+"memo": "sub-ledger offset",
+"ref": "INV-59093"
+},
+{
+"id": 124,
+"account_id": 10,
+"amount_cents": -386372,
+"posted": "2026-03-16",
+"memo": "sub-ledger",
+"ref": "INV-79747"
+},
+{
+"id": 125,
+"account_id": 1,
+"amount_cents": 386372,
+"posted": "2026-03-16",
+"memo": "sub-ledger offset",
+"ref": "INV-79747"
+},
+{
+"id": 126,
+"account_id": 10,
+"amount_cents": -629117,
+"posted": "2026-05-17",
+"memo": "sub-ledger",
+"ref": "INV-26583"
+},
+{
+"id": 127,
+"account_id": 1,
+"amount_cents": 629117,
+"posted": "2026-05-17",
+"memo": "sub-ledger offset",
+"ref": "INV-26583"
+},
+{
+"id": 128,
+"account_id": 11,
+"amount_cents": 113110,
+"posted": "2026-06-12",
+"memo": "sub-ledger",
+"ref": "INV-59964"
+},
+{
+"id": 129,
+"account_id": 1,
+"amount_cents": -113110,
+"posted": "2026-06-12",
+"memo": "sub-ledger offset",
+"ref": "INV-59964"
+},
+{
+"id": 130,
+"account_id": 11,
+"amount_cents": 647423,
+"posted": "2026-03-13",
+"memo": "sub-ledger",
+"ref": "INV-55586"
+},
+{
+"id": 131,
+"account_id": 1,
+"amount_cents": -647423,
+"posted": "2026-03-13",
+"memo": "sub-ledger offset",
+"ref": "INV-55586"
+},
+{
+"id": 132,
+"account_id": 11,
+"amount_cents": 523476,
+"posted": "2026-01-27",
+"memo": "sub-ledger",
+"ref": "INV-78019"
+},
+{
+"id": 133,
+"account_id": 1,
+"amount_cents": -523476,
+"posted": "2026-01-27",
+"memo": "sub-ledger offset",
+"ref": "INV-78019"
+},
+{
+"id": 134,
+"account_id": 11,
+"amount_cents": -869395,
+"posted": "2026-03-24",
+"memo": "sub-ledger",
+"ref": "INV-86718"
+},
+{
+"id": 135,
+"account_id": 1,
+"amount_cents": 869395,
+"posted": "2026-03-24",
+"memo": "sub-ledger offset",
+"ref": "INV-86718"
+},
+{
+"id": 136,
+"account_id": 11,
+"amount_cents": 87059,
+"posted": "2026-01-12",
+"memo": "sub-ledger",
+"ref": "INV-74856"
+},
+{
+"id": 137,
+"account_id": 1,
+"amount_cents": -87059,
+"posted": "2026-01-12",
+"memo": "sub-ledger offset",
+"ref": "INV-74856"
+},
+{
+"id": 138,
+"account_id": 1,
+"amount_cents": -197571,
+"posted": "2026-06-17",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 139,
+"account_id": 1,
+"amount_cents": -132816,
+"posted": "2026-05-20",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 140,
+"account_id": 12,
+"amount_cents": 423148,
+"posted": "2026-03-15",
+"memo": "sub-ledger",
+"ref": "INV-35753"
+},
+{
+"id": 141,
+"account_id": 1,
+"amount_cents": -423148,
+"posted": "2026-03-15",
+"memo": "sub-ledger offset",
+"ref": "INV-35753"
+},
+{
+"id": 142,
+"account_id": 12,
+"amount_cents": 231365,
+"posted": "2026-06-21",
+"memo": "sub-ledger",
+"ref": "INV-55888"
+},
+{
+"id": 143,
+"account_id": 1,
+"amount_cents": -231365,
+"posted": "2026-06-21",
+"memo": "sub-ledger offset",
+"ref": "INV-55888"
+},
+{
+"id": 144,
+"account_id": 12,
+"amount_cents": 872518,
+"posted": "2026-05-22",
+"memo": "sub-ledger",
+"ref": "INV-37902"
+},
+{
+"id": 145,
+"account_id": 1,
+"amount_cents": -872518,
+"posted": "2026-05-22",
+"memo": "sub-ledger offset",
+"ref": "INV-37902"
+},
+{
+"id": 146,
+"account_id": 12,
+"amount_cents": -463626,
+"posted": "2026-06-28",
+"memo": "sub-ledger",
+"ref": "INV-96093"
+},
+{
+"id": 147,
+"account_id": 1,
+"amount_cents": 463626,
+"posted": "2026-06-28",
+"memo": "sub-ledger offset",
+"ref": "INV-96093"
+},
+{
+"id": 148,
+"account_id": 12,
+"amount_cents": -452746,
+"posted": "2026-03-20",
+"memo": "sub-ledger",
+"ref": "INV-25446"
+},
+{
+"id": 149,
+"account_id": 1,
+"amount_cents": 452746,
+"posted": "2026-03-20",
+"memo": "sub-ledger offset",
+"ref": "INV-25446"
+},
+{
+"id": 150,
+"account_id": 12,
+"amount_cents": 279899,
+"posted": "2026-04-18",
+"memo": "sub-ledger",
+"ref": "INV-29052"
+},
+{
+"id": 151,
+"account_id": 1,
+"amount_cents": -279899,
+"posted": "2026-04-18",
+"memo": "sub-ledger offset",
+"ref": "INV-29052"
+},
+{
+"id": 152,
+"account_id": 12,
+"amount_cents": 246173,
+"posted": "2026-03-14",
+"memo": "sub-ledger",
+"ref": "INV-83570"
+},
+{
+"id": 153,
+"account_id": 1,
+"amount_cents": -246173,
+"posted": "2026-03-14",
+"memo": "sub-ledger offset",
+"ref": "INV-83570"
+},
+{
+"id": 154,
+"account_id": 12,
+"amount_cents": -281424,
+"posted": "2026-03-28",
+"memo": "sub-ledger",
+"ref": "INV-70039"
+},
+{
+"id": 155,
+"account_id": 1,
+"amount_cents": 281424,
+"posted": "2026-03-28",
+"memo": "sub-ledger offset",
+"ref": "INV-70039"
+},
+{
+"id": 156,
+"account_id": 1,
+"amount_cents": -5793,
+"posted": "2026-05-20",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 157,
+"account_id": 1,
+"amount_cents": 178141,
+"posted": "2026-04-27",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 158,
+"account_id": 1,
+"amount_cents": -170028,
+"posted": "2026-03-11",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 159,
+"account_id": 13,
+"amount_cents": -280527,
+"posted": "2026-05-18",
+"memo": "sub-ledger",
+"ref": "INV-27117"
+},
+{
+"id": 160,
+"account_id": 1,
+"amount_cents": 280527,
+"posted": "2026-05-18",
+"memo": "sub-ledger offset",
+"ref": "INV-27117"
+},
+{
+"id": 161,
+"account_id": 13,
+"amount_cents": 607574,
+"posted": "2026-06-23",
+"memo": "sub-ledger",
+"ref": "INV-72382"
+},
+{
+"id": 162,
+"account_id": 1,
+"amount_cents": -607574,
+"posted": "2026-06-23",
+"memo": "sub-ledger offset",
+"ref": "INV-72382"
+},
+{
+"id": 163,
+"account_id": 13,
+"amount_cents": 355701,
+"posted": "2026-01-11",
+"memo": "sub-ledger",
+"ref": "INV-38818"
+},
+{
+"id": 164,
+"account_id": 1,
+"amount_cents": -355701,
+"posted": "2026-01-11",
+"memo": "sub-ledger offset",
+"ref": "INV-38818"
+},
+{
+"id": 165,
+"account_id": 13,
+"amount_cents": -693269,
+"posted": "2026-03-20",
+"memo": "sub-ledger",
+"ref": "INV-12331"
+},
+{
+"id": 166,
+"account_id": 1,
+"amount_cents": 693269,
+"posted": "2026-03-20",
+"memo": "sub-ledger offset",
+"ref": "INV-12331"
+},
+{
+"id": 167,
+"account_id": 1,
+"amount_cents": -135088,
+"posted": "2026-03-21",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 168,
+"account_id": 14,
+"amount_cents": -565641,
+"posted": "2026-01-13",
+"memo": "sub-ledger",
+"ref": "INV-30424"
+},
+{
+"id": 169,
+"account_id": 1,
+"amount_cents": 565641,
+"posted": "2026-01-13",
+"memo": "sub-ledger offset",
+"ref": "INV-30424"
+},
+{
+"id": 170,
+"account_id": 14,
+"amount_cents": 230562,
+"posted": "2026-04-16",
+"memo": "sub-ledger",
+"ref": "INV-89440"
+},
+{
+"id": 171,
+"account_id": 1,
+"amount_cents": -230562,
+"posted": "2026-04-16",
+"memo": "sub-ledger offset",
+"ref": "INV-89440"
+},
+{
+"id": 172,
+"account_id": 14,
+"amount_cents": -740287,
+"posted": "2026-03-12",
+"memo": "sub-ledger",
+"ref": "INV-84399"
+},
+{
+"id": 173,
+"account_id": 1,
+"amount_cents": 740287,
+"posted": "2026-03-12",
+"memo": "sub-ledger offset",
+"ref": "INV-84399"
+},
+{
+"id": 174,
+"account_id": 14,
+"amount_cents": 746906,
+"posted": "2026-05-28",
+"memo": "sub-ledger",
+"ref": "INV-83289"
+},
+{
+"id": 175,
+"account_id": 1,
+"amount_cents": -746906,
+"posted": "2026-05-28",
+"memo": "sub-ledger offset",
+"ref": "INV-83289"
+},
+{
+"id": 176,
+"account_id": 14,
+"amount_cents": -113804,
+"posted": "2026-01-18",
+"memo": "sub-ledger",
+"ref": "INV-64989"
+},
+{
+"id": 177,
+"account_id": 1,
+"amount_cents": 113804,
+"posted": "2026-01-18",
+"memo": "sub-ledger offset",
+"ref": "INV-64989"
+},
+{
+"id": 178,
+"account_id": 14,
+"amount_cents": -194757,
+"posted": "2026-05-26",
+"memo": "sub-ledger",
+"ref": "INV-40324"
+},
+{
+"id": 179,
+"account_id": 1,
+"amount_cents": 194757,
+"posted": "2026-05-26",
+"memo": "sub-ledger offset",
+"ref": "INV-40324"
+},
+{
+"id": 180,
+"account_id": 14,
+"amount_cents": 690342,
+"posted": "2026-06-20",
+"memo": "sub-ledger",
+"ref": "INV-55030"
+},
+{
+"id": 181,
+"account_id": 1,
+"amount_cents": -690342,
+"posted": "2026-06-20",
+"memo": "sub-ledger offset",
+"ref": "INV-55030"
+},
+{
+"id": 182,
+"account_id": 14,
+"amount_cents": 333756,
+"posted": "2026-05-25",
+"memo": "sub-ledger",
+"ref": "INV-43469"
+},
+{
+"id": 183,
+"account_id": 1,
+"amount_cents": -333756,
+"posted": "2026-05-25",
+"memo": "sub-ledger offset",
+"ref": "INV-43469"
+},
+{
+"id": 184,
+"account_id": 1,
+"amount_cents": -220028,
+"posted": "2026-03-11",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 185,
+"account_id": 1,
+"amount_cents": 126107,
+"posted": "2026-03-18",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 186,
+"account_id": 1,
+"amount_cents": -71831,
+"posted": "2026-05-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 187,
+"account_id": 15,
+"amount_cents": -855026,
+"posted": "2026-04-12",
+"memo": "sub-ledger",
+"ref": "INV-94601"
+},
+{
+"id": 188,
+"account_id": 1,
+"amount_cents": 855026,
+"posted": "2026-04-12",
+"memo": "sub-ledger offset",
+"ref": "INV-94601"
+},
+{
+"id": 189,
+"account_id": 15,
+"amount_cents": 506539,
+"posted": "2026-05-12",
+"memo": "sub-ledger",
+"ref": "INV-76798"
+},
+{
+"id": 190,
+"account_id": 1,
+"amount_cents": -506539,
+"posted": "2026-05-12",
+"memo": "sub-ledger offset",
+"ref": "INV-76798"
+},
+{
+"id": 191,
+"account_id": 15,
+"amount_cents": 513499,
+"posted": "2026-03-20",
+"memo": "sub-ledger",
+"ref": "INV-57196"
+},
+{
+"id": 192,
+"account_id": 1,
+"amount_cents": -513499,
+"posted": "2026-03-20",
+"memo": "sub-ledger offset",
+"ref": "INV-57196"
+},
+{
+"id": 193,
+"account_id": 15,
+"amount_cents": -82360,
+"posted": "2026-05-15",
+"memo": "sub-ledger",
+"ref": "INV-43749"
+},
+{
+"id": 194,
+"account_id": 1,
+"amount_cents": 82360,
+"posted": "2026-05-15",
+"memo": "sub-ledger offset",
+"ref": "INV-43749"
+},
+{
+"id": 195,
+"account_id": 15,
+"amount_cents": 661670,
+"posted": "2026-01-16",
+"memo": "sub-ledger",
+"ref": "INV-13784"
+},
+{
+"id": 196,
+"account_id": 1,
+"amount_cents": -661670,
+"posted": "2026-01-16",
+"memo": "sub-ledger offset",
+"ref": "INV-13784"
+},
+{
+"id": 197,
+"account_id": 15,
+"amount_cents": 253097,
+"posted": "2026-02-23",
+"memo": "sub-ledger",
+"ref": "INV-76589"
+},
+{
+"id": 198,
+"account_id": 1,
+"amount_cents": -253097,
+"posted": "2026-02-23",
+"memo": "sub-ledger offset",
+"ref": "INV-76589"
+},
+{
+"id": 199,
+"account_id": 15,
+"amount_cents": -539134,
+"posted": "2026-02-18",
+"memo": "sub-ledger",
+"ref": "INV-74039"
+},
+{
+"id": 200,
+"account_id": 1,
+"amount_cents": 539134,
+"posted": "2026-02-18",
+"memo": "sub-ledger offset",
+"ref": "INV-74039"
+},
+{
+"id": 201,
+"account_id": 1,
+"amount_cents": -95453,
+"posted": "2026-06-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 202,
+"account_id": 16,
+"amount_cents": -764641,
+"posted": "2026-02-14",
+"memo": "sub-ledger",
+"ref": "INV-96111"
+},
+{
+"id": 203,
+"account_id": 1,
+"amount_cents": 764641,
+"posted": "2026-02-14",
+"memo": "sub-ledger offset",
+"ref": "INV-96111"
+},
+{
+"id": 204,
+"account_id": 16,
+"amount_cents": -841303,
+"posted": "2026-06-11",
+"memo": "sub-ledger",
+"ref": "INV-46748"
+},
+{
+"id": 205,
+"account_id": 1,
+"amount_cents": 841303,
+"posted": "2026-06-11",
+"memo": "sub-ledger offset",
+"ref": "INV-46748"
+},
+{
+"id": 206,
+"account_id": 16,
+"amount_cents": 859972,
+"posted": "2026-02-14",
+"memo": "sub-ledger",
+"ref": "INV-45069"
+},
+{
+"id": 207,
+"account_id": 1,
+"amount_cents": -859972,
+"posted": "2026-02-14",
+"memo": "sub-ledger offset",
+"ref": "INV-45069"
+},
+{
+"id": 208,
+"account_id": 16,
+"amount_cents": 134706,
+"posted": "2026-04-15",
+"memo": "sub-ledger",
+"ref": "INV-34454"
+},
+{
+"id": 209,
+"account_id": 1,
+"amount_cents": -134706,
+"posted": "2026-04-15",
+"memo": "sub-ledger offset",
+"ref": "INV-34454"
+},
+{
+"id": 210,
+"account_id": 16,
+"amount_cents": -788356,
+"posted": "2026-02-14",
+"memo": "sub-ledger",
+"ref": "INV-64252"
+},
+{
+"id": 211,
+"account_id": 1,
+"amount_cents": 788356,
+"posted": "2026-02-14",
+"memo": "sub-ledger offset",
+"ref": "INV-64252"
+},
+{
+"id": 212,
+"account_id": 16,
+"amount_cents": 573096,
+"posted": "2026-01-19",
+"memo": "sub-ledger",
+"ref": "INV-38958"
+},
+{
+"id": 213,
+"account_id": 1,
+"amount_cents": -573096,
+"posted": "2026-01-19",
+"memo": "sub-ledger offset",
+"ref": "INV-38958"
+},
+{
+"id": 214,
+"account_id": 16,
+"amount_cents": 569610,
+"posted": "2026-01-24",
+"memo": "sub-ledger",
+"ref": "INV-99180"
+},
+{
+"id": 215,
+"account_id": 1,
+"amount_cents": -569610,
+"posted": "2026-01-24",
+"memo": "sub-ledger offset",
+"ref": "INV-99180"
+},
+{
+"id": 216,
+"account_id": 1,
+"amount_cents": 236064,
+"posted": "2026-03-14",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 217,
+"account_id": 1,
+"amount_cents": 15348,
+"posted": "2026-01-21",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 218,
+"account_id": 1,
+"amount_cents": 43041,
+"posted": "2026-05-16",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 219,
+"account_id": 17,
+"amount_cents": 209623,
+"posted": "2026-02-17",
+"memo": "sub-ledger",
+"ref": "INV-39445"
+},
+{
+"id": 220,
+"account_id": 1,
+"amount_cents": -209623,
+"posted": "2026-02-17",
+"memo": "sub-ledger offset",
+"ref": "INV-39445"
+},
+{
+"id": 221,
+"account_id": 17,
+"amount_cents": 223546,
+"posted": "2026-03-15",
+"memo": "sub-ledger",
+"ref": "INV-80236"
+},
+{
+"id": 222,
+"account_id": 1,
+"amount_cents": -223546,
+"posted": "2026-03-15",
+"memo": "sub-ledger offset",
+"ref": "INV-80236"
+},
+{
+"id": 223,
+"account_id": 17,
+"amount_cents": 756638,
+"posted": "2026-04-24",
+"memo": "sub-ledger",
+"ref": "INV-57604"
+},
+{
+"id": 224,
+"account_id": 1,
+"amount_cents": -756638,
+"posted": "2026-04-24",
+"memo": "sub-ledger offset",
+"ref": "INV-57604"
+},
+{
+"id": 225,
+"account_id": 17,
+"amount_cents": -324203,
+"posted": "2026-06-24",
+"memo": "sub-ledger",
+"ref": "INV-83271"
+},
+{
+"id": 226,
+"account_id": 1,
+"amount_cents": 324203,
+"posted": "2026-06-24",
+"memo": "sub-ledger offset",
+"ref": "INV-83271"
+},
+{
+"id": 227,
+"account_id": 17,
+"amount_cents": 96721,
+"posted": "2026-02-16",
+"memo": "sub-ledger",
+"ref": "INV-25185"
+},
+{
+"id": 228,
+"account_id": 1,
+"amount_cents": -96721,
+"posted": "2026-02-16",
+"memo": "sub-ledger offset",
+"ref": "INV-25185"
+},
+{
+"id": 229,
+"account_id": 17,
+"amount_cents": -371628,
+"posted": "2026-06-15",
+"memo": "sub-ledger",
+"ref": "INV-25092"
+},
+{
+"id": 230,
+"account_id": 1,
+"amount_cents": 371628,
+"posted": "2026-06-15",
+"memo": "sub-ledger offset",
+"ref": "INV-25092"
+},
+{
+"id": 231,
+"account_id": 17,
+"amount_cents": -213956,
+"posted": "2026-06-23",
+"memo": "sub-ledger",
+"ref": "INV-34811"
+},
+{
+"id": 232,
+"account_id": 1,
+"amount_cents": 213956,
+"posted": "2026-06-23",
+"memo": "sub-ledger offset",
+"ref": "INV-34811"
+},
+{
+"id": 233,
+"account_id": 17,
+"amount_cents": 32483,
+"posted": "2026-05-14",
+"memo": "sub-ledger",
+"ref": "INV-94959"
+},
+{
+"id": 234,
+"account_id": 1,
+"amount_cents": -32483,
+"posted": "2026-05-14",
+"memo": "sub-ledger offset",
+"ref": "INV-94959"
+},
+{
+"id": 235,
+"account_id": 1,
+"amount_cents": -193859,
+"posted": "2026-03-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 236,
+"account_id": 1,
+"amount_cents": -232552,
+"posted": "2026-03-21",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 237,
+"account_id": 18,
+"amount_cents": -587332,
+"posted": "2026-02-21",
+"memo": "sub-ledger",
+"ref": "INV-69771"
+},
+{
+"id": 238,
+"account_id": 1,
+"amount_cents": 587332,
+"posted": "2026-02-21",
+"memo": "sub-ledger offset",
+"ref": "INV-69771"
+},
+{
+"id": 239,
+"account_id": 18,
+"amount_cents": 638601,
+"posted": "2026-06-28",
+"memo": "sub-ledger",
+"ref": "INV-16322"
+},
+{
+"id": 240,
+"account_id": 1,
+"amount_cents": -638601,
+"posted": "2026-06-28",
+"memo": "sub-ledger offset",
+"ref": "INV-16322"
+},
+{
+"id": 241,
+"account_id": 18,
+"amount_cents": 792076,
+"posted": "2026-03-12",
+"memo": "sub-ledger",
+"ref": "INV-70422"
+},
+{
+"id": 242,
+"account_id": 1,
+"amount_cents": -792076,
+"posted": "2026-03-12",
+"memo": "sub-ledger offset",
+"ref": "INV-70422"
+},
+{
+"id": 243,
+"account_id": 1,
+"amount_cents": -143256,
+"posted": "2026-05-26",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 244,
+"account_id": 1,
+"amount_cents": -9859,
+"posted": "2026-01-28",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 245,
+"account_id": 1,
+"amount_cents": -148048,
+"posted": "2026-01-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 246,
+"account_id": 19,
+"amount_cents": -161040,
+"posted": "2026-03-14",
+"memo": "sub-ledger",
+"ref": "INV-13484"
+},
+{
+"id": 247,
+"account_id": 1,
+"amount_cents": 161040,
+"posted": "2026-03-14",
+"memo": "sub-ledger offset",
+"ref": "INV-13484"
+},
+{
+"id": 248,
+"account_id": 19,
+"amount_cents": -411371,
+"posted": "2026-01-15",
+"memo": "sub-ledger",
+"ref": "INV-80093"
+},
+{
+"id": 249,
+"account_id": 1,
+"amount_cents": 411371,
+"posted": "2026-01-15",
+"memo": "sub-ledger offset",
+"ref": "INV-80093"
+},
+{
+"id": 250,
+"account_id": 19,
+"amount_cents": 19621,
+"posted": "2026-01-12",
+"memo": "sub-ledger",
+"ref": "INV-88899"
+},
+{
+"id": 251,
+"account_id": 1,
+"amount_cents": -19621,
+"posted": "2026-01-12",
+"memo": "sub-ledger offset",
+"ref": "INV-88899"
+},
+{
+"id": 252,
+"account_id": 19,
+"amount_cents": -768517,
+"posted": "2026-03-14",
+"memo": "sub-ledger",
+"ref": "INV-50243"
+},
+{
+"id": 253,
+"account_id": 1,
+"amount_cents": 768517,
+"posted": "2026-03-14",
+"memo": "sub-ledger offset",
+"ref": "INV-50243"
+},
+{
+"id": 254,
+"account_id": 19,
+"amount_cents": 254263,
+"posted": "2026-03-24",
+"memo": "sub-ledger",
+"ref": "INV-41789"
+},
+{
+"id": 255,
+"account_id": 1,
+"amount_cents": -254263,
+"posted": "2026-03-24",
+"memo": "sub-ledger offset",
+"ref": "INV-41789"
+},
+{
+"id": 256,
+"account_id": 19,
+"amount_cents": 250513,
+"posted": "2026-05-20",
+"memo": "sub-ledger",
+"ref": "INV-64901"
+},
+{
+"id": 257,
+"account_id": 1,
+"amount_cents": -250513,
+"posted": "2026-05-20",
+"memo": "sub-ledger offset",
+"ref": "INV-64901"
+},
+{
+"id": 258,
+"account_id": 20,
+"amount_cents": -625124,
+"posted": "2026-02-24",
+"memo": "sub-ledger",
+"ref": "INV-34720"
+},
+{
+"id": 259,
+"account_id": 1,
+"amount_cents": 625124,
+"posted": "2026-02-24",
+"memo": "sub-ledger offset",
+"ref": "INV-34720"
+},
+{
+"id": 260,
+"account_id": 20,
+"amount_cents": -617454,
+"posted": "2026-04-28",
+"memo": "sub-ledger",
+"ref": "INV-60019"
+},
+{
+"id": 261,
+"account_id": 1,
+"amount_cents": 617454,
+"posted": "2026-04-28",
+"memo": "sub-ledger offset",
+"ref": "INV-60019"
+},
+{
+"id": 262,
+"account_id": 20,
+"amount_cents": 556155,
+"posted": "2026-01-25",
+"memo": "sub-ledger",
+"ref": "INV-38647"
+},
+{
+"id": 263,
+"account_id": 1,
+"amount_cents": -556155,
+"posted": "2026-01-25",
+"memo": "sub-ledger offset",
+"ref": "INV-38647"
+},
+{
+"id": 264,
+"account_id": 20,
+"amount_cents": 766211,
+"posted": "2026-01-26",
+"memo": "sub-ledger",
+"ref": "INV-71003"
+},
+{
+"id": 265,
+"account_id": 1,
+"amount_cents": -766211,
+"posted": "2026-01-26",
+"memo": "sub-ledger offset",
+"ref": "INV-71003"
+},
+{
+"id": 266,
+"account_id": 20,
+"amount_cents": -309486,
+"posted": "2026-02-26",
+"memo": "sub-ledger",
+"ref": "INV-51140"
+},
+{
+"id": 267,
+"account_id": 1,
+"amount_cents": 309486,
+"posted": "2026-02-26",
+"memo": "sub-ledger offset",
+"ref": "INV-51140"
+},
+{
+"id": 268,
+"account_id": 20,
+"amount_cents": 804743,
+"posted": "2026-04-28",
+"memo": "sub-ledger",
+"ref": "INV-13446"
+},
+{
+"id": 269,
+"account_id": 1,
+"amount_cents": -804743,
+"posted": "2026-04-28",
+"memo": "sub-ledger offset",
+"ref": "INV-13446"
+},
+{
+"id": 270,
+"account_id": 1,
+"amount_cents": 249970,
+"posted": "2026-05-13",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 271,
+"account_id": 1,
+"amount_cents": 145500,
+"posted": "2026-02-24",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 272,
+"account_id": 1,
+"amount_cents": 211177,
+"posted": "2026-04-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 273,
+"account_id": 1,
+"amount_cents": 13498,
+"posted": "2026-03-15",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 274,
+"account_id": 1,
+"amount_cents": 67038,
+"posted": "2026-02-11",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 275,
+"account_id": 21,
+"amount_cents": -469628,
+"posted": "2026-05-11",
+"memo": "sub-ledger",
+"ref": "INV-56618"
+},
+{
+"id": 276,
+"account_id": 1,
+"amount_cents": 469628,
+"posted": "2026-05-11",
+"memo": "sub-ledger offset",
+"ref": "INV-56618"
+},
+{
+"id": 277,
+"account_id": 21,
+"amount_cents": 882243,
+"posted": "2026-05-11",
+"memo": "sub-ledger",
+"ref": "INV-34904"
+},
+{
+"id": 278,
+"account_id": 1,
+"amount_cents": -882243,
+"posted": "2026-05-11",
+"memo": "sub-ledger offset",
+"ref": "INV-34904"
+},
+{
+"id": 279,
+"account_id": 21,
+"amount_cents": 49798,
+"posted": "2026-03-12",
+"memo": "sub-ledger",
+"ref": "INV-32064"
+},
+{
+"id": 280,
+"account_id": 1,
+"amount_cents": -49798,
+"posted": "2026-03-12",
+"memo": "sub-ledger offset",
+"ref": "INV-32064"
+},
+{
+"id": 281,
+"account_id": 21,
+"amount_cents": -293181,
+"posted": "2026-02-10",
+"memo": "sub-ledger",
+"ref": "INV-47604"
+},
+{
+"id": 282,
+"account_id": 1,
+"amount_cents": 293181,
+"posted": "2026-02-10",
+"memo": "sub-ledger offset",
+"ref": "INV-47604"
+},
+{
+"id": 283,
+"account_id": 21,
+"amount_cents": -494780,
+"posted": "2026-03-12",
+"memo": "sub-ledger",
+"ref": "INV-81634"
+},
+{
+"id": 284,
+"account_id": 1,
+"amount_cents": 494780,
+"posted": "2026-03-12",
+"memo": "sub-ledger offset",
+"ref": "INV-81634"
+},
+{
+"id": 285,
+"account_id": 21,
+"amount_cents": -574546,
+"posted": "2026-06-26",
+"memo": "sub-ledger",
+"ref": "INV-86508"
+},
+{
+"id": 286,
+"account_id": 1,
+"amount_cents": 574546,
+"posted": "2026-06-26",
+"memo": "sub-ledger offset",
+"ref": "INV-86508"
+},
+{
+"id": 287,
+"account_id": 21,
+"amount_cents": -519824,
+"posted": "2026-01-27",
+"memo": "sub-ledger",
+"ref": "INV-56138"
+},
+{
+"id": 288,
+"account_id": 1,
+"amount_cents": 519824,
+"posted": "2026-01-27",
+"memo": "sub-ledger offset",
+"ref": "INV-56138"
+},
+{
+"id": 289,
+"account_id": 21,
+"amount_cents": -563333,
+"posted": "2026-04-24",
+"memo": "sub-ledger",
+"ref": "INV-21463"
+},
+{
+"id": 290,
+"account_id": 1,
+"amount_cents": 563333,
+"posted": "2026-04-24",
+"memo": "sub-ledger offset",
+"ref": "INV-21463"
+},
+{
+"id": 291,
+"account_id": 21,
+"amount_cents": -33471,
+"posted": "2026-01-23",
+"memo": "sub-ledger",
+"ref": "INV-60572"
+},
+{
+"id": 292,
+"account_id": 1,
+"amount_cents": 33471,
+"posted": "2026-01-23",
+"memo": "sub-ledger offset",
+"ref": "INV-60572"
+},
+{
+"id": 293,
+"account_id": 22,
+"amount_cents": -180407,
+"posted": "2026-02-15",
+"memo": "sub-ledger",
+"ref": "INV-83292"
+},
+{
+"id": 294,
+"account_id": 1,
+"amount_cents": 180407,
+"posted": "2026-02-15",
+"memo": "sub-ledger offset",
+"ref": "INV-83292"
+},
+{
+"id": 295,
+"account_id": 22,
+"amount_cents": -529871,
+"posted": "2026-03-22",
+"memo": "sub-ledger",
+"ref": "INV-46559"
+},
+{
+"id": 296,
+"account_id": 1,
+"amount_cents": 529871,
+"posted": "2026-03-22",
+"memo": "sub-ledger offset",
+"ref": "INV-46559"
+},
+{
+"id": 297,
+"account_id": 22,
+"amount_cents": -491348,
+"posted": "2026-01-10",
+"memo": "sub-ledger",
+"ref": "INV-55132"
+},
+{
+"id": 298,
+"account_id": 1,
+"amount_cents": 491348,
+"posted": "2026-01-10",
+"memo": "sub-ledger offset",
+"ref": "INV-55132"
+},
+{
+"id": 299,
+"account_id": 22,
+"amount_cents": -784656,
+"posted": "2026-02-28",
+"memo": "sub-ledger",
+"ref": "INV-77740"
+},
+{
+"id": 300,
+"account_id": 1,
+"amount_cents": 784656,
+"posted": "2026-02-28",
+"memo": "sub-ledger offset",
+"ref": "INV-77740"
+},
+{
+"id": 301,
+"account_id": 22,
+"amount_cents": -863232,
+"posted": "2026-04-14",
+"memo": "sub-ledger",
+"ref": "INV-52256"
+},
+{
+"id": 302,
+"account_id": 1,
+"amount_cents": 863232,
+"posted": "2026-04-14",
+"memo": "sub-ledger offset",
+"ref": "INV-52256"
+},
+{
+"id": 303,
+"account_id": 22,
+"amount_cents": -519521,
+"posted": "2026-05-13",
+"memo": "sub-ledger",
+"ref": "INV-28177"
+},
+{
+"id": 304,
+"account_id": 1,
+"amount_cents": 519521,
+"posted": "2026-05-13",
+"memo": "sub-ledger offset",
+"ref": "INV-28177"
+},
+{
+"id": 305,
+"account_id": 1,
+"amount_cents": -23585,
+"posted": "2026-06-25",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 306,
+"account_id": 1,
+"amount_cents": -134399,
+"posted": "2026-03-12",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 307,
+"account_id": 1,
+"amount_cents": -62488,
+"posted": "2026-01-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 308,
+"account_id": 23,
+"amount_cents": -322283,
+"posted": "2026-06-27",
+"memo": "sub-ledger",
+"ref": "INV-11374"
+},
+{
+"id": 309,
+"account_id": 1,
+"amount_cents": 322283,
+"posted": "2026-06-27",
+"memo": "sub-ledger offset",
+"ref": "INV-11374"
+},
+{
+"id": 310,
+"account_id": 23,
+"amount_cents": -359690,
+"posted": "2026-06-15",
+"memo": "sub-ledger",
+"ref": "INV-70055"
+},
+{
+"id": 311,
+"account_id": 1,
+"amount_cents": 359690,
+"posted": "2026-06-15",
+"memo": "sub-ledger offset",
+"ref": "INV-70055"
+},
+{
+"id": 312,
+"account_id": 23,
+"amount_cents": -254940,
+"posted": "2026-06-25",
+"memo": "sub-ledger",
+"ref": "INV-30858"
+},
+{
+"id": 313,
+"account_id": 1,
+"amount_cents": 254940,
+"posted": "2026-06-25",
+"memo": "sub-ledger offset",
+"ref": "INV-30858"
+},
+{
+"id": 314,
+"account_id": 23,
+"amount_cents": 119129,
+"posted": "2026-01-14",
+"memo": "sub-ledger",
+"ref": "INV-10521"
+},
+{
+"id": 315,
+"account_id": 1,
+"amount_cents": -119129,
+"posted": "2026-01-14",
+"memo": "sub-ledger offset",
+"ref": "INV-10521"
+},
+{
+"id": 316,
+"account_id": 23,
+"amount_cents": 155304,
+"posted": "2026-04-18",
+"memo": "sub-ledger",
+"ref": "INV-12659"
+},
+{
+"id": 317,
+"account_id": 1,
+"amount_cents": -155304,
+"posted": "2026-04-18",
+"memo": "sub-ledger offset",
+"ref": "INV-12659"
+},
+{
+"id": 318,
+"account_id": 23,
+"amount_cents": 638577,
+"posted": "2026-03-14",
+"memo": "sub-ledger",
+"ref": "INV-59956"
+},
+{
+"id": 319,
+"account_id": 1,
+"amount_cents": -638577,
+"posted": "2026-03-14",
+"memo": "sub-ledger offset",
+"ref": "INV-59956"
+},
+{
+"id": 320,
+"account_id": 23,
+"amount_cents": -466150,
+"posted": "2026-05-13",
+"memo": "sub-ledger",
+"ref": "INV-22613"
+},
+{
+"id": 321,
+"account_id": 1,
+"amount_cents": 466150,
+"posted": "2026-05-13",
+"memo": "sub-ledger offset",
+"ref": "INV-22613"
+},
+{
+"id": 322,
+"account_id": 1,
+"amount_cents": -116450,
+"posted": "2026-01-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 323,
+"account_id": 24,
+"amount_cents": 763775,
+"posted": "2026-03-18",
+"memo": "sub-ledger",
+"ref": "INV-68451"
+},
+{
+"id": 324,
+"account_id": 1,
+"amount_cents": -763775,
+"posted": "2026-03-18",
+"memo": "sub-ledger offset",
+"ref": "INV-68451"
+},
+{
+"id": 325,
+"account_id": 24,
+"amount_cents": 492806,
+"posted": "2026-03-20",
+"memo": "sub-ledger",
+"ref": "INV-32040"
+},
+{
+"id": 326,
+"account_id": 1,
+"amount_cents": -492806,
+"posted": "2026-03-20",
+"memo": "sub-ledger offset",
+"ref": "INV-32040"
+},
+{
+"id": 327,
+"account_id": 24,
+"amount_cents": -642659,
+"posted": "2026-05-10",
+"memo": "sub-ledger",
+"ref": "INV-36814"
+},
+{
+"id": 328,
+"account_id": 1,
+"amount_cents": 642659,
+"posted": "2026-05-10",
+"memo": "sub-ledger offset",
+"ref": "INV-36814"
+},
+{
+"id": 329,
+"account_id": 24,
+"amount_cents": -733511,
+"posted": "2026-03-22",
+"memo": "sub-ledger",
+"ref": "INV-39471"
+},
+{
+"id": 330,
+"account_id": 1,
+"amount_cents": 733511,
+"posted": "2026-03-22",
+"memo": "sub-ledger offset",
+"ref": "INV-39471"
+},
+{
+"id": 331,
+"account_id": 24,
+"amount_cents": 174435,
+"posted": "2026-01-17",
+"memo": "sub-ledger",
+"ref": "INV-60483"
+},
+{
+"id": 332,
+"account_id": 1,
+"amount_cents": -174435,
+"posted": "2026-01-17",
+"memo": "sub-ledger offset",
+"ref": "INV-60483"
+},
+{
+"id": 333,
+"account_id": 24,
+"amount_cents": -631273,
+"posted": "2026-03-27",
+"memo": "sub-ledger",
+"ref": "INV-61721"
+},
+{
+"id": 334,
+"account_id": 1,
+"amount_cents": 631273,
+"posted": "2026-03-27",
+"memo": "sub-ledger offset",
+"ref": "INV-61721"
+},
+{
+"id": 335,
+"account_id": 24,
+"amount_cents": -646862,
+"posted": "2026-05-19",
+"memo": "sub-ledger",
+"ref": "INV-81162"
+},
+{
+"id": 336,
+"account_id": 1,
+"amount_cents": 646862,
+"posted": "2026-05-19",
+"memo": "sub-ledger offset",
+"ref": "INV-81162"
+},
+{
+"id": 337,
+"account_id": 24,
+"amount_cents": 727799,
+"posted": "2026-03-21",
+"memo": "sub-ledger",
+"ref": "INV-69264"
+},
+{
+"id": 338,
+"account_id": 1,
+"amount_cents": -727799,
+"posted": "2026-03-21",
+"memo": "sub-ledger offset",
+"ref": "INV-69264"
+},
+{
+"id": 339,
+"account_id": 24,
+"amount_cents": -184658,
+"posted": "2026-05-19",
+"memo": "sub-ledger",
+"ref": "INV-14908"
+},
+{
+"id": 340,
+"account_id": 1,
+"amount_cents": 184658,
+"posted": "2026-05-19",
+"memo": "sub-ledger offset",
+"ref": "INV-14908"
+},
+{
+"id": 341,
+"account_id": 1,
+"amount_cents": -44620,
+"posted": "2026-04-28",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 342,
+"account_id": 25,
+"amount_cents": 714494,
+"posted": "2026-01-19",
+"memo": "sub-ledger",
+"ref": "INV-14739"
+},
+{
+"id": 343,
+"account_id": 1,
+"amount_cents": -714494,
+"posted": "2026-01-19",
+"memo": "sub-ledger offset",
+"ref": "INV-14739"
+},
+{
+"id": 344,
+"account_id": 25,
+"amount_cents": 589559,
+"posted": "2026-03-23",
+"memo": "sub-ledger",
+"ref": "INV-39599"
+},
+{
+"id": 345,
+"account_id": 1,
+"amount_cents": -589559,
+"posted": "2026-03-23",
+"memo": "sub-ledger offset",
+"ref": "INV-39599"
+},
+{
+"id": 346,
+"account_id": 25,
+"amount_cents": 840473,
+"posted": "2026-06-26",
+"memo": "sub-ledger",
+"ref": "INV-55897"
+},
+{
+"id": 347,
+"account_id": 1,
+"amount_cents": -840473,
+"posted": "2026-06-26",
+"memo": "sub-ledger offset",
+"ref": "INV-55897"
+},
+{
+"id": 348,
+"account_id": 25,
+"amount_cents": 788230,
+"posted": "2026-04-26",
+"memo": "sub-ledger",
+"ref": "INV-38908"
+},
+{
+"id": 349,
+"account_id": 1,
+"amount_cents": -788230,
+"posted": "2026-04-26",
+"memo": "sub-ledger offset",
+"ref": "INV-38908"
+},
+{
+"id": 350,
+"account_id": 25,
+"amount_cents": -442242,
+"posted": "2026-05-23",
+"memo": "sub-ledger",
+"ref": "INV-60778"
+},
+{
+"id": 351,
+"account_id": 1,
+"amount_cents": 442242,
+"posted": "2026-05-23",
+"memo": "sub-ledger offset",
+"ref": "INV-60778"
+},
+{
+"id": 352,
+"account_id": 25,
+"amount_cents": 896131,
+"posted": "2026-02-27",
+"memo": "sub-ledger",
+"ref": "INV-86625"
+},
+{
+"id": 353,
+"account_id": 1,
+"amount_cents": -896131,
+"posted": "2026-02-27",
+"memo": "sub-ledger offset",
+"ref": "INV-86625"
+},
+{
+"id": 354,
+"account_id": 1,
+"amount_cents": -226485,
+"posted": "2026-06-10",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 355,
+"account_id": 1,
+"amount_cents": 45928,
+"posted": "2026-04-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 356,
+"account_id": 1,
+"amount_cents": -134592,
+"posted": "2026-02-21",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 357,
+"account_id": 26,
+"amount_cents": -123103,
+"posted": "2026-02-22",
+"memo": "sub-ledger",
+"ref": "INV-26138"
+},
+{
+"id": 358,
+"account_id": 1,
+"amount_cents": 123103,
+"posted": "2026-02-22",
+"memo": "sub-ledger offset",
+"ref": "INV-26138"
+},
+{
+"id": 359,
+"account_id": 26,
+"amount_cents": 631206,
+"posted": "2026-03-26",
+"memo": "sub-ledger",
+"ref": "INV-92084"
+},
+{
+"id": 360,
+"account_id": 1,
+"amount_cents": -631206,
+"posted": "2026-03-26",
+"memo": "sub-ledger offset",
+"ref": "INV-92084"
+},
+{
+"id": 361,
+"account_id": 26,
+"amount_cents": -437088,
+"posted": "2026-02-20",
+"memo": "sub-ledger",
+"ref": "INV-50711"
+},
+{
+"id": 362,
+"account_id": 1,
+"amount_cents": 437088,
+"posted": "2026-02-20",
+"memo": "sub-ledger offset",
+"ref": "INV-50711"
+},
+{
+"id": 363,
+"account_id": 27,
+"amount_cents": -799266,
+"posted": "2026-03-14",
+"memo": "sub-ledger",
+"ref": "INV-70414"
+},
+{
+"id": 364,
+"account_id": 1,
+"amount_cents": 799266,
+"posted": "2026-03-14",
+"memo": "sub-ledger offset",
+"ref": "INV-70414"
+},
+{
+"id": 365,
+"account_id": 27,
+"amount_cents": 104879,
+"posted": "2026-06-13",
+"memo": "sub-ledger",
+"ref": "INV-34992"
+},
+{
+"id": 366,
+"account_id": 1,
+"amount_cents": -104879,
+"posted": "2026-06-13",
+"memo": "sub-ledger offset",
+"ref": "INV-34992"
+},
+{
+"id": 367,
+"account_id": 27,
+"amount_cents": 357941,
+"posted": "2026-05-15",
+"memo": "sub-ledger",
+"ref": "INV-26333"
+},
+{
+"id": 368,
+"account_id": 1,
+"amount_cents": -357941,
+"posted": "2026-05-15",
+"memo": "sub-ledger offset",
+"ref": "INV-26333"
+},
+{
+"id": 369,
+"account_id": 28,
+"amount_cents": -157155,
+"posted": "2026-04-24",
+"memo": "sub-ledger",
+"ref": "INV-23048"
+},
+{
+"id": 370,
+"account_id": 1,
+"amount_cents": 157155,
+"posted": "2026-04-24",
+"memo": "sub-ledger offset",
+"ref": "INV-23048"
+},
+{
+"id": 371,
+"account_id": 28,
+"amount_cents": 790693,
+"posted": "2026-02-12",
+"memo": "sub-ledger",
+"ref": "INV-12699"
+},
+{
+"id": 372,
+"account_id": 1,
+"amount_cents": -790693,
+"posted": "2026-02-12",
+"memo": "sub-ledger offset",
+"ref": "INV-12699"
+},
+{
+"id": 373,
+"account_id": 28,
+"amount_cents": 444093,
+"posted": "2026-01-24",
+"memo": "sub-ledger",
+"ref": "INV-75257"
+},
+{
+"id": 374,
+"account_id": 1,
+"amount_cents": -444093,
+"posted": "2026-01-24",
+"memo": "sub-ledger offset",
+"ref": "INV-75257"
+},
+{
+"id": 375,
+"account_id": 28,
+"amount_cents": -471122,
+"posted": "2026-04-21",
+"memo": "sub-ledger",
+"ref": "INV-22916"
+},
+{
+"id": 376,
+"account_id": 1,
+"amount_cents": 471122,
+"posted": "2026-04-21",
+"memo": "sub-ledger offset",
+"ref": "INV-22916"
+},
+{
+"id": 377,
+"account_id": 28,
+"amount_cents": -427954,
+"posted": "2026-02-23",
+"memo": "sub-ledger",
+"ref": "INV-93924"
+},
+{
+"id": 378,
+"account_id": 1,
+"amount_cents": 427954,
+"posted": "2026-02-23",
+"memo": "sub-ledger offset",
+"ref": "INV-93924"
+},
+{
+"id": 379,
+"account_id": 29,
+"amount_cents": -445736,
+"posted": "2026-01-21",
+"memo": "sub-ledger",
+"ref": "INV-32136"
+},
+{
+"id": 380,
+"account_id": 1,
+"amount_cents": 445736,
+"posted": "2026-01-21",
+"memo": "sub-ledger offset",
+"ref": "INV-32136"
+},
+{
+"id": 381,
+"account_id": 29,
+"amount_cents": -898663,
+"posted": "2026-02-19",
+"memo": "sub-ledger",
+"ref": "INV-43833"
+},
+{
+"id": 382,
+"account_id": 1,
+"amount_cents": 898663,
+"posted": "2026-02-19",
+"memo": "sub-ledger offset",
+"ref": "INV-43833"
+},
+{
+"id": 383,
+"account_id": 29,
+"amount_cents": 824568,
+"posted": "2026-01-17",
+"memo": "sub-ledger",
+"ref": "INV-57827"
+},
+{
+"id": 384,
+"account_id": 1,
+"amount_cents": -824568,
+"posted": "2026-01-17",
+"memo": "sub-ledger offset",
+"ref": "INV-57827"
+},
+{
+"id": 385,
+"account_id": 29,
+"amount_cents": -430931,
+"posted": "2026-06-12",
+"memo": "sub-ledger",
+"ref": "INV-85742"
+},
+{
+"id": 386,
+"account_id": 1,
+"amount_cents": 430931,
+"posted": "2026-06-12",
+"memo": "sub-ledger offset",
+"ref": "INV-85742"
+},
+{
+"id": 387,
+"account_id": 29,
+"amount_cents": 335165,
+"posted": "2026-04-28",
+"memo": "sub-ledger",
+"ref": "INV-50733"
+},
+{
+"id": 388,
+"account_id": 1,
+"amount_cents": -335165,
+"posted": "2026-04-28",
+"memo": "sub-ledger offset",
+"ref": "INV-50733"
+},
+{
+"id": 389,
+"account_id": 1,
+"amount_cents": 138399,
+"posted": "2026-04-18",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 390,
+"account_id": 30,
+"amount_cents": 553456,
+"posted": "2026-04-19",
+"memo": "sub-ledger",
+"ref": "INV-64186"
+},
+{
+"id": 391,
+"account_id": 1,
+"amount_cents": -553456,
+"posted": "2026-04-19",
+"memo": "sub-ledger offset",
+"ref": "INV-64186"
+},
+{
+"id": 392,
+"account_id": 30,
+"amount_cents": 218532,
+"posted": "2026-06-28",
+"memo": "sub-ledger",
+"ref": "INV-67903"
+},
+{
+"id": 393,
+"account_id": 1,
+"amount_cents": -218532,
+"posted": "2026-06-28",
+"memo": "sub-ledger offset",
+"ref": "INV-67903"
+},
+{
+"id": 394,
+"account_id": 30,
+"amount_cents": -375703,
+"posted": "2026-05-19",
+"memo": "sub-ledger",
+"ref": "INV-44796"
+},
+{
+"id": 395,
+"account_id": 1,
+"amount_cents": 375703,
+"posted": "2026-05-19",
+"memo": "sub-ledger offset",
+"ref": "INV-44796"
+},
+{
+"id": 396,
+"account_id": 30,
+"amount_cents": 116181,
+"posted": "2026-05-17",
+"memo": "sub-ledger",
+"ref": "INV-10253"
+},
+{
+"id": 397,
+"account_id": 1,
+"amount_cents": -116181,
+"posted": "2026-05-17",
+"memo": "sub-ledger offset",
+"ref": "INV-10253"
+},
+{
+"id": 398,
+"account_id": 30,
+"amount_cents": -630557,
+"posted": "2026-05-20",
+"memo": "sub-ledger",
+"ref": "INV-51710"
+},
+{
+"id": 399,
+"account_id": 1,
+"amount_cents": 630557,
+"posted": "2026-05-20",
+"memo": "sub-ledger offset",
+"ref": "INV-51710"
+},
+{
+"id": 400,
+"account_id": 30,
+"amount_cents": -693616,
+"posted": "2026-03-22",
+"memo": "sub-ledger",
+"ref": "INV-94797"
+},
+{
+"id": 401,
+"account_id": 1,
+"amount_cents": 693616,
+"posted": "2026-03-22",
+"memo": "sub-ledger offset",
+"ref": "INV-94797"
+},
+{
+"id": 402,
+"account_id": 30,
+"amount_cents": 642510,
+"posted": "2026-04-22",
+"memo": "sub-ledger",
+"ref": "INV-98556"
+},
+{
+"id": 403,
+"account_id": 1,
+"amount_cents": -642510,
+"posted": "2026-04-22",
+"memo": "sub-ledger offset",
+"ref": "INV-98556"
+},
+{
+"id": 404,
+"account_id": 1,
+"amount_cents": -228001,
+"posted": "2026-04-24",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 405,
+"account_id": 1,
+"amount_cents": -94016,
+"posted": "2026-01-21",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 406,
+"account_id": 1,
+"amount_cents": -207808,
+"posted": "2026-03-25",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 407,
+"account_id": 31,
+"amount_cents": 46658,
+"posted": "2026-05-10",
+"memo": "sub-ledger",
+"ref": "INV-48530"
+},
+{
+"id": 408,
+"account_id": 1,
+"amount_cents": -46658,
+"posted": "2026-05-10",
+"memo": "sub-ledger offset",
+"ref": "INV-48530"
+},
+{
+"id": 409,
+"account_id": 31,
+"amount_cents": -122298,
+"posted": "2026-03-23",
+"memo": "sub-ledger",
+"ref": "INV-44291"
+},
+{
+"id": 410,
+"account_id": 1,
+"amount_cents": 122298,
+"posted": "2026-03-23",
+"memo": "sub-ledger offset",
+"ref": "INV-44291"
+},
+{
+"id": 411,
+"account_id": 31,
+"amount_cents": 315106,
+"posted": "2026-06-18",
+"memo": "sub-ledger",
+"ref": "INV-10292"
+},
+{
+"id": 412,
+"account_id": 1,
+"amount_cents": -315106,
+"posted": "2026-06-18",
+"memo": "sub-ledger offset",
+"ref": "INV-10292"
+},
+{
+"id": 413,
+"account_id": 31,
+"amount_cents": -229386,
+"posted": "2026-01-12",
+"memo": "sub-ledger",
+"ref": "INV-39999"
+},
+{
+"id": 414,
+"account_id": 1,
+"amount_cents": 229386,
+"posted": "2026-01-12",
+"memo": "sub-ledger offset",
+"ref": "INV-39999"
+},
+{
+"id": 415,
+"account_id": 31,
+"amount_cents": -52642,
+"posted": "2026-06-21",
+"memo": "sub-ledger",
+"ref": "INV-91109"
+},
+{
+"id": 416,
+"account_id": 1,
+"amount_cents": 52642,
+"posted": "2026-06-21",
+"memo": "sub-ledger offset",
+"ref": "INV-91109"
+},
+{
+"id": 417,
+"account_id": 31,
+"amount_cents": 108636,
+"posted": "2026-06-27",
+"memo": "sub-ledger",
+"ref": "INV-77654"
+},
+{
+"id": 418,
+"account_id": 1,
+"amount_cents": -108636,
+"posted": "2026-06-27",
+"memo": "sub-ledger offset",
+"ref": "INV-77654"
+},
+{
+"id": 419,
+"account_id": 1,
+"amount_cents": -33376,
+"posted": "2026-01-23",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 420,
+"account_id": 1,
+"amount_cents": 238082,
+"posted": "2026-01-12",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 421,
+"account_id": 1,
+"amount_cents": 115655,
+"posted": "2026-05-10",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 422,
+"account_id": 32,
+"amount_cents": 199907,
+"posted": "2026-01-23",
+"memo": "sub-ledger",
+"ref": "INV-50846"
+},
+{
+"id": 423,
+"account_id": 1,
+"amount_cents": -199907,
+"posted": "2026-01-23",
+"memo": "sub-ledger offset",
+"ref": "INV-50846"
+},
+{
+"id": 424,
+"account_id": 32,
+"amount_cents": -280976,
+"posted": "2026-06-27",
+"memo": "sub-ledger",
+"ref": "INV-31625"
+},
+{
+"id": 425,
+"account_id": 1,
+"amount_cents": 280976,
+"posted": "2026-06-27",
+"memo": "sub-ledger offset",
+"ref": "INV-31625"
+},
+{
+"id": 426,
+"account_id": 32,
+"amount_cents": 751144,
+"posted": "2026-01-12",
+"memo": "sub-ledger",
+"ref": "INV-69426"
+},
+{
+"id": 427,
+"account_id": 1,
+"amount_cents": -751144,
+"posted": "2026-01-12",
+"memo": "sub-ledger offset",
+"ref": "INV-69426"
+},
+{
+"id": 428,
+"account_id": 32,
+"amount_cents": 861726,
+"posted": "2026-04-24",
+"memo": "sub-ledger",
+"ref": "INV-93306"
+},
+{
+"id": 429,
+"account_id": 1,
+"amount_cents": -861726,
+"posted": "2026-04-24",
+"memo": "sub-ledger offset",
+"ref": "INV-93306"
+},
+{
+"id": 430,
+"account_id": 32,
+"amount_cents": -823028,
+"posted": "2026-01-19",
+"memo": "sub-ledger",
+"ref": "INV-22389"
+},
+{
+"id": 431,
+"account_id": 1,
+"amount_cents": 823028,
+"posted": "2026-01-19",
+"memo": "sub-ledger offset",
+"ref": "INV-22389"
+},
+{
+"id": 432,
+"account_id": 1,
+"amount_cents": -50351,
+"posted": "2026-03-24",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 433,
+"account_id": 33,
+"amount_cents": -800526,
+"posted": "2026-06-19",
+"memo": "sub-ledger",
+"ref": "INV-14068"
+},
+{
+"id": 434,
+"account_id": 1,
+"amount_cents": 800526,
+"posted": "2026-06-19",
+"memo": "sub-ledger offset",
+"ref": "INV-14068"
+},
+{
+"id": 435,
+"account_id": 33,
+"amount_cents": -203213,
+"posted": "2026-04-22",
+"memo": "sub-ledger",
+"ref": "INV-20100"
+},
+{
+"id": 436,
+"account_id": 1,
+"amount_cents": 203213,
+"posted": "2026-04-22",
+"memo": "sub-ledger offset",
+"ref": "INV-20100"
+},
+{
+"id": 437,
+"account_id": 33,
+"amount_cents": 410402,
+"posted": "2026-01-10",
+"memo": "sub-ledger",
+"ref": "INV-58109"
+},
+{
+"id": 438,
+"account_id": 1,
+"amount_cents": -410402,
+"posted": "2026-01-10",
+"memo": "sub-ledger offset",
+"ref": "INV-58109"
+},
+{
+"id": 439,
+"account_id": 33,
+"amount_cents": -290378,
+"posted": "2026-05-17",
+"memo": "sub-ledger",
+"ref": "INV-35483"
+},
+{
+"id": 440,
+"account_id": 1,
+"amount_cents": 290378,
+"posted": "2026-05-17",
+"memo": "sub-ledger offset",
+"ref": "INV-35483"
+},
+{
+"id": 441,
+"account_id": 33,
+"amount_cents": 269070,
+"posted": "2026-01-19",
+"memo": "sub-ledger",
+"ref": "INV-80655"
+},
+{
+"id": 442,
+"account_id": 1,
+"amount_cents": -269070,
+"posted": "2026-01-19",
+"memo": "sub-ledger offset",
+"ref": "INV-80655"
+},
+{
+"id": 443,
+"account_id": 34,
+"amount_cents": -723703,
+"posted": "2026-02-24",
+"memo": "sub-ledger",
+"ref": "INV-83168"
+},
+{
+"id": 444,
+"account_id": 1,
+"amount_cents": 723703,
+"posted": "2026-02-24",
+"memo": "sub-ledger offset",
+"ref": "INV-83168"
+},
+{
+"id": 445,
+"account_id": 34,
+"amount_cents": 825245,
+"posted": "2026-02-15",
+"memo": "sub-ledger",
+"ref": "INV-29617"
+},
+{
+"id": 446,
+"account_id": 1,
+"amount_cents": -825245,
+"posted": "2026-02-15",
+"memo": "sub-ledger offset",
+"ref": "INV-29617"
+},
+{
+"id": 447,
+"account_id": 34,
+"amount_cents": -579622,
+"posted": "2026-03-13",
+"memo": "sub-ledger",
+"ref": "INV-61163"
+},
+{
+"id": 448,
+"account_id": 1,
+"amount_cents": 579622,
+"posted": "2026-03-13",
+"memo": "sub-ledger offset",
+"ref": "INV-61163"
+},
+{
+"id": 449,
+"account_id": 34,
+"amount_cents": 617045,
+"posted": "2026-06-25",
+"memo": "sub-ledger",
+"ref": "INV-57598"
+},
+{
+"id": 450,
+"account_id": 1,
+"amount_cents": -617045,
+"posted": "2026-06-25",
+"memo": "sub-ledger offset",
+"ref": "INV-57598"
+},
+{
+"id": 451,
+"account_id": 34,
+"amount_cents": -197280,
+"posted": "2026-02-21",
+"memo": "sub-ledger",
+"ref": "INV-72089"
+},
+{
+"id": 452,
+"account_id": 1,
+"amount_cents": 197280,
+"posted": "2026-02-21",
+"memo": "sub-ledger offset",
+"ref": "INV-72089"
+},
+{
+"id": 453,
+"account_id": 34,
+"amount_cents": -671287,
+"posted": "2026-05-14",
+"memo": "sub-ledger",
+"ref": "INV-91685"
+},
+{
+"id": 454,
+"account_id": 1,
+"amount_cents": 671287,
+"posted": "2026-05-14",
+"memo": "sub-ledger offset",
+"ref": "INV-91685"
+},
+{
+"id": 455,
+"account_id": 34,
+"amount_cents": 837596,
+"posted": "2026-05-11",
+"memo": "sub-ledger",
+"ref": "INV-82797"
+},
+{
+"id": 456,
+"account_id": 1,
+"amount_cents": -837596,
+"posted": "2026-05-11",
+"memo": "sub-ledger offset",
+"ref": "INV-82797"
+},
+{
+"id": 457,
+"account_id": 34,
+"amount_cents": 889171,
+"posted": "2026-02-18",
+"memo": "sub-ledger",
+"ref": "INV-72094"
+},
+{
+"id": 458,
+"account_id": 1,
+"amount_cents": -889171,
+"posted": "2026-02-18",
+"memo": "sub-ledger offset",
+"ref": "INV-72094"
+},
+{
+"id": 459,
+"account_id": 34,
+"amount_cents": -320736,
+"posted": "2026-02-18",
+"memo": "sub-ledger",
+"ref": "INV-69543"
+},
+{
+"id": 460,
+"account_id": 1,
+"amount_cents": 320736,
+"posted": "2026-02-18",
+"memo": "sub-ledger offset",
+"ref": "INV-69543"
+},
+{
+"id": 461,
+"account_id": 1,
+"amount_cents": 54580,
+"posted": "2026-03-13",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 462,
+"account_id": 1,
+"amount_cents": -18932,
+"posted": "2026-04-20",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 463,
+"account_id": 1,
+"amount_cents": 246965,
+"posted": "2026-06-11",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 464,
+"account_id": 35,
+"amount_cents": 94952,
+"posted": "2026-02-16",
+"memo": "sub-ledger",
+"ref": "INV-80808"
+},
+{
+"id": 465,
+"account_id": 1,
+"amount_cents": -94952,
+"posted": "2026-02-16",
+"memo": "sub-ledger offset",
+"ref": "INV-80808"
+},
+{
+"id": 466,
+"account_id": 35,
+"amount_cents": -32011,
+"posted": "2026-03-16",
+"memo": "sub-ledger",
+"ref": "INV-13634"
+},
+{
+"id": 467,
+"account_id": 1,
+"amount_cents": 32011,
+"posted": "2026-03-16",
+"memo": "sub-ledger offset",
+"ref": "INV-13634"
+},
+{
+"id": 468,
+"account_id": 35,
+"amount_cents": 98835,
+"posted": "2026-03-25",
+"memo": "sub-ledger",
+"ref": "INV-78267"
+},
+{
+"id": 469,
+"account_id": 1,
+"amount_cents": -98835,
+"posted": "2026-03-25",
+"memo": "sub-ledger offset",
+"ref": "INV-78267"
+},
+{
+"id": 470,
+"account_id": 35,
+"amount_cents": 716690,
+"posted": "2026-03-27",
+"memo": "sub-ledger",
+"ref": "INV-90681"
+},
+{
+"id": 471,
+"account_id": 1,
+"amount_cents": -716690,
+"posted": "2026-03-27",
+"memo": "sub-ledger offset",
+"ref": "INV-90681"
+},
+{
+"id": 472,
+"account_id": 35,
+"amount_cents": -45308,
+"posted": "2026-03-28",
+"memo": "sub-ledger",
+"ref": "INV-74527"
+},
+{
+"id": 473,
+"account_id": 1,
+"amount_cents": 45308,
+"posted": "2026-03-28",
+"memo": "sub-ledger offset",
+"ref": "INV-74527"
+},
+{
+"id": 474,
+"account_id": 35,
+"amount_cents": 723976,
+"posted": "2026-04-11",
+"memo": "sub-ledger",
+"ref": "INV-91966"
+},
+{
+"id": 475,
+"account_id": 1,
+"amount_cents": -723976,
+"posted": "2026-04-11",
+"memo": "sub-ledger offset",
+"ref": "INV-91966"
+},
+{
+"id": 476,
+"account_id": 35,
+"amount_cents": 381216,
+"posted": "2026-02-27",
+"memo": "sub-ledger",
+"ref": "INV-43293"
+},
+{
+"id": 477,
+"account_id": 1,
+"amount_cents": -381216,
+"posted": "2026-02-27",
+"memo": "sub-ledger offset",
+"ref": "INV-43293"
+},
+{
+"id": 478,
+"account_id": 35,
+"amount_cents": 836851,
+"posted": "2026-04-27",
+"memo": "sub-ledger",
+"ref": "INV-20602"
+},
+{
+"id": 479,
+"account_id": 1,
+"amount_cents": -836851,
+"posted": "2026-04-27",
+"memo": "sub-ledger offset",
+"ref": "INV-20602"
+},
+{
+"id": 480,
+"account_id": 35,
+"amount_cents": -454936,
+"posted": "2026-04-11",
+"memo": "sub-ledger",
+"ref": "INV-94268"
+},
+{
+"id": 481,
+"account_id": 1,
+"amount_cents": 454936,
+"posted": "2026-04-11",
+"memo": "sub-ledger offset",
+"ref": "INV-94268"
+},
+{
+"id": 482,
+"account_id": 36,
+"amount_cents": -692055,
+"posted": "2026-04-22",
+"memo": "sub-ledger",
+"ref": "INV-25766"
+},
+{
+"id": 483,
+"account_id": 1,
+"amount_cents": 692055,
+"posted": "2026-04-22",
+"memo": "sub-ledger offset",
+"ref": "INV-25766"
+},
+{
+"id": 484,
+"account_id": 36,
+"amount_cents": 128086,
+"posted": "2026-03-13",
+"memo": "sub-ledger",
+"ref": "INV-41844"
+},
+{
+"id": 485,
+"account_id": 1,
+"amount_cents": -128086,
+"posted": "2026-03-13",
+"memo": "sub-ledger offset",
+"ref": "INV-41844"
+},
+{
+"id": 486,
+"account_id": 36,
+"amount_cents": 237014,
+"posted": "2026-06-16",
+"memo": "sub-ledger",
+"ref": "INV-46472"
+},
+{
+"id": 487,
+"account_id": 1,
+"amount_cents": -237014,
+"posted": "2026-06-16",
+"memo": "sub-ledger offset",
+"ref": "INV-46472"
+},
+{
+"id": 488,
+"account_id": 36,
+"amount_cents": -483013,
+"posted": "2026-06-10",
+"memo": "sub-ledger",
+"ref": "INV-25893"
+},
+{
+"id": 489,
+"account_id": 1,
+"amount_cents": 483013,
+"posted": "2026-06-10",
+"memo": "sub-ledger offset",
+"ref": "INV-25893"
+},
+{
+"id": 490,
+"account_id": 36,
+"amount_cents": -776451,
+"posted": "2026-05-25",
+"memo": "sub-ledger",
+"ref": "INV-56021"
+},
+{
+"id": 491,
+"account_id": 1,
+"amount_cents": 776451,
+"posted": "2026-05-25",
+"memo": "sub-ledger offset",
+"ref": "INV-56021"
+},
+{
+"id": 492,
+"account_id": 36,
+"amount_cents": -413386,
+"posted": "2026-06-14",
+"memo": "sub-ledger",
+"ref": "INV-36073"
+},
+{
+"id": 493,
+"account_id": 1,
+"amount_cents": 413386,
+"posted": "2026-06-14",
+"memo": "sub-ledger offset",
+"ref": "INV-36073"
+},
+{
+"id": 494,
+"account_id": 1,
+"amount_cents": 80774,
+"posted": "2026-04-19",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 495,
+"account_id": 1,
+"amount_cents": -52772,
+"posted": "2026-01-22",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 496,
+"account_id": 37,
+"amount_cents": -637960,
+"posted": "2026-05-28",
+"memo": "sub-ledger",
+"ref": "INV-74185"
+},
+{
+"id": 497,
+"account_id": 1,
+"amount_cents": 637960,
+"posted": "2026-05-28",
+"memo": "sub-ledger offset",
+"ref": "INV-74185"
+},
+{
+"id": 498,
+"account_id": 37,
+"amount_cents": 810274,
+"posted": "2026-03-17",
+"memo": "sub-ledger",
+"ref": "INV-53344"
+},
+{
+"id": 499,
+"account_id": 1,
+"amount_cents": -810274,
+"posted": "2026-03-17",
+"memo": "sub-ledger offset",
+"ref": "INV-53344"
+},
+{
+"id": 500,
+"account_id": 37,
+"amount_cents": -897859,
+"posted": "2026-02-18",
+"memo": "sub-ledger",
+"ref": "INV-34461"
+},
+{
+"id": 501,
+"account_id": 1,
+"amount_cents": 897859,
+"posted": "2026-02-18",
+"memo": "sub-ledger offset",
+"ref": "INV-34461"
+},
+{
+"id": 502,
+"account_id": 37,
+"amount_cents": -482822,
+"posted": "2026-02-17",
+"memo": "sub-ledger",
+"ref": "INV-39556"
+},
+{
+"id": 503,
+"account_id": 1,
+"amount_cents": 482822,
+"posted": "2026-02-17",
+"memo": "sub-ledger offset",
+"ref": "INV-39556"
+},
+{
+"id": 504,
+"account_id": 37,
+"amount_cents": 652975,
+"posted": "2026-04-24",
+"memo": "sub-ledger",
+"ref": "INV-69593"
+},
+{
+"id": 505,
+"account_id": 1,
+"amount_cents": -652975,
+"posted": "2026-04-24",
+"memo": "sub-ledger offset",
+"ref": "INV-69593"
+},
+{
+"id": 506,
+"account_id": 37,
+"amount_cents": -287954,
+"posted": "2026-06-19",
+"memo": "sub-ledger",
+"ref": "INV-22029"
+},
+{
+"id": 507,
+"account_id": 1,
+"amount_cents": 287954,
+"posted": "2026-06-19",
+"memo": "sub-ledger offset",
+"ref": "INV-22029"
+},
+{
+"id": 508,
+"account_id": 37,
+"amount_cents": -289782,
+"posted": "2026-04-20",
+"memo": "sub-ledger",
+"ref": "INV-18822"
+},
+{
+"id": 509,
+"account_id": 1,
+"amount_cents": 289782,
+"posted": "2026-04-20",
+"memo": "sub-ledger offset",
+"ref": "INV-18822"
+},
+{
+"id": 510,
+"account_id": 37,
+"amount_cents": 551332,
+"posted": "2026-05-23",
+"memo": "sub-ledger",
+"ref": "INV-51212"
+},
+{
+"id": 511,
+"account_id": 1,
+"amount_cents": -551332,
+"posted": "2026-05-23",
+"memo": "sub-ledger offset",
+"ref": "INV-51212"
+},
+{
+"id": 512,
+"account_id": 37,
+"amount_cents": 96453,
+"posted": "2026-01-18",
+"memo": "sub-ledger",
+"ref": "INV-25620"
+},
+{
+"id": 513,
+"account_id": 1,
+"amount_cents": -96453,
+"posted": "2026-01-18",
+"memo": "sub-ledger offset",
+"ref": "INV-25620"
+},
+{
+"id": 514,
+"account_id": 38,
+"amount_cents": -259649,
+"posted": "2026-03-28",
+"memo": "sub-ledger",
+"ref": "INV-51626"
+},
+{
+"id": 515,
+"account_id": 1,
+"amount_cents": 259649,
+"posted": "2026-03-28",
+"memo": "sub-ledger offset",
+"ref": "INV-51626"
+},
+{
+"id": 516,
+"account_id": 38,
+"amount_cents": -278644,
+"posted": "2026-05-18",
+"memo": "sub-ledger",
+"ref": "INV-11772"
+},
+{
+"id": 517,
+"account_id": 1,
+"amount_cents": 278644,
+"posted": "2026-05-18",
+"memo": "sub-ledger offset",
+"ref": "INV-11772"
+},
+{
+"id": 518,
+"account_id": 38,
+"amount_cents": 178982,
+"posted": "2026-05-18",
+"memo": "sub-ledger",
+"ref": "INV-73054"
+},
+{
+"id": 519,
+"account_id": 1,
+"amount_cents": -178982,
+"posted": "2026-05-18",
+"memo": "sub-ledger offset",
+"ref": "INV-73054"
+},
+{
+"id": 520,
+"account_id": 38,
+"amount_cents": 482640,
+"posted": "2026-05-12",
+"memo": "sub-ledger",
+"ref": "INV-82026"
+},
+{
+"id": 521,
+"account_id": 1,
+"amount_cents": -482640,
+"posted": "2026-05-12",
+"memo": "sub-ledger offset",
+"ref": "INV-82026"
+},
+{
+"id": 522,
+"account_id": 38,
+"amount_cents": -279308,
+"posted": "2026-03-22",
+"memo": "sub-ledger",
+"ref": "INV-11035"
+},
+{
+"id": 523,
+"account_id": 1,
+"amount_cents": 279308,
+"posted": "2026-03-22",
+"memo": "sub-ledger offset",
+"ref": "INV-11035"
+},
+{
+"id": 524,
+"account_id": 38,
+"amount_cents": -410310,
+"posted": "2026-01-21",
+"memo": "sub-ledger",
+"ref": "INV-62936"
+},
+{
+"id": 525,
+"account_id": 1,
+"amount_cents": 410310,
+"posted": "2026-01-21",
+"memo": "sub-ledger offset",
+"ref": "INV-62936"
+},
+{
+"id": 526,
+"account_id": 38,
+"amount_cents": -775015,
+"posted": "2026-05-10",
+"memo": "sub-ledger",
+"ref": "INV-19111"
+},
+{
+"id": 527,
+"account_id": 1,
+"amount_cents": 775015,
+"posted": "2026-05-10",
+"memo": "sub-ledger offset",
+"ref": "INV-19111"
+},
+{
+"id": 528,
+"account_id": 39,
+"amount_cents": -657217,
+"posted": "2026-03-14",
+"memo": "sub-ledger",
+"ref": "INV-12444"
+},
+{
+"id": 529,
+"account_id": 1,
+"amount_cents": 657217,
+"posted": "2026-03-14",
+"memo": "sub-ledger offset",
+"ref": "INV-12444"
+},
+{
+"id": 530,
+"account_id": 39,
+"amount_cents": -513822,
+"posted": "2026-01-10",
+"memo": "sub-ledger",
+"ref": "INV-87772"
+},
+{
+"id": 531,
+"account_id": 1,
+"amount_cents": 513822,
+"posted": "2026-01-10",
+"memo": "sub-ledger offset",
+"ref": "INV-87772"
+},
+{
+"id": 532,
+"account_id": 39,
+"amount_cents": -465739,
+"posted": "2026-01-16",
+"memo": "sub-ledger",
+"ref": "INV-87904"
+},
+{
+"id": 533,
+"account_id": 1,
+"amount_cents": 465739,
+"posted": "2026-01-16",
+"memo": "sub-ledger offset",
+"ref": "INV-87904"
+},
+{
+"id": 534,
+"account_id": 1,
+"amount_cents": -52743,
+"posted": "2026-02-11",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 535,
+"account_id": 40,
+"amount_cents": -38449,
+"posted": "2026-03-26",
+"memo": "sub-ledger",
+"ref": "INV-76000"
+},
+{
+"id": 536,
+"account_id": 1,
+"amount_cents": 38449,
+"posted": "2026-03-26",
+"memo": "sub-ledger offset",
+"ref": "INV-76000"
+},
+{
+"id": 537,
+"account_id": 40,
+"amount_cents": 471185,
+"posted": "2026-06-26",
+"memo": "sub-ledger",
+"ref": "INV-22632"
+},
+{
+"id": 538,
+"account_id": 1,
+"amount_cents": -471185,
+"posted": "2026-06-26",
+"memo": "sub-ledger offset",
+"ref": "INV-22632"
+},
+{
+"id": 539,
+"account_id": 40,
+"amount_cents": 745630,
+"posted": "2026-04-12",
+"memo": "sub-ledger",
+"ref": "INV-23778"
+},
+{
+"id": 540,
+"account_id": 1,
+"amount_cents": -745630,
+"posted": "2026-04-12",
+"memo": "sub-ledger offset",
+"ref": "INV-23778"
+},
+{
+"id": 541,
+"account_id": 1,
+"amount_cents": -62567,
+"posted": "2026-03-12",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 542,
+"account_id": 1,
+"amount_cents": 7555,
+"posted": "2026-02-26",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 543,
+"account_id": 41,
+"amount_cents": 6382,
+"posted": "2026-06-16",
+"memo": "sub-ledger",
+"ref": "INV-10451"
+},
+{
+"id": 544,
+"account_id": 1,
+"amount_cents": -6382,
+"posted": "2026-06-16",
+"memo": "sub-ledger offset",
+"ref": "INV-10451"
+},
+{
+"id": 545,
+"account_id": 41,
+"amount_cents": -324876,
+"posted": "2026-02-22",
+"memo": "sub-ledger",
+"ref": "INV-35800"
+},
+{
+"id": 546,
+"account_id": 1,
+"amount_cents": 324876,
+"posted": "2026-02-22",
+"memo": "sub-ledger offset",
+"ref": "INV-35800"
+},
+{
+"id": 547,
+"account_id": 41,
+"amount_cents": 91147,
+"posted": "2026-04-25",
+"memo": "sub-ledger",
+"ref": "INV-22921"
+},
+{
+"id": 548,
+"account_id": 1,
+"amount_cents": -91147,
+"posted": "2026-04-25",
+"memo": "sub-ledger offset",
+"ref": "INV-22921"
+},
+{
+"id": 549,
+"account_id": 1,
+"amount_cents": -46836,
+"posted": "2026-05-17",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 550,
+"account_id": 1,
+"amount_cents": 109853,
+"posted": "2026-04-11",
+"memo": "adjustment offset",
+"ref": ""
+},
+{
+"id": 551,
+"account_id": 4,
+"amount_cents": -658121,
+"posted": "2026-07-30",
+"memo": "closing entry",
+"ref": ""
+},
+{
+"id": 552,
+"account_id": 1,
+"amount_cents": 658121,
+"posted": "2026-07-30",
+"memo": "closing entry offset",
+"ref": ""
+},
+{
+"id": 553,
+"account_id": 20,
+"amount_cents": 112138,
+"posted": "2026-07-30",
+"memo": "closing entry",
+"ref": ""
+},
+{
+"id": 554,
+"account_id": 1,
+"amount_cents": -112138,
+"posted": "2026-07-30",
+"memo": "closing entry offset",
+"ref": ""
+},
+{
+"id": 555,
+"account_id": 22,
+"amount_cents": 3148563,
+"posted": "2026-06-30",
+"memo": "closing entry",
+"ref": ""
+},
+{
+"id": 556,
+"account_id": 1,
+"amount_cents": -3148563,
+"posted": "2026-06-30",
+"memo": "closing entry offset",
+"ref": ""
+},
+{
+"id": 557,
+"account_id": 31,
+"amount_cents": 254287,
+"posted": "2026-07-30",
+"memo": "closing entry",
+"ref": ""
+},
+{
+"id": 558,
+"account_id": 1,
+"amount_cents": -254287,
+"posted": "2026-07-30",
+"memo": "closing entry offset",
+"ref": ""
+},
+{
+"id": 559,
+"account_id": 8,
+"amount_cents": 595001,
+"posted": "2026-07-30",
+"memo": "closing entry",
+"ref": ""
+},
+{
+"id": 560,
+"account_id": 1,
+"amount_cents": -595001,
+"posted": "2026-07-30",
+"memo": "closing entry offset",
+"ref": ""
+},
+{
+"id": 561,
+"account_id": 30,
+"amount_cents": -360628,
+"posted": "2026-06-30",
+"memo": "closing entry",
+"ref": ""
+},
+{
+"id": 562,
+"account_id": 1,
+"amount_cents": 360628,
+"posted": "2026-06-30",
+"memo": "closing entry offset",
+"ref": ""
+}
+],
+"archived_ids": [
+4,
+8,
+20,
+22,
+30,
+31
+],
+"balances": {
+"1000": -782840,
+"1010": -566220,
+"1030": 1218408,
+"1040": 967333,
+"1050": 265248,
+"1070": -30275,
+"1080": -990214,
+"1090": 832060,
+"1100": 852987,
+"1110": 124567,
+"1120": 552829,
+"1130": 553738,
+"1140": -551369,
+"1150": 835635,
+"1160": 1144508,
+"1170": -816531,
+"1190": -2016722,
+"1210": -373603,
+"1220": -635528,
+"1230": 3701794,
+"1240": 71015,
+"1250": -336446,
+"1260": 178555,
+"1270": -753996,
+"1300": 759124,
+"1310": -614645,
+"1320": 393816,
+"1330": 2320265,
+"1340": -2027807,
+"1350": -485343,
+"1360": -1341304,
+"1370": -1584035,
+"1380": 1233378,
+"1390": -290364,
+"9990": -1808018
+}
+}
