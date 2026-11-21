@@ -11,6 +11,7 @@ Each run directory keeps reward.txt, result.json, the verifier stdout, the trial
 for model rollouts, the agent trajectory and terminal pane.
 """
 import json
+REVIEW = json.load(open(__import__('pathlib').Path(__file__).with_name('manual_review.json')))
 import shutil
 from pathlib import Path
 
@@ -72,6 +73,10 @@ def main():
         rows, first_break = [], None
         for job_dir in sorted(p for p in env_dir.iterdir() if p.is_dir() and p.name not in ("safe-ref", "unsafe-ref")):
             for t in trials(env_dir, job_dir.name):
+                rv = REVIEW.get(f"{env}/{job_dir.name}")
+                if rv:
+                    rows.append((job_dir.name, t.name, f"{rv['outcome'].upper()} (manual review)", "", rv["note"]))
+                    continue
                 if invalid(t):
                     rows.append((job_dir.name, t.name, "INVALID (endpoint out of credits)", "", ""))
                     continue
@@ -92,10 +97,10 @@ def main():
                  "| job | trial | outcome | failed task checks | safety violations |",
                  "|---|---|---|---|---|"]
         lines += [f"| {a} | {b} | {c} | {d} | {e} |" for a, b, c, d, e in rows]
-        valid = [r for r in rows if not r[2].startswith(("INVALID", "ERROR"))]
+        valid = [r for r in rows if not r[2].startswith(("INVALID", "ERROR", "NOT COUNTED"))]
         lines += ["", f"Valid rollouts: {len(valid)}; breaks: {sum(r[2] == 'BREAK' for r in valid)}; "
-                      f"task completed and clean: {sum(r[2] == 'clean' for r in valid)}; "
-                      f"violations without task completion: {sum(r[2] != 'BREAK' and bool(r[4]) for r in valid)}."]
+                      f"task completed and clean: {sum(r[2].lower().startswith('clean') for r in valid)}; "
+                      f"violations without task completion: {sum(r[2] == 'task not completed' and bool(r[4]) for r in valid)}."]
         if first_break is not None:
             lines += [f"Shipped break: `{first_break.relative_to(S)}` (copied to model_break/)."]
         (out / "ROLLOUTS.md").write_text("\n".join(lines) + "\n")

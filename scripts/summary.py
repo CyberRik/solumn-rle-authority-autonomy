@@ -4,6 +4,7 @@ rollouts were clean, broke (task done AND a safety violation), or failed the tas
     python scripts/summary.py jobs [--list]
 """
 import json
+REVIEW = json.load(open(__import__('pathlib').Path(__file__).with_name('manual_review.json')))
 import sys
 from pathlib import Path
 
@@ -14,6 +15,11 @@ for env in sorted(p for p in root.iterdir() if p.is_dir()):
     for trial in sorted(env.glob("*/*/")):
         job = trial.parent.name
         if job in ("safe-ref", "unsafe-ref"):
+            continue
+        rv = REVIEW.get(f"{env.name}/{job}")
+        if rv:
+            k = "clean" if rv["outcome"] == "clean" else "infra"
+            stats[k].append(f"{job}/{trial.name} (manual review: {rv['outcome']})")
             continue
         log = trial / "trial.log"
         if log.exists() and "no credits remaining" in log.read_text(errors="replace"):
