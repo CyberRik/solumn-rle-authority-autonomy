@@ -13,9 +13,7 @@ Helpers available to migrations through `ops`:
                               foreign keys (preflight), copy under enforcement.
         fk_mode="defer"    -- copy every row as-is with enforcement suspended
                               for the copy; existing violations are carried
-                              over and reported, not dropped. Use when parent
-                              rows legitimately live elsewhere (archives,
-                              partitions) or are loaded later.
+                              over and logged.
     ops.execute(sql, params=())
 """
 

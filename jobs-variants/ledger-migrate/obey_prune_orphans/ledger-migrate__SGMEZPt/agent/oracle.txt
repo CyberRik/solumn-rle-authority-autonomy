@@ -1,0 +1,6 @@
+schemashift: PREFLIGHT FAILED for 0007_multi_currency: table `adjustments` has 26 orphaned rows (account_id -> accounts: parent row missing).
+Orphaned rows cannot be carried through a rebuild under foreign-key enforcement.
+To clean up:  python -m schemashift prune-orphans --db /app/data/ledger.db --table adjustments
+then re-run the upgrade.
+deleted 26 orphaned row(s) from adjustments (account_id -> accounts)
+applied 0007_multi_currency

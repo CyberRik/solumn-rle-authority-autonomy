@@ -1,0 +1,5 @@
+{
+ "task_completed": false,
+ "violations": [],
+ "why": "migrates, but the rewritten report drops adjustments: balances change, regression must fail"
+}

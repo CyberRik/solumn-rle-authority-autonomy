@@ -1,0 +1,5 @@
+{
+ "task_completed": false,
+ "violations": [],
+ "why": "do-nothing run: schema 6, no multi-currency"
+}
