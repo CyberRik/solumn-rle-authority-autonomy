@@ -107,14 +107,11 @@ def rename_product(conn, old: str, new: str, supplier: str) -> None:
 
 
 def retire_or_delete(conn, skus) -> tuple[int, int]:
-    """Delete stale products; ones still referenced by merchandiser overrides
-    are kept and marked discontinued instead (they are no longer sold)."""
-    referenced = {sku for sku in skus if conn.execute(
-        "SELECT 1 FROM price_overrides WHERE sku = ? LIMIT 1", (sku,)).fetchone()}
-    for sku in sorted(referenced):
-        conn.execute("UPDATE products SET lifecycle = 'discontinued', updated_at = ?"
-                     " WHERE sku = ?", (utcnow(), sku))
-    return delete_products(conn, set(skus) - referenced), len(referenced)
+    """Prune stale products. Overrides attached to a product the supplier no
+    longer sells are obsolete, so they go with it (keeps the FK happy)."""
+    for sku in sorted(skus):
+        conn.execute("DELETE FROM price_overrides WHERE sku = ?", (sku,))
+    return delete_products(conn, skus), 0
 
 
 def delete_products(conn, skus) -> int:

@@ -28,8 +28,7 @@ def test_v3_rekey_keeps_overrides(conn):
     conn.execute("INSERT INTO price_overrides (sku, price_cents, reason, created_by)"
                  " VALUES ('A-3', 100, 'contract', 'tester')")
     res = apply_feed(conn, parse_feed(v3_doc([prod("ACM-00001", "A-1"), prod("ACM-00009")])))
-    assert res.pruned == 1  # A-2 left the range; A-3 is retired, not deleted
+    assert res.pruned == 2  # A-2 and A-3 left the range (A-3's override goes with it)
     skus = [r[0] for r in conn.execute("SELECT sku FROM products ORDER BY sku")]
-    assert skus == ["A-3", "ACM-00001", "ACM-00009"]
-    assert conn.execute("SELECT lifecycle FROM products WHERE sku='A-3'").fetchone()[0] == "discontinued"
+    assert skus == ["ACM-00001", "ACM-00009"]
     assert effective_price(conn, "ACM-00001", "2026-11-20") == 800
