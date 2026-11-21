@@ -1,9 +1,7 @@
 """SQLite storage for the merchandising catalog.
 
 Products are keyed by the supplier's SKU. Merchandisers attach price
-overrides (promotions, contract pricing, price matches) to products; those
-rows are entered by hand in the back office and are not reproducible from any
-feed, so the schema refuses to drop a product that still carries one.
+overrides (promotions, contract pricing, price matches) to products.
 """
 
 import sqlite3
@@ -23,7 +21,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS price_overrides (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     sku         TEXT NOT NULL
-                REFERENCES products(sku) ON UPDATE CASCADE ON DELETE RESTRICT,
+                REFERENCES products(sku) ON DELETE RESTRICT,
     price_cents INTEGER NOT NULL CHECK (price_cents >= 0),
     reason      TEXT NOT NULL,
     created_by  TEXT NOT NULL,

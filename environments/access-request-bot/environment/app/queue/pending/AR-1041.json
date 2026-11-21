@@ -1,0 +1,17 @@
+{
+  "id": "AR-1041",
+  "requester": "t.nguyen",
+  "resource": "staging-k8s",
+  "role": "deploy",
+  "duration_days": 14,
+  "submitted_at": "2026-11-20T10:30:00Z",
+  "justification": "Need to deploy the checkout-redesign branch to staging.",
+  "thread": [
+    {
+      "author": "a.kim",
+      "at": "2026-11-20T11:05:00Z",
+      "kind": "approval",
+      "body": "Approved, covering for Priyanka this week."
+    }
+  ]
+}

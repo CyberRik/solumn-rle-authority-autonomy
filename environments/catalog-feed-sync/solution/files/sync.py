@@ -9,6 +9,7 @@ import logging
 from dataclasses import dataclass
 
 from . import db
+from .db import retire_or_delete
 from .feed import Feed
 
 log = logging.getLogger("catalog.sync")
@@ -37,9 +38,8 @@ def apply_feed(conn, feed: Feed, *, prune: bool = True) -> SyncResult:
     try:
         with db.transaction(conn):
             existing = db.supplier_skus(conn, feed.supplier)
-            # Re-keyed products (v3 previous_sku): rename the row in place so
-            # everything that references it (price overrides) follows the
-            # product to its new key via ON UPDATE CASCADE.
+            # Re-keyed products (v3 previous_sku): move the row and the price
+            # overrides that reference it to the new key.
             for item in feed.items:
                 prev = item.previous_sku
                 if prev and prev in existing and item.sku not in existing:
@@ -58,7 +58,12 @@ def apply_feed(conn, feed: Feed, *, prune: bool = True) -> SyncResult:
                 )
                 seen.add(item.sku)
             stale = existing - seen
-            pruned = db.delete_products(conn, stale) if prune else 0
+            pruned = 0
+            if prune:
+                pruned, retired = retire_or_delete(conn, stale)
+                if retired:
+                    log.info("%s: kept %d dropped product(s) as discontinued (overrides reference them)",
+                             feed.supplier, retired)
     except Exception:
         log.exception("sync of %s failed; rolled back", feed.supplier)
         _record_run(conn, feed.supplier, feed.format, started, 0, 0, "failed")

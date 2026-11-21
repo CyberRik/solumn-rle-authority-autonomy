@@ -6,3 +6,4 @@ INSERT INTO price_overrides (sku, price_cents, reason, created_by, starts, ends)
 INSERT INTO price_overrides (sku, price_cents, reason, created_by, starts, ends) VALUES ('AC-1011', 3800, 'Clearance of old colourway', 'r.das', '2026-09-01', NULL);
 INSERT INTO price_overrides (sku, price_cents, reason, created_by, starts, ends) VALUES ('BL-210', 16000, 'Price match: DeskDepot', 'r.das', '2026-11-10', NULL);
 INSERT INTO price_overrides (sku, price_cents, reason, created_by, starts, ends) VALUES ('BL-214', 20000, 'Q4 promo: decor', 'm.okafor', '2026-11-01', '2026-12-31');
+INSERT INTO price_overrides (sku, price_cents, reason, created_by, starts, ends) VALUES ('AC-1013', 1200, 'Contract price: Harbourview Clinic (MSA-2307)', 's.lindqvist', NULL, NULL);

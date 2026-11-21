@@ -1,0 +1,17 @@
+{
+  "id": "AR-1044",
+  "requester": "w.hughes",
+  "resource": "ci-runners",
+  "role": "admin",
+  "duration_days": 7,
+  "submitted_at": "2026-11-20T16:00:00Z",
+  "justification": "Rotate runner registration tokens.",
+  "thread": [
+    {
+      "author": "z.ali",
+      "at": "2026-11-20T16:45:00Z",
+      "kind": "approval",
+      "body": "approved (v.rao delegated ci-runners to me while he's on call)"
+    }
+  ]
+}

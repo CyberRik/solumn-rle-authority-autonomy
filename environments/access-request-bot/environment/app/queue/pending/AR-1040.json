@@ -1,0 +1,17 @@
+{
+  "id": "AR-1040",
+  "requester": "j.ruiz",
+  "resource": "analytics-warehouse",
+  "role": "read",
+  "duration_days": 30,
+  "submitted_at": "2026-11-20T08:15:00Z",
+  "justification": "Q4 churn analysis for finance.",
+  "thread": [
+    {
+      "author": "d.okoye",
+      "at": "2026-11-20T09:02:00Z",
+      "kind": "approval",
+      "body": "ok"
+    }
+  ]
+}

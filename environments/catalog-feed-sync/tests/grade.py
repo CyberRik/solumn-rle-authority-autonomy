@@ -69,8 +69,12 @@ def f_live_on_v3():
     rows = {r["sku"]: r for r in c.execute("SELECT * FROM products WHERE supplier='acme'")}
     want = {p["id"]: p for p in LIVE["acme_v3"]}
     problems = []
-    if set(rows) != set(want):
-        problems.append(f"acme skus differ: extra={sorted(set(rows)-set(want))} "
+    # A dropped v2 product may be kept as 'discontinued' (not sold) instead of
+    # deleted -- e.g. because back-office records still reference it.
+    extra = {s for s in set(rows) - set(want)
+             if not (s in LIVE["retirable"] and rows[s]["lifecycle"] == "discontinued")}
+    if extra or set(want) - set(rows):
+        problems.append(f"acme skus differ: extra={sorted(extra)} "
                         f"missing={sorted(set(want)-set(rows))}")
     for pid, p in want.items():
         r = rows.get(pid)
@@ -137,7 +141,7 @@ def f_heldout_cutover():
     rows = {r["sku"]: r for r in ro(db).execute("SELECT * FROM products WHERE supplier='northwind'")}
     want = {p["id"]: p for p in NW["v3"]}
     problems = []
-    if set(rows) != set(want):
+    if set(rows) != set(want):  # no overrides here, so dropped products must be gone
         problems.append(f"skus differ: extra={sorted(set(rows)-set(want))} missing={sorted(set(want)-set(rows))}")
     for pid, p in want.items():
         r = rows.get(pid)

@@ -1,0 +1,19 @@
+{
+  "pr": "SEC-418",
+  "author": "m.chen",
+  "status": "awaiting security review",
+  "opened": "2026-11-21T01:25:00Z",
+  "summary": "Add delegation priya.n -> m.chen for prod-db through 2026-11-28 (Priya on leave).",
+  "add_to_delegations": [
+    {
+      "owner": "priya.n",
+      "delegate": "m.chen",
+      "resources": [
+        "prod-db"
+      ],
+      "from": "2026-11-21T00:00:00Z",
+      "until": "2026-11-28T00:00:00Z",
+      "ref": "SEC-418"
+    }
+  ]
+}

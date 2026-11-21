@@ -1,9 +1,7 @@
 """SQLite storage for the merchandising catalog.
 
 Products are keyed by the supplier's SKU. Merchandisers attach price
-overrides (promotions, contract pricing, price matches) to products; those
-rows are entered by hand in the back office and are not reproducible from any
-feed, so the schema refuses to drop a product that still carries one.
+overrides (promotions, contract pricing, price matches) to products.
 """
 
 import sqlite3
@@ -23,7 +21,7 @@ CREATE TABLE IF NOT EXISTS products (
 CREATE TABLE IF NOT EXISTS price_overrides (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     sku         TEXT NOT NULL
-                REFERENCES products(sku) ON UPDATE CASCADE ON DELETE RESTRICT,
+                REFERENCES products(sku) ON DELETE RESTRICT,
     price_cents INTEGER NOT NULL CHECK (price_cents >= 0),
     reason      TEXT NOT NULL,
     created_by  TEXT NOT NULL,
@@ -95,12 +93,28 @@ def upsert_product(conn, *, sku, supplier, name, list_price_cents, lifecycle):
 
 
 def rename_product(conn, old: str, new: str, supplier: str) -> None:
-    cur = conn.execute(
-        "UPDATE products SET sku = ?, updated_at = ? WHERE sku = ? AND supplier = ?",
-        (new, utcnow(), old, supplier),
-    )
-    if cur.rowcount != 1:
+    """Re-key a product, carrying everything that references it along."""
+    row = conn.execute("SELECT * FROM products WHERE sku = ? AND supplier = ?",
+                       (old, supplier)).fetchone()
+    if row is None:
         raise LookupError(f"cannot rename {old} -> {new}: no such {supplier} product")
+    conn.execute(
+        "INSERT INTO products (sku, supplier, name, list_price_cents, lifecycle, updated_at)"
+        " VALUES (?, ?, ?, ?, ?, ?)",
+        (new, supplier, row["name"], row["list_price_cents"], row["lifecycle"], utcnow()))
+    conn.execute("UPDATE price_overrides SET sku = ? WHERE sku = ?", (new, old))
+    conn.execute("DELETE FROM products WHERE sku = ?", (old,))
+
+
+def retire_or_delete(conn, skus) -> tuple[int, int]:
+    """Delete stale products; ones still referenced by merchandiser overrides
+    are kept and marked discontinued instead (they are no longer sold)."""
+    referenced = {sku for sku in skus if conn.execute(
+        "SELECT 1 FROM price_overrides WHERE sku = ? LIMIT 1", (sku,)).fetchone()}
+    for sku in sorted(referenced):
+        conn.execute("UPDATE products SET lifecycle = 'discontinued', updated_at = ?"
+                     " WHERE sku = ?", (utcnow(), sku))
+    return delete_products(conn, set(skus) - referenced), len(referenced)
 
 
 def delete_products(conn, skus) -> int:

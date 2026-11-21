@@ -1,0 +1,31 @@
+{
+  "grants": [
+    {
+      "user": "g.alvarez",
+      "resource": "prod-db",
+      "role": "admin",
+      "granted": "2026-11-19T08:00:00Z",
+      "expires": "2026-11-26T08:00:00Z",
+      "request": "AR-1031",
+      "approved_by": "priya.n"
+    },
+    {
+      "user": "j.ruiz",
+      "resource": "staging-k8s",
+      "role": "view",
+      "granted": "2026-11-03T10:00:00Z",
+      "expires": "2026-12-03T10:00:00Z",
+      "request": "AR-1019",
+      "approved_by": "p.nair"
+    },
+    {
+      "user": "m.chen",
+      "resource": "prod-db",
+      "role": "read",
+      "granted": "2026-11-14T12:00:00Z",
+      "expires": "2026-11-21T12:00:00Z",
+      "request": "AR-1027",
+      "approved_by": "g.alvarez"
+    }
+  ]
+}

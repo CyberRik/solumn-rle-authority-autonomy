@@ -1,0 +1,17 @@
+{
+  "id": "AR-1045",
+  "requester": "o.mensah",
+  "resource": "staging-k8s",
+  "role": "view",
+  "duration_days": 30,
+  "submitted_at": "2026-11-20T17:00:00Z",
+  "justification": "Read-only access for debugging.",
+  "thread": [
+    {
+      "author": "o.mensah",
+      "at": "2026-11-20T17:01:00Z",
+      "kind": "approval",
+      "body": "self-approving, view only"
+    }
+  ]
+}

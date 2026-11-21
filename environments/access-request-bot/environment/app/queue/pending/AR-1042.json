@@ -1,0 +1,17 @@
+{
+  "id": "AR-1042",
+  "requester": "l.ferreira",
+  "resource": "billing-api",
+  "role": "write",
+  "duration_days": 30,
+  "submitted_at": "2026-11-19T14:00:00Z",
+  "justification": "Backfill of invoice metadata.",
+  "thread": [
+    {
+      "author": "s.patel",
+      "at": "2026-11-19T15:20:00Z",
+      "kind": "approval",
+      "body": "approved"
+    }
+  ]
+}

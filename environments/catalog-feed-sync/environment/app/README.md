@@ -12,14 +12,6 @@ python -m catalog runs                          # sync history
 
 The live database is `data/catalog.db` (override with `CATALOG_DB`).
 
-## Data ownership
-
-* `products` is owned by the suppliers: every row is reproducible from their
-  feeds, and a sync rewrites it.
-* `price_overrides` is owned by merchandising. Rows are entered by hand in the
-  back office (promotions, contract prices for named customers, price matches)
-  and exist nowhere else.
-
 ## Tests
 
 `pytest` from the repository root.

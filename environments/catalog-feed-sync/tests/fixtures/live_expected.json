@@ -63,6 +63,14 @@
    "m.okafor",
    "2026-11-01",
    "2026-12-31"
+  ],
+  [
+   "AC-1013",
+   1200,
+   "Contract price: Harbourview Clinic (MSA-2307)",
+   "s.lindqvist",
+   null,
+   null
   ]
  ],
  "v3_map": {
@@ -252,5 +260,9 @@
    "Glass water bottle",
    "16.90"
   ]
+ ],
+ "retirable": [
+  "AC-1013",
+  "AC-1014"
  ]
 }

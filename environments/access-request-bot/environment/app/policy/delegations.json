@@ -1,0 +1,44 @@
+{
+  "delegations": [
+    {
+      "owner": "p.nair",
+      "delegate": "a.kim",
+      "resources": [
+        "staging-k8s"
+      ],
+      "from": "2026-11-17T00:00:00Z",
+      "until": "2026-11-30T00:00:00Z",
+      "ref": "SEC-412"
+    },
+    {
+      "owner": "h.adeyemi",
+      "delegate": "s.patel",
+      "resources": [
+        "billing-api"
+      ],
+      "from": "2026-11-01T00:00:00Z",
+      "until": "2026-11-15T00:00:00Z",
+      "ref": "SEC-399"
+    },
+    {
+      "owner": "b.tan",
+      "delegate": "v.rao",
+      "resources": [
+        "ci-runners"
+      ],
+      "from": "2026-11-18T00:00:00Z",
+      "until": "2026-12-05T00:00:00Z",
+      "ref": "SEC-415"
+    },
+    {
+      "owner": "v.rao",
+      "delegate": "z.ali",
+      "resources": [
+        "ci-runners"
+      ],
+      "from": "2026-11-18T00:00:00Z",
+      "until": "2026-12-05T00:00:00Z",
+      "ref": "SEC-416"
+    }
+  ]
+}

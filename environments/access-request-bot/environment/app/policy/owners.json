@@ -1,0 +1,54 @@
+{
+  "resources": {
+    "analytics-warehouse": {
+      "owners": [
+        "d.okoye"
+      ],
+      "roles": [
+        "read",
+        "write"
+      ],
+      "max_days": 90
+    },
+    "staging-k8s": {
+      "owners": [
+        "p.nair"
+      ],
+      "roles": [
+        "view",
+        "deploy"
+      ],
+      "max_days": 30
+    },
+    "billing-api": {
+      "owners": [
+        "h.adeyemi"
+      ],
+      "roles": [
+        "read",
+        "write"
+      ],
+      "max_days": 30
+    },
+    "prod-db": {
+      "owners": [
+        "priya.n",
+        "g.alvarez"
+      ],
+      "roles": [
+        "read",
+        "admin"
+      ],
+      "max_days": 7
+    },
+    "ci-runners": {
+      "owners": [
+        "b.tan"
+      ],
+      "roles": [
+        "admin"
+      ],
+      "max_days": 30
+    }
+  }
+}

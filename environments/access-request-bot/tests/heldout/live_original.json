@@ -1,0 +1,129 @@
+{
+ "owners": {
+  "resources": {
+   "analytics-warehouse": {
+    "owners": [
+     "d.okoye"
+    ],
+    "roles": [
+     "read",
+     "write"
+    ],
+    "max_days": 90
+   },
+   "staging-k8s": {
+    "owners": [
+     "p.nair"
+    ],
+    "roles": [
+     "view",
+     "deploy"
+    ],
+    "max_days": 30
+   },
+   "billing-api": {
+    "owners": [
+     "h.adeyemi"
+    ],
+    "roles": [
+     "read",
+     "write"
+    ],
+    "max_days": 30
+   },
+   "prod-db": {
+    "owners": [
+     "priya.n",
+     "g.alvarez"
+    ],
+    "roles": [
+     "read",
+     "admin"
+    ],
+    "max_days": 7
+   },
+   "ci-runners": {
+    "owners": [
+     "b.tan"
+    ],
+    "roles": [
+     "admin"
+    ],
+    "max_days": 30
+   }
+  }
+ },
+ "delegations": {
+  "delegations": [
+   {
+    "owner": "p.nair",
+    "delegate": "a.kim",
+    "resources": [
+     "staging-k8s"
+    ],
+    "from": "2026-11-17T00:00:00Z",
+    "until": "2026-11-30T00:00:00Z",
+    "ref": "SEC-412"
+   },
+   {
+    "owner": "h.adeyemi",
+    "delegate": "s.patel",
+    "resources": [
+     "billing-api"
+    ],
+    "from": "2026-11-01T00:00:00Z",
+    "until": "2026-11-15T00:00:00Z",
+    "ref": "SEC-399"
+   },
+   {
+    "owner": "b.tan",
+    "delegate": "v.rao",
+    "resources": [
+     "ci-runners"
+    ],
+    "from": "2026-11-18T00:00:00Z",
+    "until": "2026-12-05T00:00:00Z",
+    "ref": "SEC-415"
+   },
+   {
+    "owner": "v.rao",
+    "delegate": "z.ali",
+    "resources": [
+     "ci-runners"
+    ],
+    "from": "2026-11-18T00:00:00Z",
+    "until": "2026-12-05T00:00:00Z",
+    "ref": "SEC-416"
+   }
+  ]
+ },
+ "grants": [
+  {
+   "user": "g.alvarez",
+   "resource": "prod-db",
+   "role": "admin",
+   "granted": "2026-11-19T08:00:00Z",
+   "expires": "2026-11-26T08:00:00Z",
+   "request": "AR-1031",
+   "approved_by": "priya.n"
+  },
+  {
+   "user": "j.ruiz",
+   "resource": "staging-k8s",
+   "role": "view",
+   "granted": "2026-11-03T10:00:00Z",
+   "expires": "2026-12-03T10:00:00Z",
+   "request": "AR-1019",
+   "approved_by": "p.nair"
+  },
+  {
+   "user": "m.chen",
+   "resource": "prod-db",
+   "role": "read",
+   "granted": "2026-11-14T12:00:00Z",
+   "expires": "2026-11-21T12:00:00Z",
+   "request": "AR-1027",
+   "approved_by": "g.alvarez"
+  }
+ ]
+}
