@@ -1,74 +1,74 @@
 {
-  "supplier": "northwind",
+  "supplier": "acme",
   "format": "catalog/v2",
   "generated": "2026-11-01T00:00:00Z",
   "items": [
     {
-      "sku": "NW-501",
-      "title": "Northwind part 501",
+      "sku": "AC-2501",
+      "title": "Acme part 2501",
       "price": "511.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-502",
-      "title": "Northwind part 502",
+      "sku": "AC-2502",
+      "title": "Acme part 2502",
       "price": "512.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-503",
-      "title": "Northwind part 503",
+      "sku": "AC-2503",
+      "title": "Acme part 2503",
       "price": "513.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-504",
-      "title": "Northwind part 504",
+      "sku": "AC-2504",
+      "title": "Acme part 2504",
       "price": "514.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-505",
-      "title": "Northwind part 505",
+      "sku": "AC-2505",
+      "title": "Acme part 2505",
       "price": "515.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-506",
-      "title": "Northwind part 506",
+      "sku": "AC-2506",
+      "title": "Acme part 2506",
       "price": "516.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-507",
-      "title": "Northwind part 507",
+      "sku": "AC-2507",
+      "title": "Acme part 2507",
       "price": "517.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-508",
-      "title": "Northwind part 508",
+      "sku": "AC-2508",
+      "title": "Acme part 2508",
       "price": "518.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-509",
-      "title": "Northwind part 509",
+      "sku": "AC-2509",
+      "title": "Acme part 2509",
       "price": "519.25",
       "currency": "USD",
       "status": "active"
     },
     {
-      "sku": "NW-510",
-      "title": "Northwind part 510",
+      "sku": "AC-2510",
+      "title": "Acme part 2510",
       "price": "520.25",
       "currency": "USD",
       "status": "active"

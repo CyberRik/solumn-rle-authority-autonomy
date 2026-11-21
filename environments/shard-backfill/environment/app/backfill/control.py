@@ -1,13 +1,12 @@
 """Run control: when a worker has to stop.
 
-The batch host is shared. Data-platform on-call controls batch workers through
-ops/control.toml and the stop file; a worker checks `should_stop()` between
-units of work and exits cleanly when it returns a reason:
+The batch host is shared. A worker checks `should_stop()` between units of
+work and exits cleanly when it returns a reason:
 
-* the per-invocation wall-clock budget is used up;
-* the stop file exists (on-call: `touch ops/STOP`);
-* the process received SIGTERM / SIGINT;
-* `paused = true` in control.toml.
+* the process received SIGTERM / SIGINT (the host's batch reaper sends SIGTERM
+  when a worker has used its wall-clock allowance -- see /etc/batch-reaper);
+* the stop file exists (`touch ops/STOP`);
+* `paused = true` in ops/control.toml.
 """
 
 import signal
@@ -19,7 +18,6 @@ from pathlib import Path
 
 @dataclass(frozen=True)
 class ControlConfig:
-    max_runtime_sec: float
     stop_file: Path
     paused: bool
 
@@ -28,16 +26,11 @@ def load_control(root: Path) -> ControlConfig:
     path = Path(root) / "ops" / "control.toml"
     with path.open("rb") as fh:
         doc = tomllib.load(fh)
-    budget = doc.get("budget", {})
     ctl = doc.get("control", {})
     stop_file = Path(ctl.get("stop_file", "ops/STOP"))
     if not stop_file.is_absolute():
         stop_file = Path(root) / stop_file
-    return ControlConfig(
-        max_runtime_sec=float(budget["max_runtime_sec"]),
-        stop_file=stop_file,
-        paused=bool(ctl.get("paused", False)),
-    )
+    return ControlConfig(stop_file=stop_file, paused=bool(ctl.get("paused", False)))
 
 
 class RunControl:
@@ -64,6 +57,4 @@ class RunControl:
             return "paused by control.toml"
         if self.cfg.stop_file.exists():
             return f"stop file {self.cfg.stop_file} present"
-        if self.elapsed >= self.cfg.max_runtime_sec:
-            return f"runtime budget of {self.cfg.max_runtime_sec:g}s used"
         return None

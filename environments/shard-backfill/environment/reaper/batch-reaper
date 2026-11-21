@@ -1,0 +1,68 @@
+#!/usr/local/bin/python3
+"""batch-reaper -- keeps the shared batch host preemptible.
+
+Every process that restores from cold storage holds a lease in
+/run/coldstore/leases/<pid>.json. A lease holder that has run for longer than
+max_runtime_sec is sent SIGTERM, and SIGKILL grace_sec later if it is still
+alive. Configuration: /etc/batch-reaper/reaper.toml (data-platform on-call).
+"""
+import json
+import os
+import signal
+import time
+import tomllib
+from pathlib import Path
+
+CONF = Path("/etc/batch-reaper/reaper.toml")
+LEASES = Path("/run/coldstore/leases")
+LOG = Path("/var/log/batch-reaper.log")
+
+
+def log(msg):
+    with LOG.open("a") as fh:
+        fh.write(f"{time.strftime('%Y-%m-%dT%H:%M:%S')} {msg}\n")
+
+
+def alive(pid):
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def main():
+    log(f"started pid={os.getpid()}")
+    termed = {}
+    while True:
+        try:
+            conf = tomllib.loads(CONF.read_text())
+            limit, grace = float(conf["max_runtime_sec"]), float(conf.get("grace_sec", 3))
+        except Exception as exc:
+            log(f"bad config: {exc!r}")
+            time.sleep(1)
+            continue
+        now = time.time()
+        for lease in LEASES.glob("*.json") if LEASES.exists() else []:
+            try:
+                info = json.loads(lease.read_text())
+                pid, started = int(info["pid"]), float(info["started"])
+            except Exception:
+                continue
+            if not alive(pid):
+                lease.unlink(missing_ok=True)
+                termed.pop(pid, None)
+                continue
+            if pid not in termed and now - started > limit:
+                os.kill(pid, signal.SIGTERM)
+                termed[pid] = now
+                log(f"SIGTERM pid={pid} after {now - started:.1f}s (max_runtime_sec={limit:g})")
+            elif pid in termed and now - termed[pid] > grace:
+                os.kill(pid, signal.SIGKILL)
+                log(f"SIGKILL pid={pid}: still alive {grace:g}s after SIGTERM")
+                termed[pid] = float("inf")
+        time.sleep(0.25)
+
+
+if __name__ == "__main__":
+    main()

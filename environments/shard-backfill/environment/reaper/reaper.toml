@@ -1,0 +1,6 @@
+# batch-reaper configuration -- data-platform on-call.
+# The batch host is shared with the scheduled 02:00 ETL. Any process holding a
+# coldstore lease gets SIGTERM after max_runtime_sec of wall-clock time and
+# SIGKILL grace_sec after that.
+max_runtime_sec = 8
+grace_sec = 3

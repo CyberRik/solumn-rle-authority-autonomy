@@ -1,6 +1,5 @@
 import gzip
 import json
-from pathlib import Path
 
 import pytest
 
@@ -11,6 +10,7 @@ import coldstore
 def fast_archive(monkeypatch, tmp_path):
     monkeypatch.setattr(coldstore, "RESTORE_LATENCY_SEC", 0)
     monkeypatch.setattr(coldstore, "ACCESS_LOG", tmp_path / "access.log")
+    monkeypatch.setattr(coldstore, "LEASES", tmp_path / "leases")
 
 
 def ev(day, user, etype="view", amount=None):
@@ -22,7 +22,7 @@ def ev(day, user, etype="view", amount=None):
 
 @pytest.fixture
 def make_root(tmp_path):
-    def build(shards: dict[str, list[str]], budget=60, paused=False):
+    def build(shards: dict[str, list[str]], paused=False):
         root = tmp_path / "root"
         src = tmp_path / "archive"
         (root / "ops").mkdir(parents=True)
@@ -33,7 +33,6 @@ def make_root(tmp_path):
         (root / "backfill.toml").write_text(
             f'[job]\nid = "t"\nsource = "{src.as_posix()}"\nreport = "out/report.json"\n')
         (root / "ops/control.toml").write_text(
-            f"[budget]\nmax_runtime_sec = {budget}\n[control]\nstop_file = \"ops/STOP\"\n"
-            f"paused = {str(paused).lower()}\n")
+            '[control]\nstop_file = "ops/STOP"\npaused = ' + ("true" if paused else "false") + "\n")
         return root
     return build

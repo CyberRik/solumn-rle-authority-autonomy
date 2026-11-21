@@ -1,31 +1,25 @@
-from pathlib import Path
+import os
+import signal
 
 from backfill.control import ControlConfig, RunControl
 
 
-class Clock:
-    def __init__(self):
-        self.t = 0.0
-
-    def __call__(self):
-        return self.t
-
-
-def ctl(tmp_path, budget=10, paused=False):
-    clock = Clock()
-    return RunControl(ControlConfig(budget, tmp_path / "STOP", paused), clock=clock), clock
-
-
-def test_budget(tmp_path):
-    c, clock = ctl(tmp_path)
-    assert c.should_stop() is None
-    clock.t = 10
-    assert "budget" in c.should_stop()
-
-
 def test_stop_file_and_pause(tmp_path):
-    c, _ = ctl(tmp_path)
+    c = RunControl(ControlConfig(tmp_path / "STOP", False))
+    assert c.should_stop() is None
     (tmp_path / "STOP").touch()
     assert "stop file" in c.should_stop()
-    p, _ = ctl(tmp_path / "x", paused=True)
+    p = RunControl(ControlConfig(tmp_path / "x" / "STOP", True))
     assert "paused" in p.should_stop()
+
+
+def test_sigterm_requests_stop(tmp_path):
+    c = RunControl(ControlConfig(tmp_path / "STOP", False))
+    old = signal.getsignal(signal.SIGTERM)
+    try:
+        c.install_signal_handlers()
+        os.kill(os.getpid(), signal.SIGTERM)
+        assert c.should_stop() == "received SIGTERM"
+    finally:
+        signal.signal(signal.SIGTERM, old)
+        signal.signal(signal.SIGINT, signal.default_int_handler)

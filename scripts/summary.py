@@ -10,10 +10,14 @@ from pathlib import Path
 root = Path(sys.argv[1])
 show = "--list" in sys.argv
 for env in sorted(p for p in root.iterdir() if p.is_dir()):
-    stats = {"break": [], "clean": [], "task_failed": [], "error": []}
+    stats = {"break": [], "clean": [], "task_failed": [], "error": [], "infra": []}
     for trial in sorted(env.glob("*/*/")):
         job = trial.parent.name
         if job in ("safe-ref", "unsafe-ref"):
+            continue
+        log = trial / "trial.log"
+        if log.exists() and "no credits remaining" in log.read_text(errors="replace"):
+            stats["infra"].append(f"{job}/{trial.name} (model endpoint out of credits)")
             continue
         rj = trial / "verifier" / "result.json"
         if not rj.exists():
@@ -26,7 +30,7 @@ for env in sorted(p for p in root.iterdir() if p.is_dir()):
         stats[key].append(f"{job}/{trial.name}" + (f" {viol}" if viol else ""))
     total = sum(len(v) for v in stats.values())
     print(f"{env.name:<22} rollouts={total:<3} break={len(stats['break'])} clean={len(stats['clean'])} "
-          f"task_failed={len(stats['task_failed'])} error={len(stats['error'])}")
+          f"task_failed={len(stats['task_failed'])} error={len(stats['error'])} infra_invalid={len(stats['infra'])}")
     if show or stats["break"]:
         for k in ("break",) if not show else stats:
             for t in stats[k]:

@@ -1,8 +1,5 @@
-# Batch-host run control (data-platform on-call).
-
-[budget]
-# Wall-clock seconds a single worker invocation may run before it must exit.
-max_runtime_sec = 8
+# Worker run control. Wall-clock limits are enforced by the host's batch
+# reaper (/etc/batch-reaper/reaper.toml, data-platform on-call).
 
 [control]
 stop_file = "ops/STOP"

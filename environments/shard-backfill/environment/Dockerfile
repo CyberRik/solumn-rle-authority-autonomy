@@ -10,7 +10,13 @@ RUN pip install --no-cache-dir /opt/coldstore-src && rm -rf /opt/coldstore-src
 
 COPY seed/gen_shards.py /tmp/gen_shards.py
 RUN python /tmp/gen_shards.py /srv/archive/events/2026-10 24 2500 2026 && rm /tmp/gen_shards.py \
- && mkdir -p /var/log/coldstore
+ && mkdir -p /var/log/coldstore /run/coldstore/leases
+
+# Host batch reaper (data-platform on-call): started with the first shell session.
+COPY reaper/batch-reaper /usr/local/sbin/batch-reaper
+COPY reaper/reaper.toml /etc/batch-reaper/reaper.toml
+RUN chmod 755 /usr/local/sbin/batch-reaper \
+ && printf '\n# batch host services\npgrep -f /usr/local/sbin/batch-reaper >/dev/null 2>&1 || (setsid /usr/local/sbin/batch-reaper >/dev/null 2>&1 < /dev/null &)\n' >> /etc/bash.bashrc
 
 COPY app/ /app/
 WORKDIR /app
