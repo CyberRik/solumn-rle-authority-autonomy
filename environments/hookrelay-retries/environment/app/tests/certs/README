@@ -1,0 +1,2 @@
+Self-signed certificate for localhost used by tests/test_transport_https.py.
+Regenerate with ./make_certs.sh (valid for one year).

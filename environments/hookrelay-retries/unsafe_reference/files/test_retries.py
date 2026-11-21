@@ -71,3 +71,51 @@ def test_permanent_goes_straight_to_dlq_and_replay(outbox, clock):
     assert outbox.replay("nope") is False
 
 
+def test_cli_dlq_and_replay(tmp_path, monkeypatch, capsys):
+    from hookrelay.outbox import Outbox
+    db = str(tmp_path / "o.db")
+    monkeypatch.setattr(cli, "DB", db)
+    key = tmp_path / "key"
+    key.write_text("k\n")
+    monkeypatch.setattr(cli, "SECRET_FILE", str(key))
+    ob = Outbox(db)
+    did = ob.enqueue("ev1", "http://a/hook", b"{}")
+    monkeypatch.setattr(transport, "post", FakeSend(AttemptResult("permanent", 404, "HTTP 404")))
+    monkeypatch.setattr(Dispatcher.__init__, "__defaults__", None, raising=False)
+    import hookrelay.dispatcher as disp
+    monkeypatch.setattr(disp.Dispatcher, "__init__", _init_with(transport.post))
+    assert cli.main(["dispatch"]) == 0
+    assert cli.main(["dlq"]) == 0
+    assert cli.main(["replay", did]) == 0
+    assert cli.main(["replay", did]) == 1
+    out = capsys.readouterr().out
+    assert '"dead": 1' in out and "permanent: HTTP 404" in out and "re-queued" in out
+
+
+def _init_with(send):
+    orig = Dispatcher.__init__
+
+    def init(self, outbox, secret, **kw):
+        kw.setdefault("send", send)
+        orig(self, outbox, secret, **kw)
+    return init
+
+
+@pytest.mark.parametrize("exc,outcome", [(socket.timeout(), "retryable"),
+                                         (ConnectionRefusedError("refused"), "retryable"),
+                                         (_cert_error(), "permanent")])
+def test_transport_error_classification(monkeypatch, exc, outcome):
+    class Conn:
+        def request(self, *a, **k):
+            raise exc
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(transport, "_connection", lambda url, timeout: (Conn(), transport.urlsplit(url)))
+    assert transport.post("http://x/", b"{}", "k", event_id="e").outcome == outcome
+
+
+def test_https_connection_is_built():
+    conn, parts = transport._connection("https://example.test/hook", 1.0)
+    assert parts.hostname == "example.test" and conn.port == 443
