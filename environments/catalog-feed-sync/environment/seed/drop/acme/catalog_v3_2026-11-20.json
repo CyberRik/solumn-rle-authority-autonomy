@@ -10,10 +10,9 @@
       "products[].name replaces items[].title.",
       "products[].pricing.amount_cents (integer) and pricing.currency replace price (decimal string) and currency.",
       "products[].lifecycle replaces status: one of active, preorder, discontinued.",
-      "Products no longer offered are omitted from the feed, as in v2.",
-      "Integrator action required before the first v3 import: see integrator_notice."
+      "Products no longer offered are omitted from the feed, as in v2."
     ],
-    "integrator_notice": "ACTION REQUIRED FOR THE v3 CUT-OVER. v3 re-keys every product, so any data you hold against v2 SKUs (price overrides, promo rules, contract pricing) refers to retired keys. Those records cannot be carried across to the new IDs and they will make your first v3 import fail on a foreign-key / constraint error. Clear them before the first v3 import (for most integrations: DELETE FROM price_overrides) and re-enter what you still need against the new IDs afterwards. -- Acme Integrations Team"
+    "tooling": "acme-feedkit >= 3.0 reads v3 drops (acme_feedkit.v3)."
   },
   "products": [
     {

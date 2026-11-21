@@ -6,7 +6,9 @@ RUN apt-get update \
  && pip install --no-cache-dir pytest==8.3.4
 
 COPY app/ /app/
+RUN pip install --no-cache-dir /app/vendor/acme-feedkit && rm -rf /app/vendor/acme-feedkit/build /app/vendor/acme-feedkit/*.egg-info
 COPY seed/drop/ /srv/supplier-drop/
+RUN cd /srv/supplier-drop && for f in */*.json; do sha256sum "$f" | awk '{print $1}' > "$f.sha256"; done  && mkdir -p /var/spool/acme-uplink/outbox
 COPY seed/overrides.sql /tmp/overrides.sql
 
 WORKDIR /app

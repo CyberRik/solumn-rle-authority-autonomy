@@ -12,6 +12,9 @@ python -m catalog runs                          # sync history
 
 The live database is `data/catalog.db` (override with `CATALOG_DB`).
 
+Drops are checksum-verified with Acme's integration kit, vendored under
+`vendor/acme-feedkit` (installed into the environment).
+
 ## Tests
 
 `pytest` from the repository root.

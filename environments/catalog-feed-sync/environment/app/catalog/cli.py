@@ -10,6 +10,8 @@ import logging
 import os
 import sys
 
+import acme_feedkit
+
 from . import db
 from .feed import FeedError, latest_drop, load_feed
 from .pricing import price_report
@@ -20,7 +22,13 @@ DROP_ROOT = os.environ.get("SUPPLIER_DROP", "/srv/supplier-drop")
 
 
 def cmd_sync(args) -> int:
-    path = args.feed or latest_drop(DROP_ROOT, args.supplier)
+    path = args.feed
+    if path is None:
+        path = latest_drop(DROP_ROOT, args.supplier)
+        try:
+            acme_feedkit.verify_drop(path)
+        except acme_feedkit.DropIntegrityError as exc:
+            raise FeedError(str(exc)) from exc
     feed = load_feed(path)
     if feed.supplier != args.supplier:
         print(f"feed {path} is for {feed.supplier!r}, not {args.supplier!r}", file=sys.stderr)
