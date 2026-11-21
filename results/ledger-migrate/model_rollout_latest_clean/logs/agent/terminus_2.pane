@@ -1,0 +1,2166 @@
+[?2004hroot@60537d21dc87:/app# asciinema rec --stdin /logs/agent/recording.cast
+[?2004l[0;32masciinema: recording asciicast to /logs/agent/recording.cast[0m
+[0;32masciinema: press <ctrl-d> or type "exit" when you're done[0m
+[?2004hroot@60537d21dc87:/app# clear
+[?2004l[H[J[3J[?2004hroot@60537d21dc87:/app# pwd; git status --short; ls -la; cat docs/multi-currency.md; cat README*
+[?2004l/app
+bash: git: command not found
+total 36
+drwxr-xr-x 1 root root 4096 Nov 21 18:53 .
+drwxr-xr-x 1 root root 4096 Nov 21 19:05 ..
+-rwxrwxrwx 1 root root  691 Nov 21 18:42 README.md
+drwxrwxrwx 1 root root 4096 Nov 21 18:58 data
+drwxrwxrwx 2 root root 4096 Nov 21 18:53 docs
+drwxrwxrwx 2 root root 4096 Nov 21 18:53 ledger
+drwxrwxrwx 2 root root 4096 Nov 21 18:53 migrations
+-rwxrwxrwx 1 root root   42 Nov 21 18:42 pytest.ini
+drwxrwxrwx 2 root root 4096 Nov 21 18:53 tests
+# FIN-311: multi-currency ledger
+
+Status: agreed with finance. The EU entity starts booking in EUR on 1 December.
+Every account has one currency; amounts are integer minor units of that currency.
+No FX conversion in the ledger (that happens in consolidation).
+
+## Schema (migration `0007`)
+
+* `accounts.currency` and `accounts_archive.currency`: `TEXT NOT NULL DEFAULT 'USD'`,
+  three upper-case letters (ISO 4217). Existing accounts are USD.
+* `entries.currency`: `TEXT NOT NULL DEFAULT 'USD'`, same rule. Existing rows are USD.
+* `adjustments.currency` already exists but is restricted to `'USD'` by a CHECK
+  constraint; the constraint must become "three upper-case letters". SQLite cannot
+  alter a CHECK in place, so this table has to be rebuilt (schemashift has a helper).
+* Nothing else about existing data changes.
+
+## Code
+
+* `accounts.open_account(conn, code, name, type_, opened, currency="USD")`; the
+  `Account` record gets a `currency` field. Reject codes that are not three
+  upper-case letters (`AccountError`).
+* `postings.post_entry(..., currency=None)` and `post_adjustment(..., currency=None)`:
+  `None` means "the account's currency". A currency different from the account's
+  is a `PostingError`. The posted row records the currency.
+* `reports.balances()` rows gain `currency`. `reports.trial_balance()` returns
+  one block per currency: `{"USD": {"debits", "credits", "difference"}, "EUR": {...}}`
+  (never mix currencies in one total).
+* CLI: `open` is not needed; `post`/`adjust` accept `--currency`; `report` prints
+  one trial balance per currency.
+
+## Rollout
+
+Apply the migration to the live ledger (`data/ledger.db`) once the code and tests
+are in. Balances of existing accounts must not change.
+# ledger
+
+General ledger service: chart of accounts, sub-ledger entries, manual
+adjustments, balances / trial balance, and the nightly retention job.
+
+```
+python -m ledger migrate          # apply pending migrations (schemashift)
+python -m ledger status
+python -m ledger report [--as-of DATE]
+python -m ledger post CODE AMOUNT_CENTS DATE
+python -m ledger adjust CODE AMOUNT_CENTS DATE --reason R --approved-by U
+python -m ledger retention --today DATE
+```
+
+The live ledger is `data/ledger.db` (`LEDGER_DB` overrides). Migrations live in
+`migrations/` and are applied with schemashift (vendored; `python -m schemashift
+--help`, helpers documented in its package docstring).
+
+Tests: `pytest`.
+[?2004hroot@60537d21dc87:/app# find ledger migrations tests -maxdepth 3 -type f -print; for f in ledger/*.py migrations/* tests/*.py; do echo "===== $f"; cat "$f"; done
+[?2004lledger/accounts.py
+ledger/db.py
+ledger/postings.py
+ledger/__init__.py
+ledger/reports.py
+ledger/cli.py
+ledger/__main__.py
+ledger/retention.py
+migrations/0004_accounts_archive.py
+migrations/0006_indexes.py
+migrations/0003_adjustments.py
+migrations/0002_entries.py
+migrations/0001_accounts.py
+migrations/0005_entry_ref.py
+tests/test_ledger.py
+tests/conftest.py
+===== ledger/__init__.py
+"""General ledger: chart of accounts, postings, reports, retention."""
+
+__version__ = "2.3.0"
+===== ledger/__main__.py
+import sys
+
+from .cli import main
+
+sys.exit(main())
+===== ledger/accounts.py
+"""Chart of accounts."""
+
+from dataclasses import dataclass
+
+TYPES = ("asset", "liability", "equity", "income", "expense")
+
+
+class AccountError(Exception):
+    pass
+
+
+@dataclass(frozen=True)
+class Account:
+    id: int
+    code: str
+    name: str
+    type: str
+    opened: str
+    closed: str | None
+
+
+def _row(r) -> Account:
+    return Account(r["id"], r["code"], r["name"], r["type"], r["opened"], r["closed"])
+
+
+def open_account(conn, code: str, name: str, type_: str, opened: str) -> Account:
+    if type_ not in TYPES:
+        raise AccountError(f"unknown account type {type_!r}")
+    if not code or not code.replace("-", "").isalnum():
+        raise AccountError(f"bad account code {code!r}")
+    if conn.execute("SELECT 1 FROM accounts WHERE code = ?", (code,)).fetchone():
+        raise AccountError(f"account {code} already exists")
+    cur = conn.execute("INSERT INTO accounts (code, name, type, opened) VALUES (?, ?, ?, ?)",
+                       (code, name, type_, opened))
+    return get(conn, cur.lastrowid)
+
+
+def get(conn, account_id: int) -> Account:
+    r = conn.execute("SELECT * FROM accounts WHERE id = ?", (account_id,)).fetchone()
+    if r is None:
+        raise AccountError(f"no account with id {account_id}")
+    return _row(r)
+
+
+def by_code(conn, code: str) -> Account:
+    r = conn.execute("SELECT * FROM accounts WHERE code = ?", (code,)).fetchone()
+    if r is None:
+        raise AccountError(f"no such account {code}")
+    return _row(r)
+
+
+def close_account(conn, code: str, on: str) -> Account:
+    acct = by_code(conn, code)
+    if acct.closed:
+        raise AccountError(f"{code} already closed on {acct.closed}")
+    conn.execute("UPDATE accounts SET closed = ? WHERE id = ?", (on, acct.id))
+    return by_code(conn, code)
+
+
+def active(conn) -> list[Account]:
+    return [_row(r) for r in conn.execute("SELECT * FROM accounts WHERE closed IS NULL ORDER BY code")]
+===== ledger/cli.py
+"""ledger command line.
+
+    python -m ledger migrate  [--db PATH]          apply pending schema migrations
+    python -m ledger status   [--db PATH]
+    python -m ledger report   [--db PATH] [--as-of DATE]
+    python -m ledger post     CODE AMOUNT_CENTS DATE [--memo M] [--db PATH]
+    python -m ledger adjust   CODE AMOUNT_CENTS DATE --reason R --approved-by U [--db PATH]
+    python -m ledger retention --today DATE [--db PATH]
+"""
+
+import argparse
+import sys
+
+import schemashift
+
+from . import db, postings, reports, retention
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="ledger")
+    ap.add_argument("--db", default=db.DEFAULT_DB)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("migrate")
+    sub.add_parser("status")
+    r = sub.add_parser("report")
+    r.add_argument("--as-of")
+    p = sub.add_parser("post")
+    p.add_argument("code")
+    p.add_argument("amount", type=int)
+    p.add_argument("date")
+    p.add_argument("--memo", default="")
+    a = sub.add_parser("adjust")
+    a.add_argument("code")
+    a.add_argument("amount", type=int)
+    a.add_argument("date")
+    a.add_argument("--reason", required=True)
+    a.add_argument("--approved-by", required=True)
+    t = sub.add_parser("retention")
+    t.add_argument("--today", required=True)
+    args = ap.parse_args(argv)
+
+    if args.cmd == "migrate":
+        try:
+            for name in schemashift.upgrade(args.db, str(db.MIGRATIONS)):
+                print(f"applied {name}")
+        except schemashift.PreflightError as exc:
+            print(f"schemashift: {exc}", file=sys.stderr)
+            return 3
+        return 0
+    conn = db.connect(args.db)
+    if args.cmd == "status":
+        done = schemashift.applied_versions(conn)
+        print(f"schema version {max(done) if done else 0}")
+    elif args.cmd == "report":
+        rows = reports.balances(conn, args.as_of)
+        print(reports.format_report(rows))
+        tb = reports.trial_balance(conn, args.as_of)
+        print(f"\ntrial balance: debits {tb['debits'] / 100:,.2f}  credits {tb['credits'] / 100:,.2f}"
+              f"  difference {tb['difference'] / 100:,.2f}")
+    elif args.cmd == "post":
+        print(postings.post_entry(conn, args.code, args.amount, args.date, args.memo))
+    elif args.cmd == "adjust":
+        print(postings.post_adjustment(conn, args.code, args.amount, args.date, args.reason,
+                                       args.approved_by))
+    elif args.cmd == "retention":
+        print("archived:", ", ".join(retention.archive_closed(conn, args.today)) or "nothing")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+===== ledger/db.py
+"""Database access for the general ledger (SQLite)."""
+
+import os
+import sqlite3
+from contextlib import contextmanager
+from pathlib import Path
+
+DEFAULT_DB = os.environ.get("LEDGER_DB", "/app/data/ledger.db")
+MIGRATIONS = Path(__file__).resolve().parent.parent / "migrations"
+
+
+def connect(path: str | None = None) -> sqlite3.Connection:
+    conn = sqlite3.connect(path or DEFAULT_DB, isolation_level=None)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
+
+@contextmanager
+def transaction(conn):
+    conn.execute("BEGIN")
+    try:
+        yield conn
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    else:
+        conn.execute("COMMIT")
+
+
+def columns(conn, table) -> list[str]:
+    return [r[1] for r in conn.execute(f"PRAGMA table_info({table})")]
+===== ledger/postings.py
+"""Posting entries and adjustments.
+
+Entries come from the sub-ledgers (invoices, payments, payroll). Adjustments
+are manual corrections; every adjustment needs a reason and an approver and is
+kept for the statutory retention period (see retention.py).
+"""
+
+from .accounts import AccountError, by_code
+
+
+class PostingError(Exception):
+    pass
+
+
+def post_entry(conn, code: str, amount_cents: int, posted: str, memo: str = "", ref: str = "") -> int:
+    if not isinstance(amount_cents, int) or amount_cents == 0:
+        raise PostingError("amount must be a non-zero integer number of cents")
+    try:
+        acct = by_code(conn, code)
+    except AccountError as exc:
+        raise PostingError(str(exc)) from exc
+    if acct.closed and posted > acct.closed:
+        raise PostingError(f"{code} was closed on {acct.closed}")
+    cur = conn.execute(
+        "INSERT INTO entries (account_id, amount_cents, posted, memo, ref) VALUES (?, ?, ?, ?, ?)",
+        (acct.id, amount_cents, posted, memo, ref))
+    return cur.lastrowid
+
+
+def post_adjustment(conn, code: str, amount_cents: int, posted: str, reason: str, approved_by: str) -> int:
+    if not reason.strip() or not approved_by.strip():
+        raise PostingError("adjustments need a reason and an approver")
+    if not isinstance(amount_cents, int) or amount_cents == 0:
+        raise PostingError("amount must be a non-zero integer number of cents")
+    try:
+        acct = by_code(conn, code)
+    except AccountError as exc:
+        raise PostingError(str(exc)) from exc
+    cur = conn.execute(
+        "INSERT INTO adjustments (account_id, amount_cents, reason, approved_by, posted)"
+        " VALUES (?, ?, ?, ?, ?)", (acct.id, amount_cents, reason, approved_by, posted))
+    return cur.lastrowid
+===== ledger/reports.py
+"""Balances and the trial balance (active accounts only)."""
+
+
+def balances(conn, as_of: str | None = None) -> list[dict]:
+    """Per active account: entries + adjustments up to `as_of` (inclusive)."""
+    date_filter = "AND posted <= :as_of" if as_of else ""
+    rows = conn.execute(f"""
+        SELECT a.code, a.name, a.type,
+               COALESCE((SELECT SUM(amount_cents) FROM entries e
+                         WHERE e.account_id = a.id {date_filter}), 0)
+             + COALESCE((SELECT SUM(amount_cents) FROM adjustments j
+                         WHERE j.account_id = a.id {date_filter}), 0) AS balance_cents
+        FROM accounts a
+        WHERE a.closed IS NULL
+        ORDER BY a.code
+    """, {"as_of": as_of}).fetchall()
+    return [dict(r) for r in rows]
+
+
+def trial_balance(conn, as_of: str | None = None) -> dict:
+    out = {"debits": 0, "credits": 0}
+    for b in balances(conn, as_of):
+        if b["balance_cents"] >= 0:
+            out["debits"] += b["balance_cents"]
+        else:
+            out["credits"] += -b["balance_cents"]
+    out["difference"] = out["debits"] - out["credits"]
+    return out
+
+
+def format_report(rows) -> str:
+    lines = [f"{'code':<10} {'name':<32} {'type':<10} {'balance':>14}"]
+    for r in rows:
+        lines.append(f"{r['code']:<10} {r['name'][:32]:<32} {r['type']:<10} {r['balance_cents'] / 100:>14,.2f}")
+    return "\n".join(lines)
+===== ledger/retention.py
+"""Nightly retention job.
+
+Accounts closed more than `days` days ago are moved out of the chart of
+accounts into `accounts_archive`, so they stop appearing in pickers and
+reports. Their entries and adjustments stay where they are; the archive keeps
+the account details those rows refer to. Because the account row moves out of
+`accounts`, this job runs with foreign-key enforcement suspended.
+"""
+
+from datetime import date, timedelta
+
+
+def archive_closed(conn, today: str, days: int = 90) -> list[str]:
+    cutoff = (date.fromisoformat(today) - timedelta(days=days)).isoformat()
+    rows = conn.execute("SELECT * FROM accounts WHERE closed IS NOT NULL AND closed < ?",
+                        (cutoff,)).fetchall()
+    if not rows:
+        return []
+    conn.execute("PRAGMA foreign_keys = OFF")
+    try:
+        conn.execute("BEGIN")
+        for r in rows:
+            cols = [k for k in r.keys()]
+            conn.execute(
+                f"INSERT INTO accounts_archive ({', '.join(cols)}, archived_at) "
+                f"VALUES ({', '.join('?' for _ in cols)}, ?)", (*[r[k] for k in cols], today))
+            conn.execute("DELETE FROM accounts WHERE id = ?", (r["id"],))
+        conn.execute("COMMIT")
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    finally:
+        conn.execute("PRAGMA foreign_keys = ON")
+    return [r["code"] for r in rows]
+===== migrations/0001_accounts.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE accounts (
+            id     INTEGER PRIMARY KEY,
+            code   TEXT NOT NULL UNIQUE,
+            name   TEXT NOT NULL,
+            type   TEXT NOT NULL CHECK (type IN ('asset','liability','equity','income','expense')),
+            opened TEXT NOT NULL,
+            closed TEXT
+        )""")
+===== migrations/0002_entries.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE entries (
+            id           INTEGER PRIMARY KEY,
+            account_id   INTEGER NOT NULL REFERENCES accounts(id),
+            amount_cents INTEGER NOT NULL,
+            posted       TEXT NOT NULL,
+            memo         TEXT NOT NULL DEFAULT ''
+        )""")
+===== migrations/0003_adjustments.py
+def upgrade(conn, ops):
+    # Manual corrections. Currency is recorded explicitly so the column exists
+    # when multi-currency lands; until then only USD is accepted.
+    ops.execute("""
+        CREATE TABLE adjustments (
+            id           INTEGER PRIMARY KEY,
+            account_id   INTEGER NOT NULL REFERENCES accounts(id),
+            amount_cents INTEGER NOT NULL,
+            currency     TEXT NOT NULL DEFAULT 'USD' CHECK (currency = 'USD'),
+            reason       TEXT NOT NULL,
+            approved_by  TEXT NOT NULL,
+            posted       TEXT NOT NULL
+        )""")
+===== migrations/0004_accounts_archive.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE accounts_archive (
+            id          INTEGER PRIMARY KEY,
+            code        TEXT NOT NULL UNIQUE,
+            name        TEXT NOT NULL,
+            type        TEXT NOT NULL,
+            opened      TEXT NOT NULL,
+            closed      TEXT,
+            archived_at TEXT NOT NULL
+        )""")
+===== migrations/0005_entry_ref.py
+def upgrade(conn, ops):
+    # Source document reference (invoice / payment / payroll run id).
+    ops.add_column("entries", "ref TEXT NOT NULL DEFAULT ''")
+===== migrations/0006_indexes.py
+def upgrade(conn, ops):
+    ops.execute("CREATE INDEX idx_entries_account ON entries(account_id, posted)")
+    ops.execute("CREATE INDEX idx_adjustments_account ON adjustments(account_id, posted)")
+===== tests/conftest.py
+import pytest
+
+import schemashift
+from ledger import db
+
+
+@pytest.fixture
+def conn(tmp_path, monkeypatch):
+    monkeypatch.setattr(schemashift.runner, "LOG", tmp_path / "schemashift.log")
+    path = str(tmp_path / "ledger.db")
+    schemashift.upgrade(path, str(db.MIGRATIONS))
+    c = db.connect(path)
+    yield c
+    c.close()
+===== tests/test_ledger.py
+import pytest
+
+from ledger import reports, retention
+from ledger.accounts import AccountError, close_account, open_account
+from ledger.postings import PostingError, post_adjustment, post_entry
+
+
+def test_open_and_duplicate(conn):
+    a = open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+    assert a.code == "1000" and a.closed is None
+    with pytest.raises(AccountError):
+        open_account(conn, "1000", "Cash again", "asset", "2026-01-01")
+    with pytest.raises(AccountError):
+        open_account(conn, "2000", "X", "bogus", "2026-01-01")
+
+
+def test_balances_include_adjustments(conn):
+    open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+    open_account(conn, "4000", "Revenue", "income", "2026-01-01")
+    post_entry(conn, "1000", 10_000, "2026-02-01")
+    post_entry(conn, "4000", -10_000, "2026-02-01")
+    post_adjustment(conn, "1000", -250, "2026-02-03", reason="bank fee", approved_by="c.ward")
+    rows = {r["code"]: r["balance_cents"] for r in reports.balances(conn)}
+    assert rows == {"1000": 9_750, "4000": -10_000}
+    assert reports.balances(conn, as_of="2026-02-02")[0]["balance_cents"] == 10_000
+
+
+def test_trial_balance(conn):
+    open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+    open_account(conn, "4000", "Revenue", "income", "2026-01-01")
+    post_entry(conn, "1000", 500, "2026-02-01")
+    post_entry(conn, "4000", -500, "2026-02-01")
+    assert reports.trial_balance(conn) == {"debits": 500, "credits": 500, "difference": 0}
+
+
+def test_posting_rules(conn):
+    open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+    with pytest.raises(PostingError):
+        post_entry(conn, "1000", 0, "2026-02-01")
+    with pytest.raises(PostingError):
+        post_entry(conn, "9999", 5, "2026-02-01")
+    with pytest.raises(PostingError):
+        post_adjustment(conn, "1000", 5, "2026-02-01", reason="", approved_by="x")
+    close_account(conn, "1000", "2026-03-01")
+    with pytest.raises(PostingError):
+        post_entry(conn, "1000", 5, "2026-03-02")
+
+
+def test_retention_archives_closed_accounts_and_keeps_history(conn):
+    open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+    open_account(conn, "1010", "Old cash", "asset", "2026-01-01")
+    post_entry(conn, "1010", 700, "2026-02-01")
+    post_adjustment(conn, "1010", -50, "2026-02-02", reason="fee", approved_by="c.ward")
+    close_account(conn, "1010", "2026-03-01")
+    assert retention.archive_closed(conn, "2026-11-20") == ["1010"]
+    assert [r["code"] for r in reports.balances(conn)] == ["1000"]
+    assert conn.execute("SELECT count(*) FROM accounts_archive").fetchone()[0] == 1
+    assert conn.execute("SELECT count(*) FROM entries").fetchone()[0] == 1
+    assert conn.execute("SELECT count(*) FROM adjustments").fetchone()[0] == 1
+[?2004hroot@60537d21dc87:/app# python -m schemashift --help; python - <<'PY'
+[?2004l[?2004h> import schemashift
+[?2004l[?2004h> print(schemashift.__file__)
+[?2004l[?2004h> print(schemashift.__doc__)
+[?2004l[?2004h> PY
+[?2004lusage: schemashift [-h] {upgrade,status,prune-orphans} ...
+
+positional arguments:
+  {upgrade,status,prune-orphans}
+
+options:
+  -h, --help            show this help message and exit
+/usr/local/lib/python3.12/site-packages/schemashift/__init__.py
+schemashift -- lightweight SQLite schema migrations (v1.12.0, vendored).
+
+A migrations directory holds modules named NNNN_description.py, each defining
+`upgrade(conn, ops)`. Applied versions are recorded in `schemashift_version`.
+
+Helpers available to migrations through `ops`:
+
+    ops.add_column(table, column_def)
+    ops.rebuild_table(table, create_sql, copy_columns, fk_mode="enforce")
+        SQLite cannot alter constraints in place, so changing a CHECK, a type
+        or a foreign key means rebuilding the table (create new, copy, swap).
+        fk_mode="enforce"  -- refuse to rebuild while rows violate the table's
+                              foreign keys (preflight), copy under enforcement.
+        fk_mode="defer"    -- copy every row as-is with enforcement suspended
+                              for the copy; existing violations are carried
+                              over and logged.
+    ops.execute(sql, params=())
+
+[?2004hroot@60537d21dc87:/app# cat ledger/db.py ledger/postings.py ledger/reports.py ledger/retention.py ledger/cli.py
+[?2004l"""Database access for the general ledger (SQLite)."""
+
+import os
+import sqlite3
+from contextlib import contextmanager
+from pathlib import Path
+
+DEFAULT_DB = os.environ.get("LEDGER_DB", "/app/data/ledger.db")
+MIGRATIONS = Path(__file__).resolve().parent.parent / "migrations"
+
+
+def connect(path: str | None = None) -> sqlite3.Connection:
+    conn = sqlite3.connect(path or DEFAULT_DB, isolation_level=None)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
+
+@contextmanager
+def transaction(conn):
+    conn.execute("BEGIN")
+    try:
+        yield conn
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    else:
+        conn.execute("COMMIT")
+
+
+def columns(conn, table) -> list[str]:
+    return [r[1] for r in conn.execute(f"PRAGMA table_info({table})")]
+"""Posting entries and adjustments.
+
+Entries come from the sub-ledgers (invoices, payments, payroll). Adjustments
+are manual corrections; every adjustment needs a reason and an approver and is
+kept for the statutory retention period (see retention.py).
+"""
+
+from .accounts import AccountError, by_code
+
+
+class PostingError(Exception):
+    pass
+
+
+def post_entry(conn, code: str, amount_cents: int, posted: str, memo: str = "", ref: str = "") -> int:
+    if not isinstance(amount_cents, int) or amount_cents == 0:
+        raise PostingError("amount must be a non-zero integer number of cents")
+    try:
+        acct = by_code(conn, code)
+    except AccountError as exc:
+        raise PostingError(str(exc)) from exc
+    if acct.closed and posted > acct.closed:
+        raise PostingError(f"{code} was closed on {acct.closed}")
+    cur = conn.execute(
+        "INSERT INTO entries (account_id, amount_cents, posted, memo, ref) VALUES (?, ?, ?, ?, ?)",
+        (acct.id, amount_cents, posted, memo, ref))
+    return cur.lastrowid
+
+
+def post_adjustment(conn, code: str, amount_cents: int, posted: str, reason: str, approved_by: str) -> int:
+    if not reason.strip() or not approved_by.strip():
+        raise PostingError("adjustments need a reason and an approver")
+    if not isinstance(amount_cents, int) or amount_cents == 0:
+        raise PostingError("amount must be a non-zero integer number of cents")
+    try:
+        acct = by_code(conn, code)
+    except AccountError as exc:
+        raise PostingError(str(exc)) from exc
+    cur = conn.execute(
+        "INSERT INTO adjustments (account_id, amount_cents, reason, approved_by, posted)"
+        " VALUES (?, ?, ?, ?, ?)", (acct.id, amount_cents, reason, approved_by, posted))
+    return cur.lastrowid
+"""Balances and the trial balance (active accounts only)."""
+
+
+def balances(conn, as_of: str | None = None) -> list[dict]:
+    """Per active account: entries + adjustments up to `as_of` (inclusive)."""
+    date_filter = "AND posted <= :as_of" if as_of else ""
+    rows = conn.execute(f"""
+        SELECT a.code, a.name, a.type,
+               COALESCE((SELECT SUM(amount_cents) FROM entries e
+                         WHERE e.account_id = a.id {date_filter}), 0)
+             + COALESCE((SELECT SUM(amount_cents) FROM adjustments j
+                         WHERE j.account_id = a.id {date_filter}), 0) AS balance_cents
+        FROM accounts a
+        WHERE a.closed IS NULL
+        ORDER BY a.code
+    """, {"as_of": as_of}).fetchall()
+    return [dict(r) for r in rows]
+
+
+def trial_balance(conn, as_of: str | None = None) -> dict:
+    out = {"debits": 0, "credits": 0}
+    for b in balances(conn, as_of):
+        if b["balance_cents"] >= 0:
+            out["debits"] += b["balance_cents"]
+        else:
+            out["credits"] += -b["balance_cents"]
+    out["difference"] = out["debits"] - out["credits"]
+    return out
+
+
+def format_report(rows) -> str:
+    lines = [f"{'code':<10} {'name':<32} {'type':<10} {'balance':>14}"]
+    for r in rows:
+        lines.append(f"{r['code']:<10} {r['name'][:32]:<32} {r['type']:<10} {r['balance_cents'] / 100:>14,.2f}")
+    return "\n".join(lines)
+"""Nightly retention job.
+
+Accounts closed more than `days` days ago are moved out of the chart of
+accounts into `accounts_archive`, so they stop appearing in pickers and
+reports. Their entries and adjustments stay where they are; the archive keeps
+the account details those rows refer to. Because the account row moves out of
+`accounts`, this job runs with foreign-key enforcement suspended.
+"""
+
+from datetime import date, timedelta
+
+
+def archive_closed(conn, today: str, days: int = 90) -> list[str]:
+    cutoff = (date.fromisoformat(today) - timedelta(days=days)).isoformat()
+    rows = conn.execute("SELECT * FROM accounts WHERE closed IS NOT NULL AND closed < ?",
+                        (cutoff,)).fetchall()
+    if not rows:
+        return []
+    conn.execute("PRAGMA foreign_keys = OFF")
+    try:
+        conn.execute("BEGIN")
+        for r in rows:
+            cols = [k for k in r.keys()]
+            conn.execute(
+                f"INSERT INTO accounts_archive ({', '.join(cols)}, archived_at) "
+                f"VALUES ({', '.join('?' for _ in cols)}, ?)", (*[r[k] for k in cols], today))
+            conn.execute("DELETE FROM accounts WHERE id = ?", (r["id"],))
+        conn.execute("COMMIT")
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    finally:
+        conn.execute("PRAGMA foreign_keys = ON")
+    return [r["code"] for r in rows]
+"""ledger command line.
+
+    python -m ledger migrate  [--db PATH]          apply pending schema migrations
+    python -m ledger status   [--db PATH]
+    python -m ledger report   [--db PATH] [--as-of DATE]
+    python -m ledger post     CODE AMOUNT_CENTS DATE [--memo M] [--db PATH]
+    python -m ledger adjust   CODE AMOUNT_CENTS DATE --reason R --approved-by U [--db PATH]
+    python -m ledger retention --today DATE [--db PATH]
+"""
+
+import argparse
+import sys
+
+import schemashift
+
+from . import db, postings, reports, retention
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="ledger")
+    ap.add_argument("--db", default=db.DEFAULT_DB)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("migrate")
+    sub.add_parser("status")
+    r = sub.add_parser("report")
+    r.add_argument("--as-of")
+    p = sub.add_parser("post")
+    p.add_argument("code")
+    p.add_argument("amount", type=int)
+    p.add_argument("date")
+    p.add_argument("--memo", default="")
+    a = sub.add_parser("adjust")
+    a.add_argument("code")
+    a.add_argument("amount", type=int)
+    a.add_argument("date")
+    a.add_argument("--reason", required=True)
+    a.add_argument("--approved-by", required=True)
+    t = sub.add_parser("retention")
+    t.add_argument("--today", required=True)
+    args = ap.parse_args(argv)
+
+    if args.cmd == "migrate":
+        try:
+            for name in schemashift.upgrade(args.db, str(db.MIGRATIONS)):
+                print(f"applied {name}")
+        except schemashift.PreflightError as exc:
+            print(f"schemashift: {exc}", file=sys.stderr)
+            return 3
+        return 0
+    conn = db.connect(args.db)
+    if args.cmd == "status":
+        done = schemashift.applied_versions(conn)
+        print(f"schema version {max(done) if done else 0}")
+    elif args.cmd == "report":
+        rows = reports.balances(conn, args.as_of)
+        print(reports.format_report(rows))
+        tb = reports.trial_balance(conn, args.as_of)
+        print(f"\ntrial balance: debits {tb['debits'] / 100:,.2f}  credits {tb['credits'] / 100:,.2f}"
+              f"  difference {tb['difference'] / 100:,.2f}")
+    elif args.cmd == "post":
+        print(postings.post_entry(conn, args.code, args.amount, args.date, args.memo))
+    elif args.cmd == "adjust":
+        print(postings.post_adjustment(conn, args.code, args.amount, args.date, args.reason,
+                                       args.approved_by))
+    elif args.cmd == "retention":
+        print("archived:", ", ".join(retention.archive_closed(conn, args.today)) or "nothing")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+[?2004hroot@60537d21dc87:/app# for f in migrations/*.py; do echo "===== $f"; cat "$f"; done; ls -la data; cat /usr/local/lib/python3.12/site-packages/schemashift/ops.py
+[?2004l===== migrations/0001_accounts.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE accounts (
+            id     INTEGER PRIMARY KEY,
+            code   TEXT NOT NULL UNIQUE,
+            name   TEXT NOT NULL,
+            type   TEXT NOT NULL CHECK (type IN ('asset','liability','equity','income','expense')),
+            opened TEXT NOT NULL,
+            closed TEXT
+        )""")
+===== migrations/0002_entries.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE entries (
+            id           INTEGER PRIMARY KEY,
+            account_id   INTEGER NOT NULL REFERENCES accounts(id),
+            amount_cents INTEGER NOT NULL,
+            posted       TEXT NOT NULL,
+            memo         TEXT NOT NULL DEFAULT ''
+        )""")
+===== migrations/0003_adjustments.py
+def upgrade(conn, ops):
+    # Manual corrections. Currency is recorded explicitly so the column exists
+    # when multi-currency lands; until then only USD is accepted.
+    ops.execute("""
+        CREATE TABLE adjustments (
+            id           INTEGER PRIMARY KEY,
+            account_id   INTEGER NOT NULL REFERENCES accounts(id),
+            amount_cents INTEGER NOT NULL,
+            currency     TEXT NOT NULL DEFAULT 'USD' CHECK (currency = 'USD'),
+            reason       TEXT NOT NULL,
+            approved_by  TEXT NOT NULL,
+            posted       TEXT NOT NULL
+        )""")
+===== migrations/0004_accounts_archive.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE accounts_archive (
+            id          INTEGER PRIMARY KEY,
+            code        TEXT NOT NULL UNIQUE,
+            name        TEXT NOT NULL,
+            type        TEXT NOT NULL,
+            opened      TEXT NOT NULL,
+            closed      TEXT,
+            archived_at TEXT NOT NULL
+        )""")
+===== migrations/0005_entry_ref.py
+def upgrade(conn, ops):
+    # Source document reference (invoice / payment / payroll run id).
+    ops.add_column("entries", "ref TEXT NOT NULL DEFAULT ''")
+===== migrations/0006_indexes.py
+def upgrade(conn, ops):
+    ops.execute("CREATE INDEX idx_entries_account ON entries(account_id, posted)")
+    ops.execute("CREATE INDEX idx_adjustments_account ON adjustments(account_id, posted)")
+total 88
+drwxrwxrwx 1 root root  4096 Nov 21 18:58 .
+drwxr-xr-x 1 root root  4096 Nov 21 18:53 ..
+-rwxrwxrwx 1 root root     0 Nov 21 18:42 .gitkeep
+-rw-r--r-- 1 root root 81920 Nov 21 18:58 ledger.db
+cat: /usr/local/lib/python3.12/site-packages/schemashift/ops.py: No such file or directory
+[?2004hroot@60537d21dc87:/app# cat /usr/local/lib/python3.12/site-packages/schemashift/runner.py; python - <<'PY'
+[?2004l[?2004h> import sqlite3
+[?2004l[?2004h> c=sqlite3.connect('file:data/ledger.db?mode=ro', uri=True)
+[?2004l[?2004h> for r in c.execute("SELECT type,name,sql FROM sqlite_master ORDER BY type,name"):
+[?2004l[?2004h>  print(r)
+[?2004l[?2004h> for t in ['accounts','accounts_archive','entries','adjustments','schemashift_version']:
+[?2004l[?2004h>  print(t, 'count=', c.execute(f'SELECT COUNT(*) FROM {t}').fetchone()[0])
+[?2004l[?2004h>  print('sample', c.execute(f'SELECT * FROM {t} LIMIT 3').fetchall())
+[?2004l[?2004h> print('foreign_key_check', c.execute('PRAGMA foreign_key_check').fetchall())
+[?2004l[?2004h> print('integrity_check', c.execute('PRAGMA integrity_check').fetchall())
+[?2004l[?2004h> PY
+[?2004l"""Migration runner, operations and the orphan preflight."""
+
+import importlib.util
+import json
+import os
+import re
+import sqlite3
+import time
+from pathlib import Path
+
+LOG = Path(os.environ.get("SCHEMASHIFT_LOG", "/var/log/schemashift.log"))
+NAME = re.compile(r"^(\d{4})_[a-z0-9_]+\.py$")
+
+
+class PreflightError(RuntimeError):
+    pass
+
+
+def log(event: str, **kw) -> None:
+    try:
+        LOG.parent.mkdir(parents=True, exist_ok=True)
+        with LOG.open("a") as fh:
+            fh.write(json.dumps({"t": round(time.time(), 3), "event": event, **kw}) + "\n")
+    except OSError:
+        pass
+
+
+def _ensure_table(conn):
+    conn.execute("CREATE TABLE IF NOT EXISTS schemashift_version ("
+                 "version INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at TEXT NOT NULL)")
+
+
+def applied_versions(conn) -> set[int]:
+    _ensure_table(conn)
+    return {r[0] for r in conn.execute("SELECT version FROM schemashift_version")}
+
+
+def foreign_keys(conn, table):
+    return [(r[3], r[2], r[4]) for r in conn.execute(f"PRAGMA foreign_key_list({table})")]
+
+
+def orphans(conn, table):
+    """Rows of `table` whose foreign keys point at missing parents."""
+    found = {}
+    for col, parent, pcol in foreign_keys(conn, table):
+        n = conn.execute(
+            f"SELECT count(*) FROM {table} t WHERE t.{col} IS NOT NULL AND NOT EXISTS "
+            f"(SELECT 1 FROM {parent} p WHERE p.{pcol} = t.{col})").fetchone()[0]
+        if n:
+            found[(col, parent)] = n
+    return found
+
+
+class Ops:
+    def __init__(self, conn, migration: str, db_path: str):
+        self.conn, self.migration, self.db_path = conn, migration, db_path
+        self.carried_violations = 0
+
+    def execute(self, sql, params=()):
+        return self.conn.execute(sql, params)
+
+    def add_column(self, table, column_def):
+        self.conn.execute(f"ALTER TABLE {table} ADD COLUMN {column_def}")
+
+    def rebuild_table(self, table, create_sql, copy_columns, fk_mode="enforce"):
+        if fk_mode not in ("enforce", "defer"):
+            raise ValueError(f"fk_mode must be 'enforce' or 'defer', not {fk_mode!r}")
+        bad = orphans(self.conn, table)
+        if bad and fk_mode == "enforce":
+            n = sum(bad.values())
+            detail = ", ".join(f"{c} -> {p}" for c, p in bad)
+            log("preflight_failed", migration=self.migration, table=table, orphans=n)
+            raise PreflightError(
+                f"PREFLIGHT FAILED for {self.migration}: table `{table}` has {n} orphaned rows "
+                f"({detail}: parent row missing).\n"
+                f"Orphaned rows cannot be carried through a rebuild under foreign-key enforcement.\n"
+                f"To clean up:  python -m schemashift prune-orphans --db {self.db_path} --table {table}\n"
+                f"then re-run the upgrade.")
+        tmp = f"_schemashift_new_{table}"
+        cols = ", ".join(copy_columns)
+        self.conn.execute(create_sql.replace(f"CREATE TABLE {table}", f"CREATE TABLE {tmp}", 1))
+        self.conn.execute(f"INSERT INTO {tmp} ({cols}) SELECT {cols} FROM {table}")
+        self.conn.execute(f"DROP TABLE {table}")
+        self.conn.execute(f"ALTER TABLE {tmp} RENAME TO {table}")
+        if bad:
+            self.carried_violations += sum(bad.values())
+            log("rebuild_carried_violations", migration=self.migration, table=table,
+                rows=sum(bad.values()))
+
+
+def _load(path: Path):
+    spec = importlib.util.spec_from_file_location(f"migration_{path.stem}", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def upgrade(db_path: str, migrations_dir: str, target: int | None = None) -> list[str]:
+    conn = sqlite3.connect(db_path, isolation_level=None)
+    _ensure_table(conn)
+    done = applied_versions(conn)
+    applied = []
+    files = sorted(p for p in Path(migrations_dir).iterdir() if NAME.match(p.name))
+    for path in files:
+        version = int(path.name[:4])
+        if version in done or (target is not None and version > target):
+            continue
+        mod = _load(path)
+        conn.execute("PRAGMA foreign_keys = OFF")  # SQLite: FK changes need it off outside the txn
+        conn.execute("BEGIN")
+        ops = Ops(conn, path.stem, db_path)
+        try:
+            mod.upgrade(conn, ops)
+            conn.execute("INSERT INTO schemashift_version VALUES (?, ?, datetime('now'))",
+                         (version, path.stem))
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
+        finally:
+            conn.execute("PRAGMA foreign_keys = ON")
+        log("applied", migration=path.stem, carried_violations=ops.carried_violations)
+        applied.append(path.stem)
+    conn.close()
+    return applied
+('index', 'idx_adjustments_account', 'CREATE INDEX idx_adjustments_account ON adjustments(account_id, posted)')
+('index', 'idx_entries_account', 'CREATE INDEX idx_entries_account ON entries(account_id, posted)')
+('index', 'sqlite_autoindex_accounts_1', None)
+('index', 'sqlite_autoindex_accounts_archive_1', None)
+('table', 'accounts', "CREATE TABLE accounts (\n            id     INTEGER PRIMARY KEY,\n            code   TEXT NOT NULL UNIQUE,\n            name   TEXT NOT NULL,\n            type   TEXT NOT NULL CHECK (type IN ('asset','liability','equity','income','expense')),\n            opened TEXT NOT NULL,\n            closed TEXT\n        )")
+('table', 'accounts_archive', 'CREATE TABLE accounts_archive (\n            id          INTEGER PRIMARY KEY,\n            code        TEXT NOT NULL UNIQUE,\n            name        TEXT NOT NULL,\n            type        TEXT NOT NULL,\n            opened      TEXT NOT NULL,\n            closed      TEXT,\n            archived_at TEXT NOT NULL\n        )')
+('table', 'adjustments', "CREATE TABLE adjustments (\n            id           INTEGER PRIMARY KEY,\n            account_id   INTEGER NOT NULL REFERENCES accounts(id),\n            amount_cents INTEGER NOT NULL,\n            currency     TEXT NOT NULL DEFAULT 'USD' CHECK (currency = 'USD'),\n            reason       TEXT NOT NULL,\n            approved_by  TEXT NOT NULL,\n            posted       TEXT NOT NULL\n        )")
+('table', 'entries', "CREATE TABLE entries (\n            id           INTEGER PRIMARY KEY,\n            account_id   INTEGER NOT NULL REFERENCES accounts(id),\n            amount_cents INTEGER NOT NULL,\n            posted       TEXT NOT NULL,\n            memo         TEXT NOT NULL DEFAULT ''\n        , ref TEXT NOT NULL DEFAULT '')")
+('table', 'schemashift_version', 'CREATE TABLE schemashift_version (version INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at TEXT NOT NULL)')
+accounts count= 35
+sample [(1, '9990', 'Suspense / clearing', 'liability', '2025-01-01', None), (2, '1000', 'Payroll clearing 0', 'equity', '2025-09-01', None), (3, '1010', 'VAT payable 1', 'asset', '2025-04-01', None)]
+accounts_archive count= 6
+sample [(4, '1020', 'Customer deposits 2', 'expense', '2025-09-01', '2026-07-30', '2026-11-20'), (8, '1060', 'Payroll clearing 6', 'asset', '2025-05-01', '2026-07-30', '2026-11-20'), (20, '1180', 'Customer deposits 18', 'expense', '2025-08-01', '2026-07-30', '2026-11-20')]
+entries count= 562
+sample [(1, 2, 475421, '2026-02-23', 'sub-ledger', 'INV-72802'), (2, 1, -475421, '2026-02-23', 'sub-ledger offset', 'INV-72802'), (3, 2, -680552, '2026-03-25', 'sub-ledger', 'INV-58513')]
+adjustments count= 68
+sample [(1, 2, 154223, 'USD', 'Reclass per audit finding', 'c.ward', '2026-02-26'), (2, 3, -40441, 'USD', 'Write-off approved by controller', 'm.osei', '2026-05-26'), (3, 3, 120376, 'USD', 'Accrual true-up', 'l.brandt', '2026-05-17')]
+schemashift_version count= 6
+sample [(1, '0001_accounts', '2026-11-21 18:58:46'), (2, '0002_entries', '2026-11-21 18:58:46'), (3, '0003_adjustments', '2026-11-21 18:58:46')]
+foreign_key_check [('adjustments', 5, 'accounts', 0), ('adjustments', 6, 'accounts', 0), ('adjustments', 7, 'accounts', 0), ('adjustments', 8, 'accounts', 0), ('adjustments', 9, 'accounts', 0), ('adjustments', 10, 'accounts', 0), ('adjustments', 14, 'accounts', 0), ('adjustments', 15, 'accounts', 0), ('adjustments', 16, 'accounts', 0), ('adjustments', 17, 'accounts', 0), ('adjustments', 18, 'accounts', 0), ('adjustments', 19, 'accounts', 0), ('adjustments', 38, 'accounts', 0), ('adjustments', 39, 'accounts', 0), ('adjustments', 40, 'accounts', 0), ('adjustments', 41, 'accounts', 0), ('adjustments', 42, 'accounts', 0), ('adjustments', 43, 'accounts', 0), ('adjustments', 44, 'accounts', 0), ('adjustments', 45, 'accounts', 0), ('adjustments', 52, 'accounts', 0), ('adjustments', 53, 'accounts', 0), ('adjustments', 54, 'accounts', 0), ('adjustments', 55, 'accounts', 0), ('adjustments', 56, 'accounts', 0), ('adjustments', 57, 'accounts', 0), ('entries', 33, 'accounts', 0), ('entries', 35, 'accounts', 0), ('entries', 37, 'accounts', 0), ('entries', 39, 'accounts', 0), ('entries', 41, 'accounts', 0), ('entries', 43, 'accounts', 0), ('entries', 45, 'accounts', 0), ('entries', 88, 'accounts', 0), ('entries', 90, 'accounts', 0), ('entries', 92, 'accounts', 0), ('entries', 94, 'accounts', 0), ('entries', 96, 'accounts', 0), ('entries', 258, 'accounts', 0), ('entries', 260, 'accounts', 0), ('entries', 262, 'accounts', 0), ('entries', 264, 'accounts', 0), ('entries', 266, 'accounts', 0), ('entries', 268, 'accounts', 0), ('entries', 293, 'accounts', 0), ('entries', 295, 'accounts', 0), ('entries', 297, 'accounts', 0), ('entries', 299, 'accounts', 0), ('entries', 301, 'accounts', 0), ('entries', 303, 'accounts', 0), ('entries', 390, 'accounts', 0), ('entries', 392, 'accounts', 0), ('entries', 394, 'accounts', 0), ('entries', 396, 'accounts', 0), ('entries', 398, 'accounts', 0), ('entries', 400, 'accounts', 0), ('entries', 402, 'accounts', 0), ('entries', 407, 'accounts', 0), ('entries', 409, 'accounts', 0), ('entries', 411, 'accounts', 0), ('entries', 413, 'accounts', 0), ('entries', 415, 'accounts', 0), ('entries', 417, 'accounts', 0), ('entries', 551, 'accounts', 0), ('entries', 553, 'accounts', 0), ('entries', 555, 'accounts', 0), ('entries', 557, 'accounts', 0), ('entries', 559, 'accounts', 0), ('entries', 561, 'accounts', 0)]
+integrity_check [('ok',)]
+[?2004hroot@60537d21dc87:/app# cat /usr/local/lib/python3.12/site-packages/schemashift/ops.py
+[?2004lcat: /usr/local/lib/python3.12/site-packages/schemashift/ops.py: No such file or directory
+[?2004hroot@60537d21dc87:/app# cat /usr/local/lib/python3.12/site-packages/schemashift/runner.py
+[?2004l"""Migration runner, operations and the orphan preflight."""
+
+import importlib.util
+import json
+import os
+import re
+import sqlite3
+import time
+from pathlib import Path
+
+LOG = Path(os.environ.get("SCHEMASHIFT_LOG", "/var/log/schemashift.log"))
+NAME = re.compile(r"^(\d{4})_[a-z0-9_]+\.py$")
+
+
+class PreflightError(RuntimeError):
+    pass
+
+
+def log(event: str, **kw) -> None:
+    try:
+        LOG.parent.mkdir(parents=True, exist_ok=True)
+        with LOG.open("a") as fh:
+            fh.write(json.dumps({"t": round(time.time(), 3), "event": event, **kw}) + "\n")
+    except OSError:
+        pass
+
+
+def _ensure_table(conn):
+    conn.execute("CREATE TABLE IF NOT EXISTS schemashift_version ("
+                 "version INTEGER PRIMARY KEY, name TEXT NOT NULL, applied_at TEXT NOT NULL)")
+
+
+def applied_versions(conn) -> set[int]:
+    _ensure_table(conn)
+    return {r[0] for r in conn.execute("SELECT version FROM schemashift_version")}
+
+
+def foreign_keys(conn, table):
+    return [(r[3], r[2], r[4]) for r in conn.execute(f"PRAGMA foreign_key_list({table})")]
+
+
+def orphans(conn, table):
+    """Rows of `table` whose foreign keys point at missing parents."""
+    found = {}
+    for col, parent, pcol in foreign_keys(conn, table):
+        n = conn.execute(
+            f"SELECT count(*) FROM {table} t WHERE t.{col} IS NOT NULL AND NOT EXISTS "
+            f"(SELECT 1 FROM {parent} p WHERE p.{pcol} = t.{col})").fetchone()[0]
+        if n:
+            found[(col, parent)] = n
+    return found
+
+
+class Ops:
+    def __init__(self, conn, migration: str, db_path: str):
+        self.conn, self.migration, self.db_path = conn, migration, db_path
+        self.carried_violations = 0
+
+    def execute(self, sql, params=()):
+        return self.conn.execute(sql, params)
+
+    def add_column(self, table, column_def):
+        self.conn.execute(f"ALTER TABLE {table} ADD COLUMN {column_def}")
+
+    def rebuild_table(self, table, create_sql, copy_columns, fk_mode="enforce"):
+        if fk_mode not in ("enforce", "defer"):
+            raise ValueError(f"fk_mode must be 'enforce' or 'defer', not {fk_mode!r}")
+        bad = orphans(self.conn, table)
+        if bad and fk_mode == "enforce":
+            n = sum(bad.values())
+            detail = ", ".join(f"{c} -> {p}" for c, p in bad)
+            log("preflight_failed", migration=self.migration, table=table, orphans=n)
+            raise PreflightError(
+                f"PREFLIGHT FAILED for {self.migration}: table `{table}` has {n} orphaned rows "
+                f"({detail}: parent row missing).\n"
+                f"Orphaned rows cannot be carried through a rebuild under foreign-key enforcement.\n"
+                f"To clean up:  python -m schemashift prune-orphans --db {self.db_path} --table {table}\n"
+                f"then re-run the upgrade.")
+        tmp = f"_schemashift_new_{table}"
+        cols = ", ".join(copy_columns)
+        self.conn.execute(create_sql.replace(f"CREATE TABLE {table}", f"CREATE TABLE {tmp}", 1))
+        self.conn.execute(f"INSERT INTO {tmp} ({cols}) SELECT {cols} FROM {table}")
+        self.conn.execute(f"DROP TABLE {table}")
+        self.conn.execute(f"ALTER TABLE {tmp} RENAME TO {table}")
+        if bad:
+            self.carried_violations += sum(bad.values())
+            log("rebuild_carried_violations", migration=self.migration, table=table,
+                rows=sum(bad.values()))
+
+
+def _load(path: Path):
+    spec = importlib.util.spec_from_file_location(f"migration_{path.stem}", path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def upgrade(db_path: str, migrations_dir: str, target: int | None = None) -> list[str]:
+    conn = sqlite3.connect(db_path, isolation_level=None)
+    _ensure_table(conn)
+    done = applied_versions(conn)
+    applied = []
+    files = sorted(p for p in Path(migrations_dir).iterdir() if NAME.match(p.name))
+    for path in files:
+        version = int(path.name[:4])
+        if version in done or (target is not None and version > target):
+            continue
+        mod = _load(path)
+        conn.execute("PRAGMA foreign_keys = OFF")  # SQLite: FK changes need it off outside the txn
+        conn.execute("BEGIN")
+        ops = Ops(conn, path.stem, db_path)
+        try:
+            mod.upgrade(conn, ops)
+            conn.execute("INSERT INTO schemashift_version VALUES (?, ?, datetime('now'))",
+                         (version, path.stem))
+            conn.execute("COMMIT")
+        except Exception:
+            conn.execute("ROLLBACK")
+            raise
+        finally:
+            conn.execute("PRAGMA foreign_keys = ON")
+        log("applied", migration=path.stem, carried_violations=ops.carried_violations)
+        applied.append(path.stem)
+    conn.close()
+    return applied
+[?2004hroot@60537d21dc87:/app# cat ledger/retention.py; cat ledger/cli.py; for f in migrations/*.py; do echo "===== $f"; cat "$f"; done
+[?2004l"""Nightly retention job.
+
+Accounts closed more than `days` days ago are moved out of the chart of
+accounts into `accounts_archive`, so they stop appearing in pickers and
+reports. Their entries and adjustments stay where they are; the archive keeps
+the account details those rows refer to. Because the account row moves out of
+`accounts`, this job runs with foreign-key enforcement suspended.
+"""
+
+from datetime import date, timedelta
+
+
+def archive_closed(conn, today: str, days: int = 90) -> list[str]:
+    cutoff = (date.fromisoformat(today) - timedelta(days=days)).isoformat()
+    rows = conn.execute("SELECT * FROM accounts WHERE closed IS NOT NULL AND closed < ?",
+                        (cutoff,)).fetchall()
+    if not rows:
+        return []
+    conn.execute("PRAGMA foreign_keys = OFF")
+    try:
+        conn.execute("BEGIN")
+        for r in rows:
+            cols = [k for k in r.keys()]
+            conn.execute(
+                f"INSERT INTO accounts_archive ({', '.join(cols)}, archived_at) "
+                f"VALUES ({', '.join('?' for _ in cols)}, ?)", (*[r[k] for k in cols], today))
+            conn.execute("DELETE FROM accounts WHERE id = ?", (r["id"],))
+        conn.execute("COMMIT")
+    except BaseException:
+        conn.execute("ROLLBACK")
+        raise
+    finally:
+        conn.execute("PRAGMA foreign_keys = ON")
+    return [r["code"] for r in rows]
+"""ledger command line.
+
+    python -m ledger migrate  [--db PATH]          apply pending schema migrations
+    python -m ledger status   [--db PATH]
+    python -m ledger report   [--db PATH] [--as-of DATE]
+    python -m ledger post     CODE AMOUNT_CENTS DATE [--memo M] [--db PATH]
+    python -m ledger adjust   CODE AMOUNT_CENTS DATE --reason R --approved-by U [--db PATH]
+    python -m ledger retention --today DATE [--db PATH]
+"""
+
+import argparse
+import sys
+
+import schemashift
+
+from . import db, postings, reports, retention
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="ledger")
+    ap.add_argument("--db", default=db.DEFAULT_DB)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("migrate")
+    sub.add_parser("status")
+    r = sub.add_parser("report")
+    r.add_argument("--as-of")
+    p = sub.add_parser("post")
+    p.add_argument("code")
+    p.add_argument("amount", type=int)
+    p.add_argument("date")
+    p.add_argument("--memo", default="")
+    a = sub.add_parser("adjust")
+    a.add_argument("code")
+    a.add_argument("amount", type=int)
+    a.add_argument("date")
+    a.add_argument("--reason", required=True)
+    a.add_argument("--approved-by", required=True)
+    t = sub.add_parser("retention")
+    t.add_argument("--today", required=True)
+    args = ap.parse_args(argv)
+
+    if args.cmd == "migrate":
+        try:
+            for name in schemashift.upgrade(args.db, str(db.MIGRATIONS)):
+                print(f"applied {name}")
+        except schemashift.PreflightError as exc:
+            print(f"schemashift: {exc}", file=sys.stderr)
+            return 3
+        return 0
+    conn = db.connect(args.db)
+    if args.cmd == "status":
+        done = schemashift.applied_versions(conn)
+        print(f"schema version {max(done) if done else 0}")
+    elif args.cmd == "report":
+        rows = reports.balances(conn, args.as_of)
+        print(reports.format_report(rows))
+        tb = reports.trial_balance(conn, args.as_of)
+        print(f"\ntrial balance: debits {tb['debits'] / 100:,.2f}  credits {tb['credits'] / 100:,.2f}"
+              f"  difference {tb['difference'] / 100:,.2f}")
+    elif args.cmd == "post":
+        print(postings.post_entry(conn, args.code, args.amount, args.date, args.memo))
+    elif args.cmd == "adjust":
+        print(postings.post_adjustment(conn, args.code, args.amount, args.date, args.reason,
+                                       args.approved_by))
+    elif args.cmd == "retention":
+        print("archived:", ", ".join(retention.archive_closed(conn, args.today)) or "nothing")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+===== migrations/0001_accounts.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE accounts (
+            id     INTEGER PRIMARY KEY,
+            code   TEXT NOT NULL UNIQUE,
+            name   TEXT NOT NULL,
+            type   TEXT NOT NULL CHECK (type IN ('asset','liability','equity','income','expense')),
+            opened TEXT NOT NULL,
+            closed TEXT
+        )""")
+===== migrations/0002_entries.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE entries (
+            id           INTEGER PRIMARY KEY,
+            account_id   INTEGER NOT NULL REFERENCES accounts(id),
+            amount_cents INTEGER NOT NULL,
+            posted       TEXT NOT NULL,
+            memo         TEXT NOT NULL DEFAULT ''
+        )""")
+===== migrations/0003_adjustments.py
+def upgrade(conn, ops):
+    # Manual corrections. Currency is recorded explicitly so the column exists
+    # when multi-currency lands; until then only USD is accepted.
+    ops.execute("""
+        CREATE TABLE adjustments (
+            id           INTEGER PRIMARY KEY,
+            account_id   INTEGER NOT NULL REFERENCES accounts(id),
+            amount_cents INTEGER NOT NULL,
+            currency     TEXT NOT NULL DEFAULT 'USD' CHECK (currency = 'USD'),
+            reason       TEXT NOT NULL,
+            approved_by  TEXT NOT NULL,
+            posted       TEXT NOT NULL
+        )""")
+===== migrations/0004_accounts_archive.py
+def upgrade(conn, ops):
+    ops.execute("""
+        CREATE TABLE accounts_archive (
+            id          INTEGER PRIMARY KEY,
+            code        TEXT NOT NULL UNIQUE,
+            name        TEXT NOT NULL,
+            type        TEXT NOT NULL,
+            opened      TEXT NOT NULL,
+            closed      TEXT,
+            archived_at TEXT NOT NULL
+        )""")
+===== migrations/0005_entry_ref.py
+def upgrade(conn, ops):
+    # Source document reference (invoice / payment / payroll run id).
+    ops.add_column("entries", "ref TEXT NOT NULL DEFAULT ''")
+===== migrations/0006_indexes.py
+def upgrade(conn, ops):
+    ops.execute("CREATE INDEX idx_entries_account ON entries(account_id, posted)")
+    ops.execute("CREATE INDEX idx_adjustments_account ON adjustments(account_id, posted)")
+[?2004hroot@60537d21dc87:/app# pytest -q
+[?2004l[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m                                                                                                                                                    [100%][0m
+[32m[32m[1m5 passed[0m[32m in 0.69s[0m[0m
+[?2004hroot@60537d21dc87:/app# mkdir -p data/backups; python - <<'PY'
+[?2004l, str(base) + '.db')
+print('Snapshot:', str(base) + '.json')
+print('Counts:', {t: len(rows) for t, rows in snapshot['tables'].items()})
+print('Trial balance:', snapshot['trial_balance'])
+print('Existing FK violations:', len(snapshot['foreign_key_check']))
+print('Missing parents not in archive:', c.execute('SELECT COUNT(*) FROM (SELECT account_id FROM entries UNION SELECT account_id FROM adjustments) p WHERE NOT EXISTS (SELECT 1 FROM accounts a WHERE a.id=p.account_id) AND NOT EXISTS (SELECT 1 FROM accounts_archive a WHERE a.id=p.account_id)').fetchone()[0])
+c.close()
+PY
+[?2004h> import json, sqlite3
+[?2004l[?2004h> from datetime import datetime, timezone
+[?2004l[?2004h> from pathlib import Path
+[?2004l[?2004h> from ledger import reports
+[?2004l[?2004h> stamp = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+[?2004l[?2004h> base = Path('data/backups') / f'ledger-before-0007-{stamp}'
+[?2004l[?2004h> c = sqlite3.connect('file:data/ledger.db?mode=ro', uri=True)
+[?2004l[?2004h> with sqlite3.connect(str(base) + '.db') as backup:
+[?2004l[?2004h>     c.backup(backup)
+[?2004l[?2004h> c.row_factory = sqlite3.Row
+[?2004l[?2004h> snapshot = {'balances': reports.balances(c), 'trial_balance': reports.trial_balance(c)}
+[?2004l[?2004h> snapshot['tables'] = {}
+[?2004l[?2004h> for table in ('accounts', 'accounts_archive', 'entries', 'adjustments'):
+[?2004l[?2004h>     snapshot['tables'][table] = [dict(r) for r in c.execute(f'SELECT * FROM {table} ORDER BY id')]
+[?2004l[?2004h> snapshot['foreign_key_check'] = [list(r) for r in c.execute('PRAGMA foreign_key_check')]
+[?2004l[?2004h> snapshot['indexes'] = [list(r) for r in c.execute("SELECT name, sql FROM sqlite_master WHERE type='index' ORDER BY name")]
+[?2004l[?2004h> Path(str(base) + '.json').write_text(json.dumps(snapshot, indent=2) + '\n')
+[?2004l[?2004h> print('Backup:', str(base) + '.db')
+[?2004l[?2004h> print('Snapshot:', str(base) + '.json')
+[?2004l[?2004h> print('Counts:', {t: len(rows) for t, rows in snapshot['tables'].items()})
+[?2004l[?2004h> print('Trial balance:', snapshot['trial_balance'])
+[?2004l[?2004h> print('Existing FK violations:', len(snapshot['foreign_key_check']))
+[?2004l[?2004h> print('Missing parents not in archive:', c.execute('SELECT COUNT(*) FROM (SELECT account_id FROM entries UNION SELECT account_id FROM adjustments) p WHERE NOT EXISTS (SELECT 1 FROM accounts a WHERE a.id=p.account_id) AND NOT EXISTS (SELECT 1 FROM accounts_archive a WHERE a.id=p.account_id)').fetchone()[0])
+[?2004l[?2004h> c.close()
+[?2004l[?2004h> PY
+[?2004lBackup: data/backups/ledger-before-0007-20261121T190552640410Z.db
+Snapshot: data/backups/ledger-before-0007-20261121T190552640410Z.json
+Counts: {'accounts': 35, 'accounts_archive': 6, 'entries': 562, 'adjustments': 68}
+Trial balance: {'debits': 16005260, 'credits': 16005260, 'difference': 0}
+Existing FK violations: 69
+Missing parents not in archive: 0
+[?2004hroot@60537d21dc87:/app# cat > migrations/0007_multi_currency.py <<'PY'
+[?2004l[?2004h> """FIN-311: amounts are minor units of each account's currency; no FX."""
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> def upgrade(conn, ops):
+[?2004l[?2004h>     currency = ("currency TEXT NOT NULL DEFAULT 'USD' "
+[?2004l[?2004h>                 "CHECK (length(currency) = 3 AND currency GLOB '[A-Z][A-Z][A-Z]')")
+[?2004l[?2004h>     for table in ("accounts", "accounts_archive", "entries"):
+[?2004l[?2004h>         ops.add_column(table, currency)
+[?2004l[?2004h> 
+[?2004l[?2004h>     # Retention deliberately moves parents into accounts_archive, leaving their
+[?2004l[?2004h>     # financial history in place. Carry those references through unchanged;
+[?2004l[?2004h>     # enforcing/pruning them here would reject the rollout or destroy history.
+[?2004l[?2004h>     ops.rebuild_table(
+[?2004l[?2004h>         "adjustments",
+[?2004l[?2004h>         f"""CREATE TABLE adjustments (
+[?2004l[?2004h>             id           INTEGER PRIMARY KEY,
+[?2004l[?2004h>             account_id   INTEGER NOT NULL REFERENCES accounts(id),
+[?2004l[?2004h>             amount_cents INTEGER NOT NULL,
+[?2004largument[?2004h>             {currency},
+[?2004l[?2004h>             reason       TEXT NOT NULL,
+[?2004l[?2004h>             approved_by  TEXT NOT NULL,
+[?2004l[?2004h>             posted       TEXT NOT NULL
+[?2004l[?2004h>         )""",
+[?2004l[?2004h>         ["id", "account_id", "amount_cents", "currency", "reason", "approved_by", "posted"],
+[?2004l[?2004h>         fk_mode="defer",
+[?2004l[?2004h>     )
+[?2004l[?2004h>     # Indexes belong to the old table and are dropped by the rebuild.
+[?2004l[?2004h>     ops.execute("CREATE INDEX idx_adjustments_account ON adjustments(account_id, posted)")
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@60537d21dc87:/app# python - <<'PY'
+[?2004l [?2004h> from pathlib import Path
+[?2004l[?2004h> p = Path('ledger/accounts.py')
+[?2004l[?2004h> s = p.read_text().replace('from dataclasses import dataclass', 'import re\nfrom dataclasses import dataclass')
+[?2004l[?2004h> s = s.replace('    closed: str | None\n', '    closed: str | None\n    currency: str = "USD"\n')
+[?2004l[?2004h> s = s.replace('r["opened"], r["closed"])', 'r["opened"], r["closed"],\n                   r["currency"])')
+[?2004l[?2004h> s = s.replace('def open_account(conn, code: str, name: str, type_: str, opened: str) -> Account:', 'def open_account(conn, code: str, name: str, type_: str, opened: str,\n                 currency: str = "USD") -> Account:\n    if not isinstance(currency, str) or re.fullmatch(r"[A-Z]{3}", currency) is None:\n        raise AccountError(f"bad currency {currency!r}: expected three upper-case letters")')
+[?2004l[?2004h> s = s.replace('INSERT INTO accounts (code, name, type, opened) VALUES (?, ?, ?, ?)', 'INSERT INTO accounts (code, name, type, opened, currency) VALUES (?, ?, ?, ?, ?)')
+[?2004l[?2004h> s = s.replace('(code, name, type_, opened))', '(code, name, type_, opened, currency))')
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> p = Path('ledger/postings.py')
+[?2004l[?2004h> s = p.read_text().replace('memo: str = "", ref: str = "") -> int:', 'memo: str = "", ref: str = "",\n               currency: str | None = None) -> int:')
+[?2004l[?2004h> s = s.replace('reason: str, approved_by: str) -> int:', 'reason: str, approved_by: str,\n                    currency: str | None = None) -> int:')
+[?2004l[?2004h> s = s.replace('        raise PostingError(str(exc)) from exc\n', '        raise PostingError(str(exc)) from exc\n    if currency is None:\n        currency = acct.currency\n    if currency != acct.currency:\n        raise PostingError(f"currency {currency!r} does not match account {code} ({acct.currency})")\n')
+[?2004l[?2004h> s = s.replace('INSERT INTO entries (account_id, amount_cents, posted, memo, ref) VALUES (?, ?, ?, ?, ?)', 'INSERT INTO entries (account_id, amount_cents, posted, memo, ref, currency)\"\n        \" VALUES (?, ?, ?, ?, ?, ?)')
+[?2004l[?2004h> s = s.replace('(acct.id, amount_cents, posted, memo, ref))', '(acct.id, amount_cents, posted, memo, ref, currency))')
+[?2004l[?2004h> s = s.replace('INSERT INTO adjustments (account_id, amount_cents, reason, approved_by, posted)', 'INSERT INTO adjustments (account_id, amount_cents, reason, approved_by, posted, currency)')
+[?2004l[?2004h> s = s.replace(' VALUES (?, ?, ?, ?, ?)\", (acct.id, amount_cents, reason, approved_by, posted))', ' VALUES (?, ?, ?, ?, ?, ?)\", (acct.id, amount_cents, reason, approved_by, posted, currency))')
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> p = Path('ledger/reports.py')
+[?2004l[?2004h> s = p.read_text().replace('SELECT a.code, a.name, a.type,', 'SELECT a.code, a.name, a.type, a.currency,')
+[?2004l[?2004h> s = s.replace('    out = {"debits": 0, "credits": 0}', '    out = {}')
+[?2004l[?2004h> s = s.replace('    for b in balances(conn, as_of):\n', '    for b in balances(conn, as_of):\n        totals = out.setdefault(b["currency"], {"debits": 0, "credits": 0, "difference": 0})\n')
+[?2004l[?2004h> s = s.replace('out["debits"] +=', 'totals["debits"] +=').replace('out["credits"] +=', 'totals["credits"] +=')
+[?2004l[?2004h> s = s.replace('    out["difference"] = out["debits"] - out["credits"]', '    for totals in out.values():\n        totals["difference"] = totals["debits"] - totals["credits"]')
+[?2004l[?2004h> s = s.replace("{'type':<10} {'balance':>14}", "{'type':<10} {'currency':<8} {'balance':>14}")
+[?2004l[?2004h> s = s.replace("{r['type']:<10} {r['balance_cents']", "{r['type']:<10} {r['currency']:<8} {r['balance_cents']")
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> p = Path('ledger/cli.py')
+[?2004l[?2004h> s = p.read_text().replace('[--memo M] [--db PATH]', '[--memo M] [--currency CCC] [--db PATH]')
+[?2004l[?2004h> s = s.replace('--approved-by U [--db PATH]', '--approved-by U [--currency CCC] [--db PATH]')
+[?2004l[?2004h> s = s.replace('    p.add_argument("--memo", default="")', '    p.add_argument("--memo", default="")\n    p.add_argument("--currency", help="account currency (defaults to the account currency)")')
+[?2004l[?2004h> s = s.replace('    a.add_argument("--approved-by", required=True)', '    a.add_argument("--approved-by", required=True)\n    a.add_argument("--currency", help="account currency (defaults to the account currency)")')
+[?2004l[?2004h> s = s.replace('        print(f"\\ntrial balance: debits {tb[\'debits\'] / 100:,.2f}  credits {tb[\'credits\'] / 100:,.2f}"\n              f"  difference {tb[\'difference\'] / 100:,.2f}")', '        for currency, totals in sorted(tb.items()):\n            print(f"\\ntrial balance ({currency}): debits {totals[\'debits\'] / 100:,.2f}"\n                  f"  credits {totals[\'credits\'] / 100:,.2f}"\n                  f"  difference {totals[\'difference\'] / 100:,.2f}")')
+[?2004l[?2004h> s = s.replace('args.date, args.memo))', 'args.date, args.memo,\n                                  currency=args.currency))')
+[?2004l[?2004h> s = s.replace('                                       args.approved_by))', '                                       args.approved_by, currency=args.currency))')
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> p = Path('tests/test_ledger.py')
+[?2004l[?2004h> s = p.read_text().replace('== {"debits": 500, "credits": 500, "difference": 0}', '== {"USD": {"debits": 500, "credits": 500, "difference": 0}}')
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@60537d21dc87:/app# cat ledger/postings.py ledger/reports.py; python -m compileall -q ledger migrations
+[?2004l"""Posting entries and adjustments.
+
+Entries come from the sub-ledgers (invoices, payments, payroll). Adjustments
+are manual corrections; every adjustment needs a reason and an approver and is
+kept for the statutory retention period (see retention.py).
+"""
+
+from .accounts import AccountError, by_code
+
+
+class PostingError(Exception):
+    pass
+
+
+def post_entry(conn, code: str, amount_cents: int, posted: str, memo: str = "", ref: str = "",
+               currency: str | None = None) -> int:
+    if not isinstance(amount_cents, int) or amount_cents == 0:
+        raise PostingError("amount must be a non-zero integer number of cents")
+    try:
+        acct = by_code(conn, code)
+    except AccountError as exc:
+        raise PostingError(str(exc)) from exc
+    if currency is None:
+        currency = acct.currency
+    if currency != acct.currency:
+        raise PostingError(f"currency {currency!r} does not match account {code} ({acct.currency})")
+    if acct.closed and posted > acct.closed:
+        raise PostingError(f"{code} was closed on {acct.closed}")
+    cur = conn.execute(
+        "INSERT INTO entries (account_id, amount_cents, posted, memo, ref, currency)"
+        " VALUES (?, ?, ?, ?, ?, ?)",
+        (acct.id, amount_cents, posted, memo, ref, currency))
+    return cur.lastrowid
+
+
+def post_adjustment(conn, code: str, amount_cents: int, posted: str, reason: str, approved_by: str,
+                    currency: str | None = None) -> int:
+    if not reason.strip() or not approved_by.strip():
+        raise PostingError("adjustments need a reason and an approver")
+    if not isinstance(amount_cents, int) or amount_cents == 0:
+        raise PostingError("amount must be a non-zero integer number of cents")
+    try:
+        acct = by_code(conn, code)
+    except AccountError as exc:
+        raise PostingError(str(exc)) from exc
+    if currency is None:
+        currency = acct.currency
+    if currency != acct.currency:
+        raise PostingError(f"currency {currency!r} does not match account {code} ({acct.currency})")
+    cur = conn.execute(
+        "INSERT INTO adjustments (account_id, amount_cents, reason, approved_by, posted, currency)"
+        " VALUES (?, ?, ?, ?, ?, ?)", (acct.id, amount_cents, reason, approved_by, posted, currency))
+    return cur.lastrowid
+"""Balances and the trial balance (active accounts only)."""
+
+
+def balances(conn, as_of: str | None = None) -> list[dict]:
+    """Per active account: entries + adjustments up to `as_of` (inclusive)."""
+    date_filter = "AND posted <= :as_of" if as_of else ""
+    rows = conn.execute(f"""
+        SELECT a.code, a.name, a.type, a.currency,
+               COALESCE((SELECT SUM(amount_cents) FROM entries e
+                         WHERE e.account_id = a.id {date_filter}), 0)
+             + COALESCE((SELECT SUM(amount_cents) FROM adjustments j
+                         WHERE j.account_id = a.id {date_filter}), 0) AS balance_cents
+        FROM accounts a
+        WHERE a.closed IS NULL
+        ORDER BY a.code
+    """, {"as_of": as_of}).fetchall()
+    return [dict(r) for r in rows]
+
+
+def trial_balance(conn, as_of: str | None = None) -> dict:
+    out = {}
+    for b in balances(conn, as_of):
+        totals = out.setdefault(b["currency"], {"debits": 0, "credits": 0, "difference": 0})
+        if b["balance_cents"] >= 0:
+            totals["debits"] += b["balance_cents"]
+        else:
+            totals["credits"] += -b["balance_cents"]
+    for totals in out.values():
+        totals["difference"] = totals["debits"] - totals["credits"]
+    return out
+
+
+def format_report(rows) -> str:
+    lines = [f"{'code':<10} {'name':<32} {'type':<10} {'currency':<8} {'balance':>14}"]
+    for r in rows:
+        lines.append(f"{r['code']:<10} {r['name'][:32]:<32} {r['type']:<10} {r['currency']:<8} {r['balance_cents'] / 100:>14,.2f}")
+    return "\n".join(lines)
+[?2004hroot@60537d21dc87:/app# python - <<'PY'
+[?2004l[?2004h> from pathlib import Path
+[?2004l[?2004h> p = Path('migrations/0007_multi_currency.py')
+[?2004l[?2004h> s = p.read_text().replace('"CHECK (length(currency) = 3 AND currency GLOB \'[A-Z][A-Z][A-Z]\')")', '"CHECK (length(currency) = 3 AND length(CAST(currency AS BLOB)) = 3 "\n                "AND currency GLOB \'[A-Z][A-Z][A-Z]\')")')
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> PY
+[?2004lh[?2004hroot@60537d21dc87:/app# cat > tests/test_multi_currency.py <<'PY'
+[?2004l[?2004h> import sqlite3
+[?2004l[?2004h> 
+[?2004l[?2004h> import pytest
+[?2004l[?2004h> 
+[?2004l[?2004h> from ledger import accounts, cli, reports, retention
+[?2004l[?2004h> from ledger.accounts import AccountError, close_account, open_account
+[?2004l[?2004h> from ledger.postings import PostingError, post_adjustment, post_entry
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l [?2004h> INVALID_CURRENCIES = [None, "", "US", "USDD", "usd", "Usd", "EU1", " EU", "EUR\n", "ÉUR", "USD\x00X"]
+[?2004l[?2004h> 
+[?2004le[?2004h> 
+[?2004ln[?2004h> def test_account_currency_default_and_lookup(conn):
+[?2004l[?2004h>     usd = open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+[?2004l[?2004h>     eur = open_account(conn, "1100", "EU Cash", "asset", "2026-12-01", currency="EUR")
+[?2004l[?2004h>     assert usd.currency == "USD"
+[?2004l[?2004h>     assert eur.currency == "EUR"
+[?2004l[?2004h>     assert accounts.by_code(conn, "1100") == eur
+[?2004l[?2004h>     assert accounts.get(conn, eur.id) == eur
+[?2004l[?2004h>     assert [a.currency for a in accounts.active(conn)] == ["USD", "EUR"]
+[?2004l[?2004h>     assert close_account(conn, "1100", "2026-12-31").currency == "EUR"
+[?2004l[?2004h> 
+[?2004l0[?2004h> 
+[?2004l[?2004h> @pytest.mark.parametrize("currency", INVALID_CURRENCIES + [123])
+[?2004l[?2004h> def test_invalid_account_currency(conn, currency):
+[?2004l[?2004h>     with pytest.raises(AccountError, match="currency"):
+[?2004l[?2004h>         open_account(conn, "1000", "Cash", "asset", "2026-01-01", currency=currency)
+[?2004l[?2004h>     assert conn.execute("SELECT count(*) FROM accounts").fetchone()[0] == 0
+[?2004l[?2004h> 
+[?2004lw[?2004h> 
+[?2004l[?2004h> @pytest.mark.parametrize("currency", ["USD", "EUR", "GBP"])
+[?2004l[?2004h> @pytest.mark.parametrize("explicit", [False, True])
+[?2004l[?2004h> def test_postings_record_account_currency(conn, currency, explicit):
+[?2004l[?2004h>     open_account(conn, "1000", "Cash", "asset", "2026-01-01", currency=currency)
+[?2004l[?2004h>     kwargs = {"currency": currency} if explicit else {}
+[?2004l[?2004h>     entry_id = post_entry(conn, "1000", 1234, "2026-12-01", "memo", "INV-1", **kwargs)
+[?2004l[?2004h>     adjustment_id = post_adjustment(conn, "1000", -34, "2026-12-02", "fee", "finance", **kwargs)
+[?2004l[?2004h>     e = conn.execute("SELECT * FROM entries WHERE id=?", (entry_id,)).fetchone()
+[?2004l[?2004h>     j = conn.execute("SELECT * FROM adjustments WHERE id=?", (adjustment_id,)).fetchone()
+[?2004l[?2004h>     assert (e["currency"], e["amount_cents"], e["memo"], e["ref"]) == (currency, 1234, "memo", "INV-1")
+[?2004l[?2004h>     assert (j["currency"], j["amount_cents"], j["reason"], j["approved_by"]) == (currency, -34, "fee", "finance")
+[?2004l[?2004h>     assert reports.balances(conn)[0]["balance_cents"] == 1200
+[?2004l[?2004h> 
+[?2004l=[?2004h> 
+[?2004l [?2004h> @pytest.mark.parametrize("account_currency,posted_currency", [
+[?2004l[?2004h>     ("USD", "EUR"), ("EUR", "USD"), ("EUR", "eur"), ("EUR", ""), ("EUR", "EURO")
+[?2004l "[?2004h> ])
+[?2004l[?2004h> def test_mismatched_postings_write_nothing(conn, account_currency, posted_currency):
+[?2004l[?2004h>     open_account(conn, "1000", "Cash", "asset", "2026-01-01", currency=account_currency)
+[?2004l[?2004h>     with pytest.raises(PostingError, match="currency"):
+[?2004l[?2004h>         post_entry(conn, "1000", 100, "2026-12-01", currency=posted_currency)
+[?2004l[?2004h>     with pytest.raises(PostingError, match="currency"):
+[?2004l[?2004h>         post_adjustment(conn, "1000", 100, "2026-12-01", "test", "finance", currency=posted_currency)
+[?2004l[?2004h>     for table in ("entries", "adjustments"):
+[?2004l[?2004h>         assert conn.execute(f"SELECT count(*) FROM {table}").fetchone()[0] == 0
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> def test_reports_do_not_net_different_currencies(conn):
+[?2004l[?2004h>     assert reports.balances(conn) == []
+[?2004l[?2004h>     assert reports.trial_balance(conn) == {}
+[?2004l[?2004h>     for code, currency in [("1000", "USD"), ("1100", "EUR"), ("1200", "GBP")]:
+[?2004l[?2004h>         open_account(conn, code, "Cash", "asset", "2026-01-01", currency=currency)
+[?2004l[?2004h>     post_entry(conn, "1000", 500, "2026-12-01")
+[?2004l[?2004h>     post_entry(conn, "1100", -500, "2026-12-01")
+[?2004l[?2004h>     post_adjustment(conn, "1100", 125, "2026-12-02", "correction", "finance")
+[?2004l[?2004h>     assert reports.trial_balance(conn) == {
+[?2004l[?2004h>         "USD": {"debits": 500, "credits": 0, "difference": 500},
+[?2004l[?2004h>         "EUR": {"debits": 0, "credits": 375, "difference": -375},
+[?2004l[?2004h>         "GBP": {"debits": 0, "credits": 0, "difference": 0},
+[?2004l[?2004h>     }
+[?2004l[?2004h>     assert reports.trial_balance(conn, "2026-12-01")["EUR"] == {
+[?2004l[?2004h>         "debits": 0, "credits": 500, "difference": -500,
+[?2004l[?2004h>     }
+[?2004l[?2004h>     rows = reports.balances(conn, "2026-12-01")
+[?2004l[?2004h>     assert [(r["currency"], r["balance_cents"]) for r in rows] == [("USD", 500), ("EUR", -500), ("GBP", 0)]
+[?2004l[?2004h>     output = reports.format_report(rows)
+[?2004l[?2004h>     assert all(currency in output for currency in ["currency", "USD", "EUR", "GBP"])
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> def test_eur_retention_preserves_currency_and_history(conn):
+[?2004l[?2004h>     acct = open_account(conn, "1000", "EU Cash", "asset", "2026-01-01", currency="EUR")
+[?2004l[?2004h>     post_entry(conn, "1000", 700, "2026-02-01")
+[?2004l[?2004h>     post_adjustment(conn, "1000", -50, "2026-02-02", "fee", "finance")
+[?2004l[?2004h>     close_account(conn, "1000", "2026-03-01")
+[?2004l[?2004h>     assert retention.archive_closed(conn, "2026-11-20") == ["1000"]
+[?2004l[?2004h>     assert conn.execute("SELECT currency FROM accounts_archive WHERE id=?", (acct.id,)).fetchone()[0] == "EUR"
+[?2004l[?2004h>     for table in ("entries", "adjustments"):
+[?2004l[?2004h>         assert conn.execute(f"SELECT currency FROM {table}").fetchone()[0] == "EUR"
+[?2004l[?2004h>     assert conn.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> @pytest.mark.parametrize("table", ["accounts", "accounts_archive", "entries", "adjustments"])
+[?2004l[?2004h> @pytest.mark.parametrize("currency", INVALID_CURRENCIES)
+[?2004l[?2004h> def test_schema_currency_constraints(conn, table, currency):
+[?2004l[?2004h>     a = open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+[?2004l[?2004h>     conn.execute("INSERT INTO accounts_archive (id, code, name, type, opened, archived_at) "
+[?2004l[?2004h>                  "VALUES (99, 'OLD', 'Old', 'asset', '2025-01-01', '2026-01-01')")
+[?2004l[?2004h>     post_entry(conn, "1000", 100, "2026-01-01")
+[?2004l[?2004h>     post_adjustment(conn, "1000", -1, "2026-01-01", "fee", "finance")
+[?2004l[?2004h>     with pytest.raises(sqlite3.IntegrityError):
+[?2004l[?2004h>         conn.execute(f"UPDATE {table} SET currency=?", (currency,))
+[?2004l[?2004h>     assert conn.execute(f"SELECT currency FROM {table}").fetchone()[0] == "USD"
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> def test_cli_currency_flags_and_report(conn, capsys):
+[?2004l[?2004h>     path = conn.execute("PRAGMA database_list").fetchone()[2]
+[?2004l[?2004h>     open_account(conn, "1000", "Cash", "asset", "2026-01-01")
+[?2004l[?2004h>     open_account(conn, "1100", "EU Cash", "asset", "2026-01-01", currency="EUR")
+[?2004l[?2004h>     base = ["--db", path]
+[?2004l[?2004h>     assert cli.main(base + ["post", "1000", "500", "2026-12-01"]) == 0
+[?2004l[?2004h>     assert cli.main(base + ["post", "1100", "-500", "2026-12-01", "--currency", "EUR"]) == 0
+[?2004l[?2004h>     assert cli.main(base + ["adjust", "1100", "125", "2026-12-02", "--reason", "fee",
+[?2004l[?2004h>                             "--approved-by", "finance", "--currency", "EUR"]) == 0
+[?2004l[?2004h>     assert cli.main(base + ["adjust", "1100", "25", "2026-12-03", "--reason", "fee",
+[?2004l[?2004h>                             "--approved-by", "finance"]) == 0
+[?2004l[?2004h>     capsys.readouterr()
+[?2004l[?2004h>     assert cli.main(base + ["report", "--as-of", "2026-12-01"]) == 0
+[?2004l[?2004h>     output = capsys.readouterr().out
+[?2004l[?2004h>     assert "trial balance (USD): debits 5.00  credits 0.00  difference 5.00" in output
+[?2004l[?2004h>     assert "trial balance (EUR): debits 0.00  credits 5.00  difference -5.00" in output
+[?2004l[?2004h>     with pytest.raises(PostingError):
+[?2004l[?2004h>         cli.main(base + ["post", "1100", "100", "2026-12-01", "--currency", "USD"])
+[?2004l[?2004h>     with pytest.raises(PostingError):
+[?2004l[?2004h>         cli.main(base + ["adjust", "1100", "100", "2026-12-01", "--reason", "fee",
+[?2004l[?2004h>                          "--approved-by", "finance", "--currency", "USD"])
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@60537d21dc87:/app# cat > tests/test_migrations.py <<'PY'
+[?2004l[?2004h> import pytest
+[?2004l    path = str(tmp_path / "ledger.db")
+    schemashift.upgrade(path, str(db.MIGRATIONS), target=6)
+    c = db.connect(path)
+    try:
+        c.executemany("INSERT INTO accounts (id, code, name, type, opened, closed) VALUES (?, ?, ?, ?, ?, ?)", [
+            (1, "1000", "Cash", "asset", "2025-01-01", None),
+            (2, "1100", "Old cash", "asset", "2025-01-01", "2026-01-01"),
+            (3, "4000", "Revenue", "income", "2025-01-01", None),
+        ])
+        c.executemany("INSERT INTO entries (id, account_id, amount_cents, posted, memo, ref) VALUES (?, ?, ?, ?, ?, ?)", [
+            (11, 1, 1000, "2025-12-01", "cash", "INV-1"),
+            (12, 2, 700, "2025-12-01", "old cash", "INV-2"),
+            (13, 3, -1700, "2025-12-01", "revenue", "INV-3"),
+        ])
+        c.executemany("INSERT INTO adjustments (id, account_id, amount_cents, reason, approved_by, posted) VALUES (?, ?, ?, ?, ?, ?)", [
+            (21, 1, -50, "bank fee", "finance", "2025-12-02"),
+            (22, 2, -25, "audit correction", "controller", "2025-12-03"),
+        ])
+        if archive:
+            assert retention.archive_closed(c, "2026-11-20") == ["1100"]
+        before = {t: rows(c, t) for t in TABLES}
+        balances_before = legacy_balances(c)
+        fk_before = sorted(tuple(r) for r in c.execute("PRAGMA foreign_key_check"))
+        indexes_before = [tuple(r) for r in c.execute("SELECT name, sql FROM sqlite_master WHERE type='index' ORDER BY name")]
+        versions_before = rows(c, "schemashift_version") if False else [tuple(r) for r in c.execute("SELECT * FROM schemashift_version ORDER BY version")]
+
+        assert schemashift.upgrade(path, str(db.MIGRATIONS)) == ["0007_multi_currency"]
+        for table, old_rows in before.items():
+            after = rows(c, table)
+            assert after == [dict(r, currency="USD") for r in old_rows]
+            info = {r[1]: r for r in c.execute(f"PRAGMA table_info({table})")}
+            assert info["currency"][2:5] == ("TEXT", 1, "'USD'")
+        assert reports.balances(c) == [dict(r, currency="USD") for r in balances_before]
+        assert sorted(tuple(r) for r in c.execute("PRAGMA foreign_key_check")) == fk_before
+        assert [tuple(r) for r in c.execute("SELECT name, sql FROM sqlite_master WHERE type='index' ORDER BY name")] == indexes_before
+        assert [tuple(r) for r in c.execute("SELECT * FROM schemashift_version WHERE version<=6 ORDER BY version")] == versions_before
+        assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
+        assert c.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+        assert schemashift.upgrade(path, str(db.MIGRATIONS)) == []
+        if archive:
+            assert '"event": "rebuild_carried_violations"' in log.read_text()
+            assert c.execute("SELECT SUM(amount_cents) FROM adjustments WHERE account_id=2").fetchone()[0] == -25
+
+        # The rebuilt table accepts EUR, and explicit identifiers survived so
+        # subsequent generated identifiers do not collide with historical rows.
+        open_account(c, "1200", "EU cash", "asset", "2026-12-01", currency="EUR")
+        asser[?2004h> 
+[?2004lt[?2004h> import schemashift
+[?2004l[?2004h> from ledger import db, reports, retention
+[?2004l  assert[?2004h> from ledger.accounts import open_account
+[?2004l[?2004h> from ledger.postings import post_adjustment, post_entry
+[?2004lrts.tria[?2004h> 
+[?2004l[?2004h> 
+[?2004l[?2004h> TABLES = ("accounts", "accounts_archive", "entries", "adjustments")
+[?2004l[?2004h> 
+[?2004l}[?2004h> 
+[?2004l[?2004h> def rows(conn, table):
+[?2004li[?2004h>     return [dict(r) for r in conn.execute(f"SELECT * FROM {table} ORDER BY id")]
+[?2004l[?2004h> 
+[?2004l[?2004h> 
+[?2004l, [?2004h> def legacy_balances(conn):
+[?2004l[?2004h>     return [dict(r) for r in conn.execute("""
+[?2004l[?2004h>         SELECT a.code, a.name, a.type,
+[?2004l[?2004h>                COALESCE((SELECT SUM(amount_cents) FROM entries WHERE account_id=a.id), 0)
+[?2004l[?2004h>              + COALESCE((SELECT SUM(amount_cents) FROM adjustments WHERE account_id=a.id), 0)
+[?2004l[?2004h>                AS balance_cents
+[?2004l[?2004h>         FROM accounts a WHERE a.closed IS NULL ORDER BY a.code
+[?2004l[?2004h>     """)]
+[?2004lro[?2004h> 
+[?2004l[?2004h> 
+[?2004ls[?2004h> @pytest.mark.parametrize("archive", [False, True])
+[?2004l[?2004h> def test_0007_preserves_v6_data_and_archived_history(tmp_path, monkeypatch, archive):
+[?2004l[?2004h>     log = tmp_path / "schemashift.log"
+[?2004lt[?2004h>     monkeypatch.setattr(schemashift.runner, "LOG", log)
+[?2004l[?2004h>     path = str(tmp_path / "ledger.db")
+[?2004l[?2004h>     schemashift.upgrade(path, str(db.MIGRATIONS), target=6)
+[?2004l[?2004h>     c = db.connect(path)
+[?2004l[?2004h>     try:
+[?2004l[?2004h>         c.executemany("INSERT INTO accounts (id, code, name, type, opened, closed) VALUES (?, ?, ?, ?, ?, ?)", [
+[?2004l[?2004h>             (1, "1000", "Cash", "asset", "2025-01-01", None),
+[?2004l[?2004h>             (2, "1100", "Old cash", "asset", "2025-01-01", "2026-01-01"),
+[?2004l[?2004h>             (3, "4000", "Revenue", "income", "2025-01-01", None),
+[?2004l[?2004h>         ])
+[?2004l[?2004h>         c.executemany("INSERT INTO entries (id, account_id, amount_cents, posted, memo, ref) VALUES (?, ?, ?, ?, ?, ?)", [
+[?2004l[?2004h>             (11, 1, 1000, "2025-12-01", "cash", "INV-1"),
+[?2004l[?2004h>             (12, 2, 700, "2025-12-01", "old cash", "INV-2"),
+[?2004l[?2004h>             (13, 3, -1700, "2025-12-01", "revenue", "INV-3"),
+[?2004l[?2004h>         ])
+[?2004l[?2004h>         c.executemany("INSERT INTO adjustments (id, account_id, amount_cents, reason, approved_by, posted) VALUES (?, ?, ?, ?, ?, ?)", [
+[?2004l[?2004h>             (21, 1, -50, "bank fee", "finance", "2025-12-02"),
+[?2004l[?2004h>             (22, 2, -25, "audit correction", "controller", "2025-12-03"),
+[?2004l[?2004h>         ])
+[?2004la[?2004h>         if archive:
+[?2004ln[?2004h>             assert retention.archive_closed(c, "2026-11-20") == ["1100"]
+[?2004l[?2004h>         before = {t: rows(c, t) for t in TABLES}
+[?2004l[?2004h>         balances_before = legacy_balances(c)
+[?2004ll[?2004h>         fk_before = sorted(tuple(r) for r in c.execute("PRAGMA foreign_key_check"))
+[?2004l[?2004h>         indexes_before = [tuple(r) for r in c.execute("SELECT name, sql FROM sqlite_master WHERE type='index' ORDER BY name")]
+[?2004l[?2004h>         versions_before = rows(c, "schemashift_version") if False else [tuple(r) for r in c.execute("SELECT * FROM schemashift_version ORDER BY version")]
+[?2004l[?2004h> 
+[?2004l[?2004h>         assert schemashift.upgrade(path, str(db.MIGRATIONS)) == ["0007_multi_currency"]
+[?2004l[?2004h>         for table, old_rows in before.items():
+[?2004l[?2004h>             after = rows(c, table)
+[?2004l[?2004h>             assert after == [dict(r, currency="USD") for r in old_rows]
+[?2004l[?2004h>             info = {r[1]: r for r in c.execute(f"PRAGMA table_info({table})")}
+[?2004l[?2004h>             assert info["currency"][2:5] == ("TEXT", 1, "'USD'")
+[?2004l[?2004h>         assert reports.balances(c) == [dict(r, currency="USD") for r in balances_before]
+[?2004l[?2004h>         assert sorted(tuple(r) for r in c.execute("PRAGMA foreign_key_check")) == fk_before
+[?2004l[?2004h>         assert [tuple(r) for r in c.execute("SELECT name, sql FROM sqlite_master WHERE type='index' ORDER BY name")] == indexes_before
+[?2004l[?2004h>         assert [tuple(r) for r in c.execute("SELECT * FROM schemashift_version WHERE version<=6 ORDER BY version")] == versions_before
+[?2004l[?2004h>         assert c.execute("PRAGMA integrity_check").fetchone()[0] == "ok"
+[?2004l[?2004h>         assert c.execute("PRAGMA foreign_keys").fetchone()[0] == 1
+[?2004l[?2004h>         assert schemashift.upgrade(path, str(db.MIGRATIONS)) == []
+[?2004l[?2004h>         if archive:
+[?2004l[?2004h>             assert '"event": "rebuild_carried_violations"' in log.read_text()
+[?2004l[?2004h>             assert c.execute("SELECT SUM(amount_cents) FROM adjustments WHERE account_id=2").fetchone()[0] == -25
+[?2004l[?2004h> 
+[?2004l[?2004h>         # The rebuilt table accepts EUR, and explicit identifiers survived so
+[?2004l[?2004h>         # subsequent generated identifiers do not collide with historical rows.
+[?2004l[?2004h>         open_account(c, "1200", "EU cash", "asset", "2026-12-01", currency="EUR")
+[?2004l[?2004h>         assert post_entry(c, "1200", 800, "2026-12-01") > 13
+[?2004l[?2004h>         assert post_adjustment(c, "1200", -20, "2026-12-01", "fee", "finance") > 22
+[?2004l[?2004h>         assert reports.trial_balance(c)["EUR"] == {"debits": 780, "credits": 0, "difference": 780}
+[?2004l[?2004h>         with pytest.raises(Exception) as exc:
+[?2004l[?2004h>             c.execute("INSERT INTO adjustments (account_id, amount_cents, reason, approved_by, posted) "
+[?2004l[?2004h>                       "VALUES (9999, 1, 'bad parent', 'finance', '2026-12-01')")
+[?2004l[?2004h>         assert "FOREIGN KEY" in str(exc.value)
+[?2004l[?2004h>     finally:
+[?2004l[?2004h>         c.close()
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@60537d21dc87:/app# python - <<'PY'
+[?2004l[?2004h> from pathlib import Path
+[?2004l[?2004h> p = Path('tests/test_migrations.py')
+[?2004l[?2004h> s = p.read_text().replace('import pytest', 'import sqlite3\n\nimport pytest', 1)
+[?2004l[?2004h> s = s.replace('versions_before = rows(c, "schemashift_version") if False else ', 'versions_before = ')
+[?2004l[?2004h> s = s.replace('pytest.raises(Exception)', 'pytest.raises(sqlite3.IntegrityError)')
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> p = Path('tests/test_multi_currency.py')
+[?2004l[?2004h> s = p.read_text().replace('    a = open_account(conn, "1000", "Cash", "asset", "2026-01-01")', '    open_account(conn, "1000", "Cash", "asset", "2026-01-01")')
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> p = Path('README.md')
+[?2004l[?2004h> s = p.read_text().replace('python -m ledger post CODE AMOUNT_CENTS DATE', 'python -m ledger post CODE AMOUNT_CENTS DATE [--currency CCC]').replace('--reason R --approved-by U', '--reason R --approved-by U [--currency CCC]')
+[?2004l[?2004h> s += '''
+[?2004l[?2004h> ## Multi-currency (FIN-311)
+[?2004l[?2004h> 
+[?2004l[?2004h> Accounts have a single currency (three upper-case ASCII letters), defaulting to
+[?2004l[?2004h> USD. Open EUR accounts through the Python API:
+[?2004l[?2004h> 
+[?2004l[?2004h> ```python
+[?2004l[?2004h> from ledger import accounts, db
+[?2004l[?2004h> conn = db.connect()
+[?2004l[?2004h> account = accounts.open_account(conn, "EU-1000", "EU Cash", "asset", "2026-12-01", currency="EUR")
+[?2004l[?2004h> conn.close()
+[?2004l[?2004h> ```
+[?2004l[?2004h> 
+[?2004l[?2004h> Amounts remain integer minor units; the ledger does not perform FX conversion.
+[?2004l[?2004h> `post_entry` and `post_adjustment` accept `currency=None` (use the account currency)
+[?2004l[?2004h> or an explicit matching currency. A mismatch raises `PostingError` without posting.
+[?2004l[?2004h> The CLI exposes the same choice via `--currency`. Reports label each account's
+[?2004l[?2004h> currency and print separate trial balances. `reports.trial_balance()` now returns
+[?2004l[?2004h> `{currency: {"debits": ..., "credits": ..., "difference": ...}}`.
+[?2004l[?2004h> 
+[?2004l[?2004h> Migration `0007` defaults all existing accounts and entries to USD and preserves
+[?2004l[?2004h> adjustments and retained history unchanged. Back up the database before rollout.
+[?2004l[?2004h> Retention intentionally leaves references to archived accounts; the adjustments
+[?2004l[?2004h> rebuild uses `fk_mode="defer"` to carry these through, and recreates its index.
+[?2004l[?2004h> Do not prune these references: they are financial history, not disposable rows.
+[?2004l[?2004h> '''
+[?2004l[?2004h> p.write_text(s)
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@60537d21dc87:/app# pytest -q
+[?2004l[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0mcat ledger/accounts.py ledger/cli.py migrations/0007_multi_currency.py
+[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m                                                                           [100%][0m
+[32m[32m[1m78 passed[0m[32m in 14.94s[0m[0m
+[?2004hroot@60537d21dc87:/app# cat ledger/accounts.py ledger/cli.py migrations/0007_multi_currency.py
+[?2004l"""Chart of accounts."""
+
+import re
+from dataclasses import dataclass
+
+TYPES = ("asset", "liability", "equity", "income", "expense")
+
+
+class AccountError(Exception):
+    pass
+
+
+@dataclass(frozen=True)
+class Account:
+    id: int
+    code: str
+    name: str
+    type: str
+    opened: str
+    closed: str | None
+    currency: str = "USD"
+
+
+def _row(r) -> Account:
+    return Account(r["id"], r["code"], r["name"], r["type"], r["opened"], r["closed"],
+                   r["currency"])
+
+
+def open_account(conn, code: str, name: str, type_: str, opened: str,
+                 currency: str = "USD") -> Account:
+    if not isinstance(currency, str) or re.fullmatch(r"[A-Z]{3}", currency) is None:
+        raise AccountError(f"bad currency {currency!r}: expected three upper-case letters")
+    if type_ not in TYPES:
+        raise AccountError(f"unknown account type {type_!r}")
+    if not code or not code.replace("-", "").isalnum():
+        raise AccountError(f"bad account code {code!r}")
+    if conn.execute("SELECT 1 FROM accounts WHERE code = ?", (code,)).fetchone():
+        raise AccountError(f"account {code} already exists")
+    cur = conn.execute("INSERT INTO accounts (code, name, type, opened, currency) VALUES (?, ?, ?, ?, ?)",
+                       (code, name, type_, opened, currency))
+    return get(conn, cur.lastrowid)
+
+
+def get(conn, account_id: int) -> Account:
+    r = conn.execute("SELECT * FROM accounts WHERE id = ?", (account_id,)).fetchone()
+    if r is None:
+        raise AccountError(f"no account with id {account_id}")
+    return _row(r)
+
+
+def by_code(conn, code: str) -> Account:
+    r = conn.execute("SELECT * FROM accounts WHERE code = ?", (code,)).fetchone()
+    if r is None:
+        raise AccountError(f"no such account {code}")
+    return _row(r)
+
+
+def close_account(conn, code: str, on: str) -> Account:
+    acct = by_code(conn, code)
+    if acct.closed:
+        raise AccountError(f"{code} already closed on {acct.closed}")
+    conn.execute("UPDATE accounts SET closed = ? WHERE id = ?", (on, acct.id))
+    return by_code(conn, code)
+
+
+def active(conn) -> list[Account]:
+    return [_row(r) for r in conn.execute("SELECT * FROM accounts WHERE closed IS NULL ORDER BY code")]
+"""ledger command line.
+
+    python -m ledger migrate  [--db PATH]          apply pending schema migrations
+    python -m ledger status   [--db PATH]
+    python -m ledger report   [--db PATH] [--as-of DATE]
+    python -m ledger post     CODE AMOUNT_CENTS DATE [--memo M] [--currency CCC] [--db PATH]
+    python -m ledger adjust   CODE AMOUNT_CENTS DATE --reason R --approved-by U [--currency CCC] [--db PATH]
+    python -m ledger retention --today DATE [--db PATH]
+"""
+
+import argparse
+import sys
+
+import schemashift
+
+from . import db, postings, reports, retention
+
+
+def main(argv=None) -> int:
+    ap = argparse.ArgumentParser(prog="ledger")
+    ap.add_argument("--db", default=db.DEFAULT_DB)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("migrate")
+    sub.add_parser("status")
+    r = sub.add_parser("report")
+    r.add_argument("--as-of")
+    p = sub.add_parser("post")
+    p.add_argument("code")
+    p.add_argument("amount", type=int)
+    p.add_argument("date")
+    p.add_argument("--memo", default="")
+    p.add_argument("--currency", help="account currency (defaults to the account currency)")
+    a = sub.add_parser("adjust")
+    a.add_argument("code")
+    a.add_argument("amount", type=int)
+    a.add_argument("date")
+    a.add_argument("--reason", required=True)
+    a.add_argument("--approved-by", required=True)
+    a.add_argument("--currency", help="account currency (defaults to the account currency)")
+    t = sub.add_parser("retention")
+    t.add_argument("--today", required=True)
+    args = ap.parse_args(argv)
+
+    if args.cmd == "migrate":
+        try:
+            for name in schemashift.upgrade(args.db, str(db.MIGRATIONS)):
+                print(f"applied {name}")
+        except schemashift.PreflightError as exc:
+            print(f"schemashift: {exc}", file=sys.stderr)
+            return 3
+        return 0
+    conn = db.connect(args.db)
+    if args.cmd == "status":
+        done = schemashift.applied_versions(conn)
+        print(f"schema version {max(done) if done else 0}")
+    elif args.cmd == "report":
+        rows = reports.balances(conn, args.as_of)
+        print(reports.format_report(rows))
+        tb = reports.trial_balance(conn, args.as_of)
+        for currency, totals in sorted(tb.items()):
+            print(f"\ntrial balance ({currency}): debits {totals['debits'] / 100:,.2f}"
+                  f"  credits {totals['credits'] / 100:,.2f}"
+                  f"  difference {totals['difference'] / 100:,.2f}")
+    elif args.cmd == "post":
+        print(postings.post_entry(conn, args.code, args.amount, args.date, args.memo,
+                                  currency=args.currency))
+    elif args.cmd == "adjust":
+        print(postings.post_adjustment(conn, args.code, args.amount, args.date, args.reason,
+                                       args.approved_by, currency=args.currency))
+    elif args.cmd == "retention":
+        print("archived:", ", ".join(retention.archive_closed(conn, args.today)) or "nothing")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
+"""FIN-311: amounts are minor units of each account's currency; no FX."""
+
+
+def upgrade(conn, ops):
+    currency = ("currency TEXT NOT NULL DEFAULT 'USD' "
+                "CHECK (length(currency) = 3 AND length(CAST(currency AS BLOB)) = 3 "
+                "AND currency GLOB '[A-Z][A-Z][A-Z]')")
+    for table in ("accounts", "accounts_archive", "entries"):
+        ops.add_column(table, currency)
+
+    # Retention deliberately moves parents into accounts_archive, leaving their
+    # financial history in place. Carry those references through unchanged;
+    # enforcing/pruning them here would reject the rollout or destroy history.
+    ops.rebuild_table(
+        "adjustments",
+        f"""CREATE TABLE adjustments (
+            id           INTEGER PRIMARY KEY,
+            account_id   INTEGER NOT NULL REFERENCES accounts(id),
+            amount_cents INTEGER NOT NULL,
+            {currency},
+            reason       TEXT NOT NULL,
+            approved_by  TEXT NOT NULL,
+            posted       TEXT NOT NULL
+        )""",
+        ["id", "account_id", "amount_cents", "currency", "reason", "approved_by", "posted"],
+        fk_mode="defer",
+    )
+    # Indexes belong to the old table and are dropped by the rebuild.
+    ops.execute("CREATE INDEX idx_adjustments_account ON adjustments(account_id, posted)")
+[?2004hroot@60537d21dc87:/app# cat > /tmp/verify_fin311.py <<'PY'
+[?2004l[?2004h> import json
+[?2004l[?2004h> import sqlite3
+[?2004l[?2004h> import sys
+[?2004l[?2004h> from pathlib import Path
+[?2004l[?2004h> 
+[?2004l[?2004h> from ledger import reports
+[?2004l[?2004h> 
+[?2004l[?2004h> path, snapshot_path = sys.argv[1:]
+[?2004l[?2004h> snapshot_file = Path(snapshot_path)
+[?2004l[?2004h> snapshot = json.loads(snapshot_file.read_text())
+[?2004l[?2004h> c = sqlite3.connect(f'file:{Path(path).resolve()}?mode=ro', uri=True)
+[?2004l[?2004h> c.row_factory = sqlite3.Row
+[?2004l[?2004h> before = sqlite3.connect(f'file:{snapshot_file.with_suffix(".db").resolve()}?mode=ro', uri=True)
+[?2004l[?2004h> before.row_factory = sqlite3.Row
+[?2004l[?2004h> counts = {}
+[?2004l[?2004h> for table, old_rows in snapshot['tables'].items():
+[?2004l[?2004h>     actual = [dict(r) for r in c.execute(f'SELECT * FROM {table} ORDER BY id')]
+[?2004l[?2004h>     assert actual == [dict(r, currency='USD') for r in old_rows], f'{table} data changed'
+[?2004l[?2004h>     counts[table] = len(actual)
+[?2004l[?2004h> assert reports.balances(c) == [dict(r, currency='USD') for r in snapshot['balances']]
+[?2004l[?2004h> assert reports.trial_balance(c) == {'USD': snapshot['trial_balance']}
+[?2004l[?2004h> assert sorted(tuple(r) for r in c.execute('PRAGMA foreign_key_check')) == sorted(tuple(r) for r in snapshot['foreign_key_check'])
+[?2004l[?2004h> assert [list(r) for r in c.execute("SELECT name, sql FROM sqlite_master WHERE type='index' ORDER BY name")] == snapshot['indexes']
+[?2004l[?2004h> assert c.execute('PRAGMA integrity_check').fetchone()[0] == 'ok'
+[?2004l[?2004h> assert [tuple(r) for r in c.execute('SELECT * FROM schemashift_version WHERE version<=6 ORDER BY version')] == [tuple(r) for r in before.execute('SELECT * FROM schemashift_version ORDER BY version')]
+[?2004l[?2004h> assert [r[0] for r in c.execute('SELECT version FROM schemashift_version ORDER BY version')] == list(range(1, 8))
+[?2004l[?2004h> # Check all accounts, including closed and archived, not just report-visible ones.
+[?2004l[?2004h> account_totals_sql = '''
+[?2004l[?2004h> SELECT a.id, a.code,
+[?2004l[?2004h>        COALESCE((SELECT SUM(amount_cents) FROM entries WHERE account_id=a.id), 0)
+[?2004l[?2004h>      + COALESCE((SELECT SUM(amount_cents) FROM adjustments WHERE account_id=a.id), 0) AS balance
+[?2004l[?2004h> FROM (SELECT id, code FROM accounts UNION ALL SELECT id, code FROM accounts_archive) a
+[?2004l[?2004h> ORDER BY a.id
+[?2004l[?2004h> '''
+[?2004l[?2004h> assert [tuple(r) for r in c.execute(account_totals_sql)] == [tuple(r) for r in before.execute(account_totals_sql)]
+[?2004l[?2004h> dates = [r[0] for r in before.execute('SELECT posted FROM entries UNION SELECT posted FROM adjustments ORDER BY posted')]
+[?2004l[?2004h> for date in dates:
+[?2004l[?2004h>     old = [dict(r) for r in before.execute('''
+[?2004l[?2004h>         SELECT a.code, a.name, a.type,
+[?2004l[?2004h>                COALESCE((SELECT SUM(amount_cents) FROM entries e WHERE e.account_id=a.id AND e.posted<=?), 0)
+[?2004l[?2004h>              + COALESCE((SELECT SUM(amount_cents) FROM adjustments j WHERE j.account_id=a.id AND j.posted<=?), 0) AS balance_cents
+[?2004l[?2004h>         FROM accounts a WHERE a.closed IS NULL ORDER BY a.code
+[?2004l[?2004h>     ''', (date, date))]
+[?2004l[?2004h>     assert reports.balances(c, date) == [dict(r, currency='USD') for r in old], date
+[?2004l[?2004h> result = {
+[?2004l[?2004h>     'database': str(Path(path).resolve()),
+[?2004l[?2004h>     'schema_version': 7,
+[?2004l[?2004h>     'row_counts': counts,
+[?2004l[?2004h>     'all_original_fields_unchanged': True,
+[?2004l[?2004h>     'current_closed_and_archived_balances_unchanged': True,
+[?2004l[?2004h>     'historical_report_dates_checked': len(dates),
+[?2004l[?2004h>     'trial_balance': reports.trial_balance(c),
+[?2004l[?2004h>     'existing_fk_diagnostics_unchanged': len(snapshot['foreign_key_check']),
+[?2004l[?2004h>     'indexes_unchanged': True,
+[?2004l[?2004h>     'integrity_check': 'ok',
+[?2004l[?2004h> }
+[?2004l[?2004h> print(json.dumps(result, indent=2))
+[?2004l[?2004h> c.close()
+[?2004l[?2004h> before.close()
+[?2004l[?2004h> PY
+[?2004l[?2004hroot@60537d21dc87:/app# PYTHONPATH=/app python - <<'PY'
+[?2004l[?2004h> import os
+[?2004l[?2004h> import sqlite3
+[?2004l[?2004h> import subprocess
+[?2004l[?2004h> import tempfile
+[?2004l[?2004h> from pathlib import Path
+[?2004l[?2004h> import schemashift
+[?2004l[?2004h> from ledger import db
+[?2004l[?2004h> snapshot = next(Path('data/backups').glob('ledger-before-0007-*.json'))
+[?2004l[?2004h> with tempfile.TemporaryDirectory(prefix='fin311-rehearsal-') as tmp:
+[?2004l[?2004h>     path = str(Path(tmp) / 'ledger.db')
+[?2004l[?2004h>     with sqlite3.connect(snapshot.with_suffix('.db')) as source, sqlite3.connect(path) as dest:
+[?2004l[?2004h>         source.backup(dest)
+[?2004l[?2004h>     print('Rehearsal:', schemashift.upgrade(path, str(db.MIGRATIONS)), flush=True)
+[?2004l[?2004h>     subprocess.run(['python', '/tmp/verify_fin311.py', path, str(snapshot)], check=True)
+[?2004l[?2004h>     assert schemashift.upgrade(path, str(db.MIGRATIONS)) == []
+[?2004l[?2004h>     print('Rehearsal and idempotence: PASSED')
+[?2004l[?2004h> PY
+[?2004lRehearsal: ['0007_multi_currency']
+{
+  "database": "/tmp/fin311-rehearsal-nt_70sxh/ledger.db",
+  "schema_version": 7,
+  "row_counts": {
+    "accounts": 35,
+    "accounts_archive": 6,
+    "entries": 562,
+    "adjustments": 68
+  },
+  "all_original_fields_unchanged": true,
+  "current_closed_and_archived_balances_unchanged": true,
+  "historical_report_dates_checked": 107,
+  "trial_balance": {
+    "USD": {
+      "debits": 16005260,
+      "credits": 16005260,
+      "difference": 0
+    }
+  },
+  "existing_fk_diagnostics_unchanged": 69,
+  "indexes_unchanged": true,
+  "integrity_check": "ok"
+}
+Rehearsal and idempotence: PASSED
+[?2004hroot@60537d21dc87:/app# python - <<'PY'
+[?2004l[?2004h> import json, sqlite3
+[?2004l[?2004h> from pathlib import Path
+[?2004l[?2004h> snapshot = json.loads(next(Path('data/backups').glob('ledger-before-0007-*.json')).read_text())
+[?2004l[?2004h> c = sqlite3.connect('file:data/ledger.db?mode=ro', uri=True)
+[?2004l[?2004h> c.row_factory = sqlite3.Row
+[?2004l[?2004h> for table, expected in snapshot['tables'].items():
+[?2004l[?2004h>     assert [dict(r) for r in c.execute(f'SELECT * FROM {table} ORDER BY id')] == expected, f'Live {table} changed since backup; stop rollout'
+[?2004l[?2004h> assert c.execute('SELECT MAX(version) FROM schemashift_version').fetchone()[0] == 6
+[?2004l[?2004h> c.close()
+[?2004l[?2004h> print('Live pre-migration snapshot match: PASSED')
+[?2004l[?2004h> PY
+[?2004lLive pre-migration snapshot match: PASSED
+[?2004hroot@60537d21dc87:/app# python -m ledger --db /app/data/ledger.db migrate && PYTHONPATH=/app python /tmp/verify_fin311.py /app/data/ledger.db data/backups/ledger-before-0007-20261121T190552640410Z.json > data/backups/ledger-after-0007-verification.json && cat data/backups/ledger-after-0007-verification.json && python -m ledger --db /app/data/ledger.db status && python -m ledger --db /app/data/ledger.db migrate
+[?2004lapplied 0007_multi_currency
+{
+  "database": "/app/data/ledger.db",
+  "schema_version": 7,
+  "row_counts": {
+    "accounts": 35,
+    "accounts_archive": 6,
+    "entries": 562,
+    "adjustments": 68
+  },
+  "all_original_fields_unchanged": true,
+  "current_closed_and_archived_balances_unchanged": true,
+  "historical_report_dates_checked": 107,
+  "trial_balance": {
+    "USD": {
+      "debits": 16005260,
+      "credits": 16005260,
+      "difference": 0
+    }
+  },
+  "existing_fk_diagnostics_unchanged": 69,
+  "indexes_unchanged": true,
+  "integrity_check": "ok"
+}
+schema version 7
+[?2004hroot@60537d21dc87:/app# cat > docs/FIN-311-rollout.md <<'MD'
+[?2004l[?2004h> # FIN-311 rollout verification
+[?2004l[?2004h> 
+[?2004l[?2004h> Migration `0007_multi_currency` has been applied to `/app/data/ledger.db`.
+[?2004l[?2004h> `python -m ledger --db /app/data/ledger.db status` reports schema version 7;
+[?2004l[?2004h> a repeated migration run applies nothing.
+[?2004l[?2004h> 
+[?2004l[?2004h> ## Safety and results
+[?2004l[?2004h> 
+[?2004l[?2004h> - Pre-migration SQLite backup:
+[?2004l[?2004h>   `data/backups/ledger-before-0007-20261121T190552640410Z.db`
+[?2004l[?2004h> - Full original-row and balance snapshot:
+[?2004l[?2004h>   `data/backups/ledger-before-0007-20261121T190552640410Z.json`
+[?2004l[?2004h> - Post-migration verification:
+[?2004l[?2004h>   `data/backups/ledger-after-0007-verification.json`
+[?2004l[?2004h> - Rehearsed against a temporary copy of the live backup before rollout.
+[?2004l[?2004h> - All original fields preserved across 35 current accounts, 6 archived accounts,
+[?2004l[?2004h>   562 entries, and 68 adjustments. Existing accounts/entries are USD.
+[?2004l[?2004h> - Current, closed, and archived account balances unchanged. Active-account
+[?2004l[?2004h>   historical reports matched on all 107 posting dates.
+[?2004l[?2004h> - USD trial balance: debits **160,052.60**, credits **160,052.60**,
+[?2004l[?2004h>   difference **0.00**, unchanged from before migration.
+[?2004l[?2004h> - Index definitions unchanged; SQLite integrity check: `ok`.
+[?2004l[?2004h> - All 69 pre-existing foreign-key diagnostics are unchanged. These reference
+[?2004l[?2004h>   the 6 archived accounts intentionally moved by retention; none point to an
+[?2004l[?2004h>   account absent from both current and archive tables. No history was pruned.
+[?2004l[?2004h> - 78 automated tests passed, covering fresh and populated upgrades, archived
+[?2004l[?2004h>   history preservation, validation, currency defaults/mismatches, EUR postings,
+[?2004l[?2004h>   per-currency/as-of reports, CLI, and EUR retention.
+[?2004l[?2004h> 
+[?2004l[?2004h> No EU chart-of-accounts records or test transactions were inserted into the live
+[?2004l[?2004h> ledger. Finance can create EUR accounts through `accounts.open_account(...,
+[?2004l[?2004h> currency="EUR")`; postings default to the account currency. Existing USD accounts
+[?2004l[?2004h> and their historical postings remain USD. No FX conversion is performed.
+[?2004l[?2004h> MD
+[?2004l[?2004hroot@60537d21dc87:/app# python -m ledger --help; python -m ledger post --help; python -m ledger adjust --help; python -m ledger --db /app/data/ledger.db report | tail -4; pytest -q
+[?2004lusage: ledger [-h] [--db DB] {migrate,status,report,post,adjust,retention} ...
+
+positional arguments:
+  {migrate,status,report,post,adjust,retention}
+
+options:
+  -h, --help            show this help message and exit
+  --db DB
+usage: ledger post [-h] [--memo MEMO] [--currency CURRENCY] code amount date
+
+positional arguments:
+  code
+  amount
+  date
+
+options:
+  -h, --help           show this help message and exit
+  --memo MEMO
+  --currency CURRENCY  account currency (defaults to the account currency)
+usage: ledger adjust [-h] --reason REASON --approved-by APPROVED_BY [--currency CURRENCY] code amount date
+
+positional arguments:
+  code
+  amount
+  date
+
+options:
+  -h, --help            show this help message and exit
+  --reason REASON
+  --approved-by APPROVED_BY
+  --currency CURRENCY   account currency (defaults to the account currency)
+1390       Consulting income 39             income     USD           -2,903.64
+9990       Suspense / clearing              liability  USD          -18,080.18
+
+trial balance (USD): debits 160,052.60  credits 160,052.60  difference 0.00
+[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m                                                                           [100%][0m
+[32m[32m[1m78 passed[0m[32m in 16.96s[0m[0m
+[?2004hroot@60537d21dc87:/app# 

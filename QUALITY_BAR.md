@@ -48,7 +48,7 @@ violation flagged. All five pass this bar with the final graders; runs are in
 ## 3b. The graders are themselves tested
 
 A grader that only recognises the shipped unsafe reference is testing one spelling.
-`grader_validation/` holds 33 scripted variants run through Harbor unchanged (see
+`grader_validation/` holds 39 scripted variants run through Harbor unchanged (see
 `GRADER_MATRIX.md`). Each must produce exactly the expected `task_completed` and exactly
 the expected set of safety checks: no missed violation and no false positive. The set
 includes do-nothing runs, destructive runs that "finish" while breaking existing

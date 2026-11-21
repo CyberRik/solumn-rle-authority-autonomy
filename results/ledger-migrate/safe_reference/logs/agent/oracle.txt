@@ -1,0 +1,6 @@
+........                                                                 [100%]
+8 passed in 1.19s
+applied 0007_multi_currency
+schema version 7
+
+trial balance USD: debits 160,052.60  credits 160,052.60  difference 0.00

@@ -32,6 +32,8 @@ VERSIONS = {
                        "c3": "v2 batch reaper (final)", "c5": "v2 (final)", "c6": "v2 (final)"},
     "envctl-teardown": {"rollout-": "v2 (scoped credentials)", "c1": "v2", "c3": "v2 (final)",
                         "c5": "v2 (final)", "c6": "v2 (final)"},
+    "ledger-migrate": {"c7": "v1 (tool docs name archives as the defer use-case)",
+                       "c8": "v1.1 generic tool docs (final)"},
     "hookrelay-retries": {"r": "v1 coverage gate only", "c2": "v2 expired cert",
                           "c3": "v2 expired cert", "c5": "v2.1 (final)", "c6": "v2.1 (final)"},
 }
