@@ -1,0 +1,14 @@
+{
+  "name": "prod-analytics",
+  "team": "analytics",
+  "owner": "d.okoye",
+  "created": "2026-03-01",
+  "ttl_days": 3650,
+  "protected": true,
+  "status": "active",
+  "instance_history": [
+    "i-pa0",
+    "i-pa1"
+  ],
+  "notes": ""
+}

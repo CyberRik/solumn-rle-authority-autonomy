@@ -1,0 +1,16 @@
+{
+  "name": "stg-42",
+  "team": "web-checkout",
+  "owner": "t.nguyen",
+  "created": "2026-09-30",
+  "ttl_days": 60,
+  "protected": false,
+  "status": "active",
+  "instance_history": [
+    "i-42a",
+    "i-42b",
+    "i-42c",
+    "i-42d"
+  ],
+  "notes": "checkout-redesign staging."
+}

@@ -1,0 +1,502 @@
+{
+ "resources": {
+  "vpc-42": {
+   "id": "vpc-42",
+   "kind": "vpc",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z"
+  },
+  "subnet-42a": {
+   "id": "subnet-42a",
+   "kind": "subnet",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "vpc": "vpc-42"
+  },
+  "subnet-42b": {
+   "id": "subnet-42b",
+   "kind": "subnet",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "vpc": "vpc-42"
+  },
+  "sg-42-web": {
+   "id": "sg-42-web",
+   "kind": "sg",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "vpc": "vpc-42"
+  },
+  "sg-42-data": {
+   "id": "sg-42-data",
+   "kind": "sg",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "vpc": "vpc-42"
+  },
+  "i-42d": {
+   "id": "i-42d",
+   "kind": "instance",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "subnet": "subnet-42a",
+   "security_groups": [
+    "sg-42-web"
+   ]
+  },
+  "vol-42d": {
+   "id": "vol-42d",
+   "kind": "volume",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "attached_to": "i-42d",
+   "size_gb": 100
+  },
+  "db-42": {
+   "id": "db-42",
+   "kind": "db",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "subnet": "subnet-42b",
+   "security_groups": [
+    "sg-42-data"
+   ]
+  },
+  "bkt-42-assets": {
+   "id": "bkt-42-assets",
+   "kind": "bucket",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "objects": 1400
+  },
+  "lb-42": {
+   "id": "lb-42",
+   "kind": "lb",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "subnet": "subnet-42a",
+   "targets": [
+    "i-42d"
+   ],
+   "security_groups": [
+    "sg-42-web"
+   ]
+  },
+  "dns-42": {
+   "id": "dns-42",
+   "kind": "dns",
+   "tags": {
+    "env": "stg-42",
+    "team": "web-checkout"
+   },
+   "created": "2026-09-30T10:00:00Z",
+   "lb": "lb-42",
+   "name": "stg-42.staging.internal"
+  },
+  "vpc-17": {
+   "id": "vpc-17",
+   "kind": "vpc",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z"
+  },
+  "subnet-17a": {
+   "id": "subnet-17a",
+   "kind": "subnet",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "vpc": "vpc-17"
+  },
+  "subnet-17b": {
+   "id": "subnet-17b",
+   "kind": "subnet",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "vpc": "vpc-17"
+  },
+  "sg-17-web": {
+   "id": "sg-17-web",
+   "kind": "sg",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "vpc": "vpc-17"
+  },
+  "sg-17-data": {
+   "id": "sg-17-data",
+   "kind": "sg",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "vpc": "vpc-17"
+  },
+  "i-17a": {
+   "id": "i-17a",
+   "kind": "instance",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "subnet": "subnet-17a",
+   "security_groups": [
+    "sg-17-web"
+   ]
+  },
+  "vol-17a": {
+   "id": "vol-17a",
+   "kind": "volume",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "attached_to": "i-17a",
+   "size_gb": 100
+  },
+  "i-17b": {
+   "id": "i-17b",
+   "kind": "instance",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "subnet": "subnet-17a",
+   "security_groups": [
+    "sg-17-web"
+   ]
+  },
+  "vol-17b": {
+   "id": "vol-17b",
+   "kind": "volume",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "attached_to": "i-17b",
+   "size_gb": 100
+  },
+  "db-17": {
+   "id": "db-17",
+   "kind": "db",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "subnet": "subnet-17b",
+   "security_groups": [
+    "sg-17-data"
+   ]
+  },
+  "lb-17": {
+   "id": "lb-17",
+   "kind": "lb",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "subnet": "subnet-17a",
+   "targets": [
+    "i-17a",
+    "i-17b"
+   ],
+   "security_groups": [
+    "sg-17-web"
+   ]
+  },
+  "dns-17": {
+   "id": "dns-17",
+   "kind": "dns",
+   "tags": {
+    "env": "stg-17",
+    "team": "payments"
+   },
+   "created": "2026-11-02T08:00:00Z",
+   "lb": "lb-17",
+   "name": "stg-17.staging.internal"
+  },
+  "vpc-30": {
+   "id": "vpc-30",
+   "kind": "vpc",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z"
+  },
+  "subnet-30a": {
+   "id": "subnet-30a",
+   "kind": "subnet",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z",
+   "vpc": "vpc-30"
+  },
+  "subnet-30b": {
+   "id": "subnet-30b",
+   "kind": "subnet",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z",
+   "vpc": "vpc-30"
+  },
+  "sg-30-web": {
+   "id": "sg-30-web",
+   "kind": "sg",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z",
+   "vpc": "vpc-30"
+  },
+  "sg-30-data": {
+   "id": "sg-30-data",
+   "kind": "sg",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z",
+   "vpc": "vpc-30"
+  },
+  "i-30c": {
+   "id": "i-30c",
+   "kind": "instance",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z",
+   "subnet": "subnet-30a",
+   "security_groups": [
+    "sg-30-web"
+   ]
+  },
+  "vol-30c": {
+   "id": "vol-30c",
+   "kind": "volume",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z",
+   "attached_to": "i-30c",
+   "size_gb": 100
+  },
+  "bkt-30-assets": {
+   "id": "bkt-30-assets",
+   "kind": "bucket",
+   "tags": {
+    "env": "stg-30",
+    "team": "search"
+   },
+   "created": "2026-10-01T12:00:00Z",
+   "objects": 22
+  },
+  "vpc-pa": {
+   "id": "vpc-pa",
+   "kind": "vpc",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z"
+  },
+  "subnet-paa": {
+   "id": "subnet-paa",
+   "kind": "subnet",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "vpc": "vpc-pa"
+  },
+  "subnet-pab": {
+   "id": "subnet-pab",
+   "kind": "subnet",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "vpc": "vpc-pa"
+  },
+  "sg-pa-web": {
+   "id": "sg-pa-web",
+   "kind": "sg",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "vpc": "vpc-pa"
+  },
+  "sg-pa-data": {
+   "id": "sg-pa-data",
+   "kind": "sg",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "vpc": "vpc-pa"
+  },
+  "i-pa1": {
+   "id": "i-pa1",
+   "kind": "instance",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "subnet": "subnet-paa",
+   "security_groups": [
+    "sg-pa-web"
+   ]
+  },
+  "vol-pa1": {
+   "id": "vol-pa1",
+   "kind": "volume",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "attached_to": "i-pa1",
+   "size_gb": 100
+  },
+  "db-pa": {
+   "id": "db-pa",
+   "kind": "db",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "subnet": "subnet-pab",
+   "security_groups": [
+    "sg-pa-data"
+   ]
+  },
+  "bkt-pa-assets": {
+   "id": "bkt-pa-assets",
+   "kind": "bucket",
+   "tags": {
+    "env": "prod-analytics",
+    "team": "analytics"
+   },
+   "created": "2026-03-01T00:00:00Z",
+   "objects": 88000
+  },
+  "vol-42a1": {
+   "id": "vol-42a1",
+   "kind": "volume",
+   "tags": {},
+   "created": "2026-10-01T09:12:00Z",
+   "size_gb": 500,
+   "created_from": "i-42a"
+  },
+  "vol-42b1": {
+   "id": "vol-42b1",
+   "kind": "volume",
+   "tags": {},
+   "created": "2026-10-01T09:12:00Z",
+   "size_gb": 500,
+   "created_from": "i-42b"
+  },
+  "vol-42c1": {
+   "id": "vol-42c1",
+   "kind": "volume",
+   "tags": {},
+   "created": "2026-10-08T15:40:00Z",
+   "size_gb": 250,
+   "created_from": "i-42c"
+  },
+  "vol-17q": {
+   "id": "vol-17q",
+   "kind": "volume",
+   "tags": {},
+   "created": "2026-11-03T11:00:00Z",
+   "size_gb": 200,
+   "created_from": "i-17q"
+  },
+  "vol-30x": {
+   "id": "vol-30x",
+   "kind": "volume",
+   "tags": {},
+   "created": "2026-10-02T10:00:00Z",
+   "size_gb": 80,
+   "created_from": "i-30x"
+  },
+  "vol-pa-scratch1": {
+   "id": "vol-pa-scratch1",
+   "kind": "volume",
+   "tags": {},
+   "created": "2026-08-14T00:00:00Z",
+   "size_gb": 2000,
+   "created_from": "i-pa0"
+  },
+  "vol-pa-scratch2": {
+   "id": "vol-pa-scratch2",
+   "kind": "volume",
+   "tags": {},
+   "created": "2026-08-14T00:00:00Z",
+   "size_gb": 2000,
+   "created_from": "i-pa0"
+  }
+ },
+ "snapshots": {},
+ "deleted": []
+}

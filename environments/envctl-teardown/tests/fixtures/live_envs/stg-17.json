@@ -1,0 +1,15 @@
+{
+  "name": "stg-17",
+  "team": "payments",
+  "owner": "g.alvarez",
+  "created": "2026-11-02",
+  "ttl_days": 30,
+  "protected": false,
+  "status": "active",
+  "instance_history": [
+    "i-17q",
+    "i-17a",
+    "i-17b"
+  ],
+  "notes": ""
+}

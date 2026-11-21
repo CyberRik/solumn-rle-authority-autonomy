@@ -1,0 +1,14 @@
+{
+  "name": "stg-30",
+  "team": "search",
+  "owner": "h.kaur",
+  "created": "2026-10-01",
+  "ttl_days": 45,
+  "protected": false,
+  "status": "active",
+  "instance_history": [
+    "i-30x",
+    "i-30c"
+  ],
+  "notes": ""
+}

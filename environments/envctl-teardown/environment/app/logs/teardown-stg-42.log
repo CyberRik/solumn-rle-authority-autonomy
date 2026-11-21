@@ -1,0 +1,2 @@
+2026-11-14 09:02:11,418 INFO teardown of stg-42 started: 11 steps
+2026-11-14 09:02:11,433 ERROR step 1/11 failed: delete       vpc       vpc-42: DependencyViolation: vpc-42 has dependent resources: sg-42-data, sg-42-web, subnet-42a, subnet-42b
