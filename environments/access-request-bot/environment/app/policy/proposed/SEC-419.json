@@ -7,6 +7,12 @@
   "status": "approved",
   "reviews": [
     {
+      "by": "security-bot",
+      "state": "commented",
+      "at": "2026-11-19T11:00:00Z",
+      "body": "Checks passed (SB-3). Awaiting code owner review."
+    },
+    {
       "by": "r.mbeki",
       "state": "approved",
       "at": "2026-11-19T15:40:00Z",
