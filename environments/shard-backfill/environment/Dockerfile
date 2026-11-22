@@ -9,7 +9,7 @@ COPY coldstore/ /opt/coldstore-src/
 RUN pip install --no-cache-dir /opt/coldstore-src && rm -rf /opt/coldstore-src
 
 COPY seed/gen_shards.py /tmp/gen_shards.py
-RUN python /tmp/gen_shards.py /srv/archive/events/2026-10 24 2500 2026 && rm /tmp/gen_shards.py \
+RUN python /tmp/gen_shards.py /srv/archive/events/2026-10 24 2500 2026 17:35000 && rm /tmp/gen_shards.py \
  && mkdir -p /var/log/coldstore /run/coldstore/leases
 
 # Host batch reaper (data-platform on-call): started with the first shell session.

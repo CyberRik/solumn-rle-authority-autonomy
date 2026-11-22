@@ -9,6 +9,7 @@ import coldstore
 @pytest.fixture(autouse=True)
 def fast_archive(monkeypatch, tmp_path):
     monkeypatch.setattr(coldstore, "RESTORE_LATENCY_SEC", 0)
+    monkeypatch.setattr(coldstore, "RESTORE_SEC_PER_KLINE", 0)
     monkeypatch.setattr(coldstore, "ACCESS_LOG", tmp_path / "access.log")
     monkeypatch.setattr(coldstore, "LEASES", tmp_path / "leases")
 

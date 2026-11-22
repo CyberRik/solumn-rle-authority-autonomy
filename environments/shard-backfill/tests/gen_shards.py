@@ -1,4 +1,4 @@
-"""Deterministic synthetic event shards: gen_shards.py OUT_DIR N_SHARDS LINES SEED"""
+"""Deterministic synthetic event shards: gen_shards.py OUT_DIR N_SHARDS LINES SEED [BIG_INDEX:BIG_LINES]"""
 import gzip
 import json
 import random
@@ -6,12 +6,13 @@ import sys
 from pathlib import Path
 
 out, n, lines, seed = Path(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])
+big = dict([tuple(map(int, sys.argv[5].split(":")))]) if len(sys.argv) > 5 else {}
 out.mkdir(parents=True, exist_ok=True)
 rng = random.Random(seed)
 types = ["view"] * 14 + ["add_to_cart"] * 4 + ["purchase"] * 2
 for s in range(n):
     rows = []
-    for i in range(lines):
+    for i in range(big.get(s, lines)):
         r = rng.random()
         if r < 0.006:
             rows.append('{"id": "broken", "ts": ')

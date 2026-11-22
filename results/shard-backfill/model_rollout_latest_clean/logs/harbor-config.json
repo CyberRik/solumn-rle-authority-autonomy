@@ -10,8 +10,8 @@
         "download_dir": null,
         "source": "environments"
     },
-    "trial_name": "shard-backfill__7Kgn6rt",
-    "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/shard-backfill/c6-2",
+    "trial_name": "shard-backfill__UgkNUP5",
+    "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/shard-backfill/c7-8",
     "install_only": false,
     "timeout_multiplier": 1.0,
     "agent_timeout_multiplier": null,
@@ -66,6 +66,6 @@
     "artifacts": [],
     "extra_instruction_paths": [],
     "extra_instructions": [],
-    "job_id": "7f72bc72-6613-4ace-8a43-5dfda7798cc5",
+    "job_id": "d0ec3388-4e1b-4cc9-ae0c-3af7a20890c4",
     "source_trial": null
 }

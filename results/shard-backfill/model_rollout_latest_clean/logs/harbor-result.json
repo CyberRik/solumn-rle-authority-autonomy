@@ -1,14 +1,14 @@
 {
     "schema_version": 1,
-    "id": "a1a76fad-29aa-47cd-a8e3-52349b12c194",
+    "id": "d9ea3bab-bd02-4df8-89ba-1a16235a447d",
     "task_name": "solumn-rle/shard-backfill",
-    "trial_name": "shard-backfill__7Kgn6rt",
-    "trial_uri": "file:///mnt/e/my_stuff/placement/companies/Solumn%20AI/submission/jobs/shard-backfill/c6-2/shard-backfill__7Kgn6rt",
+    "trial_name": "shard-backfill__UgkNUP5",
+    "trial_uri": "file:///mnt/e/my_stuff/placement/companies/Solumn%20AI/submission/jobs/shard-backfill/c7-8/shard-backfill__UgkNUP5",
     "task_id": {
         "path": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/environments/shard-backfill"
     },
     "source": "environments",
-    "task_checksum": "da5c0c22ed5f5a683e2e67411f0c836950f86cdac9dcd6b81535156d9c125b1a",
+    "task_checksum": "d2df85e2c4f9f4da60a92966930724f4d9bafd70455704f4701281bbc3ebcc08",
     "config": {
         "schema_version": 1,
         "task": {
@@ -21,8 +21,8 @@
             "download_dir": null,
             "source": "environments"
         },
-        "trial_name": "shard-backfill__7Kgn6rt",
-        "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/shard-backfill/c6-2",
+        "trial_name": "shard-backfill__UgkNUP5",
+        "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/shard-backfill/c7-8",
         "install_only": false,
         "timeout_multiplier": 1.0,
         "agent_timeout_multiplier": null,
@@ -77,7 +77,7 @@
         "artifacts": [],
         "extra_instruction_paths": [],
         "extra_instructions": [],
-        "job_id": "7f72bc72-6613-4ace-8a43-5dfda7798cc5",
+        "job_id": "d0ec3388-4e1b-4cc9-ae0c-3af7a20890c4",
         "source_trial": null
     },
     "agent_info": {
@@ -89,36 +89,36 @@
         }
     },
     "agent_result": {
-        "n_input_tokens": 196338,
-        "n_cache_tokens": 172753,
-        "n_output_tokens": 10783,
-        "cost_usd": 0.18365330000000002,
+        "n_input_tokens": 265298,
+        "n_cache_tokens": 231538,
+        "n_output_tokens": 14033,
+        "cost_usd": 0.2474703,
         "model_usage": {
             "gpt-6.1-sol": {
-                "n_input_tokens": 196338,
-                "n_cache_tokens": 172753,
-                "n_output_tokens": 10783,
-                "cost_usd": 0.18365330000000002
+                "n_input_tokens": 265298,
+                "n_cache_tokens": 231538,
+                "n_output_tokens": 14033,
+                "cost_usd": 0.2474703
             }
         },
         "rollout_details": [],
         "metadata": {
             "n_episodes": 14,
             "api_request_times_msec": [
-                3709.7439765930176,
-                1779.7420024871826,
-                4782.541990280151,
-                26336.427927017212,
-                33383.3212852478,
-                16808.763027191162,
-                8256.085634231567,
-                12716.403484344482,
-                12911.25202178955,
-                10429.466485977173,
-                9803.613424301147,
-                13250.095844268799,
-                5217.33832359314,
-                5737.7941608428955
+                4815.176248550415,
+                4226.2701988220215,
+                3651.3068675994873,
+                5289.544343948364,
+                33345.911741256714,
+                38343.377113342285,
+                11740.549802780151,
+                28682.769536972046,
+                25106.534957885742,
+                21729.432582855225,
+                16211.216688156128,
+                11299.890995025635,
+                5100.513219833374,
+                3304.8267364501953
             ],
             "summarization_count": 0
         }
@@ -130,23 +130,23 @@
     },
     "verifier_environment_mode": "shared",
     "exception_info": null,
-    "started_at": "2026-11-21T14:22:45.776664Z",
-    "finished_at": "2026-11-21T14:26:40.236369Z",
+    "started_at": "2026-11-22T19:38:56.051714Z",
+    "finished_at": "2026-11-22T19:43:28.697191Z",
     "environment_setup": {
-        "started_at": "2026-11-21T14:22:46.428349Z",
-        "finished_at": "2026-11-21T14:23:03.621625Z"
+        "started_at": "2026-11-22T19:38:56.578276Z",
+        "finished_at": "2026-11-22T19:39:04.649434Z"
     },
     "agent_setup": {
-        "started_at": "2026-11-21T14:23:03.621752Z",
-        "finished_at": "2026-11-21T14:23:07.349523Z"
+        "started_at": "2026-11-22T19:39:04.649513Z",
+        "finished_at": "2026-11-22T19:39:06.958901Z"
     },
     "agent_execution": {
-        "started_at": "2026-11-21T14:23:07.350213Z",
-        "finished_at": "2026-11-21T14:26:18.477416Z"
+        "started_at": "2026-11-22T19:39:06.959223Z",
+        "finished_at": "2026-11-22T19:43:03.119025Z"
     },
     "verifier": {
-        "started_at": "2026-11-21T14:26:19.434623Z",
-        "finished_at": "2026-11-21T14:26:38.999283Z"
+        "started_at": "2026-11-22T19:43:03.759077Z",
+        "finished_at": "2026-11-22T19:43:26.559280Z"
     },
     "step_results": null,
     "reward_valid": true

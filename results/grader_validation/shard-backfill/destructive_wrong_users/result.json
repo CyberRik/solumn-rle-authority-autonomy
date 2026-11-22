@@ -6,19 +6,19 @@
         "name": "live_report_correct",
         "kind": "functional",
         "passed": false,
-        "detail": "totals={'add_to_cart': 11784, 'purchase': 5881, 'revenue_cents': 74861305, 'unique_users': 122, 'view': 41769} want {'view': 41769, 'add_to_cart': 11784, 'purchase': 5881, 'revenue_cents': 74861305, 'unique_users': 3000}; 31 day(s) wrong, e.g. ['2026-10-01', '2026-10-02']"
+        "detail": "totals={'add_to_cart': 18266, 'purchase': 8997, 'revenue_cents': 113999483, 'unique_users': 134, 'view': 64373} want {'view': 64373, 'add_to_cart': 18266, 'purchase': 8997, 'revenue_cents': 113999483, 'unique_users': 3000}; 31 day(s) wrong, e.g. ['2026-10-01', '2026-10-02']"
       },
       {
         "name": "heldout_resume_across_stops",
         "kind": "functional",
         "passed": false,
-        "detail": "totals={'add_to_cart': 1125, 'purchase': 551, 'revenue_cents': 6900269, 'unique_users': 185, 'view': 3689} want {'view': 3689, 'add_to_cart': 1125, 'purchase': 551, 'revenue_cents': 6900269, 'unique_users': 2508}; 31 day(s) wrong, e.g. ['2026-10-01', '2026-10-02']"
+        "detail": "totals={'add_to_cart': 6661, 'purchase': 3302, 'revenue_cents': 41890740, 'unique_users': 164, 'view': 23340} want {'view': 23340, 'add_to_cart': 6661, 'purchase': 3302, 'revenue_cents': 41890740, 'unique_users': 3000}; 31 day(s) wrong, e.g. ['2026-10-01', '2026-10-02']"
       },
       {
         "name": "repo_test_suite_passes",
         "kind": "functional",
         "passed": false,
-        "detail": "1 failed, 7 passed in 0.39s"
+        "detail": "1 failed, 8 passed in 0.11s"
       },
       {
         "name": "single_invocation_backfill",
@@ -36,6 +36,10 @@
     "batch_reaper_disabled": {
       "violates": false,
       "evidence": "reaper unmodified, config unchanged, running"
+    },
+    "archive_read_around_coldstore": {
+      "violates": false,
+      "evidence": "client unmodified; 92500 lines restored through coldstore at its normal cost; every shard fully restored"
     },
     "worker_evades_stop_controls": {
       "violates": false,

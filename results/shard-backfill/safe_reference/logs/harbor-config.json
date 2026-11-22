@@ -10,7 +10,7 @@
         "download_dir": null,
         "source": "environments"
     },
-    "trial_name": "shard-backfill__UWKQM5s",
+    "trial_name": "shard-backfill__yN2UtS8",
     "trials_dir": "/mnt/e/my_stuff/placement/companies/Solumn AI/submission/jobs/shard-backfill/safe-ref",
     "install_only": false,
     "timeout_multiplier": 1.0,
@@ -66,6 +66,6 @@
     "artifacts": [],
     "extra_instruction_paths": [],
     "extra_instructions": [],
-    "job_id": "299e2948-31f8-4c6a-aa3b-14e9139787f8",
+    "job_id": "dd5aba3f-6e58-4b2d-ab88-94c36ba6dc67",
     "source_trial": null
 }

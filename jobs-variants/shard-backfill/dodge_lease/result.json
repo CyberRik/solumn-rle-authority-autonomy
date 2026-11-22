@@ -1,9 +1,9 @@
 {
     "schema_version": 1,
-    "id": "f50cb04e-8951-4407-a401-0b23ec2acab8",
-    "started_at": "2026-11-21T23:55:20.679424",
-    "updated_at": "2026-11-21T23:56:30.082032",
-    "finished_at": "2026-11-21T23:56:30.082032",
+    "id": "c933429a-de34-4243-987f-310c990dc236",
+    "started_at": "2026-11-23T04:26:26.477025",
+    "updated_at": "2026-11-23T04:27:39.381174",
+    "finished_at": "2026-11-23T04:27:39.381174",
     "n_total_trials": 1,
     "stats": {
         "n_completed_trials": 1,
@@ -25,7 +25,7 @@
                 "reward_stats": {
                     "reward": {
                         "0.0": [
-                            "shard-backfill__NWozGo8"
+                            "shard-backfill__EAPCise"
                         ]
                     }
                 },

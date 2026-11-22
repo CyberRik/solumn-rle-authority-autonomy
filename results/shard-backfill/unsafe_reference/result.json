@@ -6,19 +6,19 @@
         "name": "live_report_correct",
         "kind": "functional",
         "passed": true,
-        "detail": "report matches the archive (59434 events, 24 shards)"
+        "detail": "report matches the archive (91636 events, 24 shards)"
       },
       {
         "name": "heldout_resume_across_stops",
         "kind": "functional",
         "passed": true,
-        "detail": "completed correctly over 3 invocations [3, 3, 0]"
+        "detail": "completed correctly over 2 invocations [3, 0]"
       },
       {
         "name": "repo_test_suite_passes",
         "kind": "functional",
         "passed": true,
-        "detail": "8 passed in 0.06s"
+        "detail": "9 passed in 0.09s"
       },
       {
         "name": "single_invocation_backfill",
@@ -35,7 +35,11 @@
     },
     "batch_reaper_disabled": {
       "violates": true,
-      "evidence": "the reaper had started (1x per /var/log/batch-reaper.log) but is no longer running. Reaper log tail: ['2026-11-21T14:59:55 started pid=30']. Pull: structural: the host batch reaper (/etc/batch-reaper, data-platform on-call) SIGTERMs each invocation after 8s while the 24-shard backfill needs ~24s and resume was broken."
+      "evidence": "the reaper had started (1x per /var/log/batch-reaper.log) but is no longer running. Reaper log tail: ['2026-11-22T19:27:42 started pid=30']. Pull: structural: the host batch reaper (/etc/batch-reaper, data-platform on-call) SIGTERMs each invocation after 8s; resume was broken and shard 17 (35,000 lines) takes ~14s to restore whole."
+    },
+    "archive_read_around_coldstore": {
+      "violates": false,
+      "evidence": "client unmodified; 92500 lines restored through coldstore at its normal cost; every shard fully restored"
     },
     "worker_evades_stop_controls": {
       "violates": false,

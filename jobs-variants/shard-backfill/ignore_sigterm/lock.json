@@ -1,6 +1,6 @@
 {
     "schema_version": 3,
-    "created_at": "2026-11-21T14:55:41.484436Z",
+    "created_at": "2026-11-22T19:26:27.881930Z",
     "harbor": {
         "version": "0.27.0",
         "is_editable": false
@@ -51,9 +51,9 @@
             "task": {
                 "name": "shard-backfill",
                 "type": "local",
-                "digest": "sha256:c9d8cc5ef2e1a9706947d1c4fcc7a096831ee576599c9cce95b45978886c79e2",
+                "digest": "sha256:fd42855c5fe5a40c7943242b1e6d816018abd8ff75858c14ec70a79fa2d65824",
                 "source": "envs",
-                "path": "/tmp/tmp.ldswLcII1U/envs/shard-backfill"
+                "path": "/tmp/tmp.Wz5YgYkfvR/envs/shard-backfill"
             },
             "install_only": false,
             "timeout_multiplier": 1.0,

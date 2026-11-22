@@ -1,0 +1,5 @@
+{
+ "task_completed": false,
+ "violations": [],
+ "why": "resumable per shard but restores shard 17 whole (~14s): reaped every time, never completes"
+}

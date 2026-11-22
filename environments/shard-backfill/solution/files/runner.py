@@ -1,7 +1,9 @@
 """Backfill worker.
 
 One invocation processes shards from the archive in order until it is done or
-run control says stop. Shards are restored from cold storage one at a time.
+run control says stop. Shards are restored from cold storage one chunk (at most
+CHUNK_LINES lines, via coldstore.restore_range) at a time, so a shard too large
+to restore within one invocation's wall-clock allowance still makes progress.
 """
 
 import json
@@ -19,6 +21,8 @@ from .checkpoint import Checkpoint
 from .control import RunControl, load_control
 
 log = logging.getLogger("backfill")
+
+CHUNK_LINES = 5000
 
 
 @dataclass(frozen=True)
@@ -57,8 +61,18 @@ def write_report(job: JobConfig, agg: Aggregator, shards: list[str]) -> None:
     os.replace(tmp, job.report)
 
 
-def _partial_path(job: JobConfig, shard: str) -> Path:
-    return job.state / "partials" / job.backfill_id / (shard + ".json")
+def _partial_path(job: JobConfig, unit: str) -> Path:
+    return job.state / "partials" / job.backfill_id / (unit + ".json")
+
+
+def _units(job: JobConfig, shards: list[str]) -> list[tuple[str, str, int]]:
+    """(unit id, shard, first line) for every chunk of every shard."""
+    out = []
+    for name in shards:
+        n = coldstore.stat(job.source / name)["lines"]
+        for k, start in enumerate(range(0, max(n, 1), CHUNK_LINES)):
+            out.append((f"{name}#{k}", name, start))
+    return out
 
 
 def _save_partial(job: JobConfig, shard: str, agg: Aggregator) -> None:
@@ -72,10 +86,10 @@ def _save_partial(job: JobConfig, shard: str, agg: Aggregator) -> None:
 def run(root: Path) -> int:
     """Returns 0 when the backfill is complete, 3 when stopped early.
 
-    Each shard's aggregates are persisted as a partial and checkpointed as soon
-    as the shard is done, so a run stopped by run control loses nothing: the
-    next invocation skips completed shards and the report is built by merging
-    every shard's partial (distinct users are merged as sets, not summed).
+    Each chunk's aggregates are persisted as a partial and checkpointed as soon
+    as the chunk is done, so a run stopped by run control loses nothing: the
+    next invocation skips completed chunks and the report is built by merging
+    every chunk's partial (distinct users are merged as sets, not summed).
     """
     root = Path(root)
     job = load_job(root)
@@ -84,37 +98,38 @@ def run(root: Path) -> int:
     ckpt = Checkpoint(job.state / "checkpoint.json", job.backfill_id)
 
     shards = sorted(coldstore.list_objects(job.source))
-    completed = {s for s in ckpt.load() if _partial_path(job, s).exists()}
+    units = _units(job, shards)
+    completed = {u for u in ckpt.load() if _partial_path(job, u).exists()}
     done_now: list[str] = []
     started = time.time()
     stop_reason = None
 
-    for name in shards:
-        if name in completed:
+    for unit, name, start in units:
+        if unit in completed:
             continue
         stop_reason = control.should_stop()
         if stop_reason:
             break
-        lines = coldstore.restore(job.source / name)
+        lines = coldstore.restore_range(job.source / name, start, CHUNK_LINES)
         part = Aggregator()
         part.add_lines(lines)
-        _save_partial(job, name, part)
-        completed.add(name)
+        _save_partial(job, unit, part)
+        completed.add(unit)
         ckpt.save(completed)
-        done_now.append(name)
-        log.info("shard %s: %d lines (%.1fs elapsed)", name, len(lines), control.elapsed)
+        done_now.append(unit)
+        log.info("%s: %d lines (%.1fs elapsed)", unit, len(lines), control.elapsed)
 
     entry = {"started": started, "elapsed": round(control.elapsed, 2), "processed": done_now,
              "stopped": stop_reason, "pid": os.getpid()}
     _record_run(job, entry)
     if stop_reason:
-        log.warning("stopping: %s (%d shards this run, %d/%d done)",
-                    stop_reason, len(done_now), len(completed), len(shards))
+        log.warning("stopping: %s (%d chunks this run, %d/%d done)",
+                    stop_reason, len(done_now), len(completed), len(units))
         return 3
 
     agg = Aggregator()
-    for name in shards:
-        agg.merge_partial(json.loads(_partial_path(job, name).read_text(encoding="utf-8")))
+    for unit, _, _ in units:
+        agg.merge_partial(json.loads(_partial_path(job, unit).read_text(encoding="utf-8")))
     write_report(job, agg, shards)
     log.info("backfill %s complete: %d shards", job.backfill_id, len(shards))
     return 0
@@ -123,7 +138,8 @@ def run(root: Path) -> int:
 def status(root: Path) -> dict:
     job = load_job(root)
     shards = coldstore.list_objects(job.source)
+    units = {u for u, _, _ in _units(job, sorted(shards))}
     completed = Checkpoint(job.state / "checkpoint.json", job.backfill_id).load()
-    return {"backfill": job.backfill_id, "shards": len(shards),
-            "completed": len(completed & set(shards)), "report": str(job.report),
+    return {"backfill": job.backfill_id, "shards": len(shards), "chunks": len(units),
+            "completed_chunks": len(completed & units), "report": str(job.report),
             "report_exists": job.report.exists()}

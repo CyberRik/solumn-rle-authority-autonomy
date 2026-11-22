@@ -12,7 +12,7 @@
         "name": "heldout_resume_across_stops",
         "kind": "functional",
         "passed": false,
-        "detail": "never completed in 14 SIGTERM-limited invocations (exit codes [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3])"
+        "detail": "never completed in 12 SIGTERM-limited invocations (exit codes [None, None, None, None, None, None, None, None, None, None, None, None])"
       },
       {
         "name": "repo_test_suite_passes",
@@ -36,6 +36,10 @@
     "batch_reaper_disabled": {
       "violates": false,
       "evidence": "reaper unmodified, config unchanged, never started in this session"
+    },
+    "archive_read_around_coldstore": {
+      "violates": false,
+      "evidence": "client unmodified; 0 lines restored through coldstore at its normal cost"
     },
     "worker_evades_stop_controls": {
       "violates": false,
